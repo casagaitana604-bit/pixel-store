@@ -4,90 +4,101 @@
     <meta charset="UTF-8">
     <title>PIXEL STORE - RPG Dashboard</title>
     <style>
-        /* FONDO Y ESTILO GENERAL */
+        /* FONDO DINÁMICO CYBER-SURVIVAL */
         body { 
-            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8)), 
-                        url('https://images.unsplash.com/photo-1505630285034-888476f7a753?q=80&w=2070&auto=format&fit=crop'); 
-            background-size: cover;
-            background-position: center;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #050505 100%);
             background-attachment: fixed;
             color: #e0e0e0; 
             font-family: 'Segoe UI', Tahoma, sans-serif; 
             text-align: center; 
             padding: 20px;
             margin: 0;
+            min-height: 100vh;
+        }
+
+        /* EFECTO DE LUZ NEÓN DE FONDO */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+            opacity: 0.1;
+            z-index: -1;
         }
 
         .container { 
             max-width: 1000px; 
             margin: auto; 
-            background: rgba(26, 26, 26, 0.9); /* Fondo semi-transparente */
+            background: rgba(20, 20, 20, 0.95);
             padding: 30px; 
             border-radius: 15px; 
-            border: 1px solid #00ff41; 
-            box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(5px); /* Efecto de desenfoque detrás del panel */
+            border: 2px solid #00ff41; 
+            box-shadow: 0 0 50px rgba(0, 255, 65, 0.15);
+            backdrop-filter: blur(10px);
         }
 
         h1 { 
             color: #00ff41; 
-            text-shadow: 0 0 15px #00ff41; 
+            text-shadow: 0 0 20px #00ff41; 
             margin-bottom: 5px;
-            font-size: 2.5em;
+            font-size: 3em;
+            letter-spacing: 5px;
         }
 
         /* Stats */
         .stats-row { display: flex; justify-content: space-around; margin-bottom: 25px; gap: 15px; }
         .stat-box { 
-            background: rgba(34, 34, 34, 0.8); 
+            background: rgba(0, 0, 0, 0.6); 
             padding: 15px; 
             border-radius: 10px; 
             flex: 1; 
-            border-bottom: 3px solid #00ff41; 
+            border: 1px solid #333;
+            border-bottom: 4px solid #00ff41; 
         }
-        .stat-box small { color: #888; font-size: 11px; text-transform: uppercase; }
-        .stat-box div { color: #fff; font-size: 24px; font-weight: bold; }
+        .stat-box small { color: #00ff41; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+        .stat-box div { color: #fff; font-size: 28px; font-weight: bold; }
 
         /* Buscador */
-        .search-container { margin-bottom: 20px; display: flex; gap: 10px; }
+        .search-container { margin-bottom: 25px; display: flex; gap: 10px; }
         #searchInput { 
             flex-grow: 1; 
-            padding: 12px; 
-            background: rgba(0, 0, 0, 0.7); 
+            padding: 15px; 
+            background: rgba(0, 0, 0, 0.8); 
             border: 1px solid #00ff41; 
             color: #00ff41; 
-            border-radius: 5px; 
+            border-radius: 8px; 
             outline: none; 
+            font-size: 16px;
         }
         
         .btn-refresh {
             background: #00ff41; 
             color: #000; 
             border: none;
-            padding: 0 20px; 
+            padding: 0 25px; 
             cursor: pointer; 
-            border-radius: 5px; 
+            border-radius: 8px; 
             font-weight: bold;
-            font-size: 20px;
+            font-size: 24px;
             transition: 0.3s;
         }
-        .btn-refresh:hover { background: #fff; box-shadow: 0 0 15px #00ff41; }
+        .btn-refresh:hover { background: #fff; transform: scale(1.05); }
 
-        /* Tabla Estilo Gamer */
-        table { width: 100%; border-collapse: collapse; background: rgba(17, 17, 17, 0.8); border-radius: 10px; overflow: hidden; }
-        th { background: #00ff41; color: #000; padding: 15px; text-transform: uppercase; font-size: 13px; }
-        td { padding: 12px; border-bottom: 1px solid #333; }
-        tr:hover { background: rgba(0, 255, 65, 0.1); }
+        /* Tabla */
+        table { width: 100%; border-collapse: collapse; background: rgba(0, 0, 0, 0.5); border-radius: 10px; overflow: hidden; }
+        th { background: #00ff41; color: #000; padding: 15px; text-transform: uppercase; }
+        td { padding: 15px; border-bottom: 1px solid #222; font-size: 16px; }
+        tr:hover { background: rgba(0, 255, 65, 0.05); }
 
         /* RANGOS */
-        .badge { font-size: 18px; margin-right: 8px; }
-        .rango-txt { font-size: 10px; text-transform: uppercase; padding: 2px 6px; border-radius: 4px; font-weight: bold; margin-left: 10px; }
+        .badge { font-size: 20px; margin-right: 10px; }
+        .rango-txt { font-size: 10px; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; font-weight: bold; margin-left: 10px; }
         .rango-recluta { color: #cd7f32; border: 1px solid #cd7f32; }
         .rango-veterano { color: #c0c0c0; border: 1px solid #c0c0c0; }
         .rango-elite { color: #ffd700; border: 1px solid #ffd700; text-shadow: 0 0 5px #ffd700; }
-        .rango-leyenda { color: #00f2ff; border: 1px solid #00f2ff; text-shadow: 0 0 10px #00f2ff; animation: shine 2s infinite; }
+        .rango-leyenda { color: #00f2ff; border: 1px solid #00f2ff; text-shadow: 0 0 15px #00f2ff; animation: pulse 1.5s infinite; }
 
-        @keyframes shine { 0%, 100% { opacity: 0.7; } 50% { opacity: 1; } }
+        @keyframes pulse { 0%, 100% { opacity: 0.8; transform: scale(1); } 50% { opacity: 1; transform: scale(1.05); } }
         .name-cell { display: flex; align-items: center; justify-content: center; color: #00ff41; font-weight: bold; }
     </style>
 </head>
@@ -95,25 +106,25 @@
 
 <div class="container">
     <h1>PIXEL STORE</h1>
-    <p style="color: #aaa; margin-bottom: 25px;">RPG SURVIVAL - RANKING DE SUPERVIVIENTES</p>
+    <p style="color: #00ff41; letter-spacing: 2px; margin-bottom: 30px; opacity: 0.7;">RPG SURVIVAL SYSTEM - GLOBAL ACCESS</p>
 
     <div class="stats-row">
         <div class="stat-box"><small>Supervivientes</small><div id="totalP">0</div></div>
-        <div class="stat-box"><small>Zombies Eliminados</small><div id="totalN">0</div></div>
+        <div class="stat-box"><small>NPC Kills Totales</small><div id="totalN">0</div></div>
         <button class="btn-refresh" onclick="cargar()">🔄</button>
     </div>
 
     <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Rastrear nombre de superviviente..." onkeyup="filtrar()">
+        <input type="text" id="searchInput" placeholder="BUSCANDO EN LA BASE DE DATOS..." onkeyup="filtrar()">
     </div>
 
     <table id="tablaRank">
         <thead>
             <tr>
-                <th>Pos</th>
-                <th>Nombre / Rango</th>
-                <th>Nivel</th>
-                <th>NPC</th>
+                <th>POS</th>
+                <th>SUPERVIVIENTE / RANGO</th>
+                <th>NIVEL</th>
+                <th>ZOMBIES</th>
                 <th>PVP</th>
             </tr>
         </thead>
@@ -171,7 +182,7 @@
                         <span class="rango-txt ${rango.clase}">${rango.titulo}</span>
                     </div>
                 </td>
-                <td style="font-weight:bold; font-size:18px;">${lvl}</td>
+                <td style="font-weight:bold; font-size:20px; color:#fff;">${lvl}</td>
                 <td>${npc}</td>
                 <td>${pvp}</td>
             </tr>`;
