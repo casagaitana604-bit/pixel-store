@@ -2,79 +2,102 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>PIXEL STORE - RPG Survival Leaderboard</title>
+    <title>PIXEL STORE - RPG Global Dashboard</title>
     <style>
-        /* ESTILO GAMER SURVIVAL */
         body {
             background-color: #0b0b0b;
             color: #e0e0e0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            text-align: center;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
             margin: 0; padding: 20px;
         }
-        h1 { color: #00ff41; text-shadow: 0 0 10px #00ff41; }
+        h1 { color: #00ff41; text-shadow: 0 0 10px #00ff41; margin-bottom: 5px; }
         .container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: auto;
             background: #1a1a1a;
-            padding: 20px;
-            border-radius: 10px;
+            padding: 25px;
+            border-radius: 15px;
             border: 1px solid #333;
-            box-shadow: 0 0 20px rgba(0,255,65,0.1);
+            box-shadow: 0 0 30px rgba(0,255,65,0.1);
         }
 
-        /* BOTÓN DE REFRESCAR */
+        /* ESTADÍSTICAS GLOBALES */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .stat-card {
+            background: #252525;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #00ff41;
+        }
+        .stat-card h3 { margin: 0; font-size: 12px; text-transform: uppercase; color: #888; }
+        .stat-card p { margin: 5px 0 0; font-size: 24px; font-weight: bold; color: #00ff41; }
+
+        /* BUSCADOR */
+        .search-box {
+            width: 100%;
+            padding: 12px;
+            background: #000;
+            border: 1px solid #00ff41;
+            color: #00ff41;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            outline: none;
+        }
+        .search-box::placeholder { color: rgba(0,255,65,0.4); }
+
         .btn-refresh {
-            background-color: transparent;
+            background: transparent;
             color: #00ff41;
             border: 2px solid #00ff41;
-            padding: 10px 20px;
-            font-size: 16px;
-            font-weight: bold;
+            padding: 10px 25px;
             cursor: pointer;
             border-radius: 5px;
-            text-transform: uppercase;
+            font-weight: bold;
             transition: 0.3s;
             margin-bottom: 20px;
-            box-shadow: 0 0 10px rgba(0,255,65,0.2);
         }
-        .btn-refresh:hover {
-            background-color: #00ff41;
-            color: #000;
-            box-shadow: 0 0 20px #00ff41;
-        }
+        .btn-refresh:hover { background: #00ff41; color: #000; box-shadow: 0 0 15px #00ff41; }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-        th {
-            background-color: #00ff41;
-            color: #000;
-            padding: 12px;
-            text-transform: uppercase;
-        }
-        td {
-            padding: 10px;
-            border-bottom: 1px solid #333;
-        }
-        tr:hover { background: #252525; }
-        .rank-1 { color: #ffd700; font-weight: bold; font-size: 1.2em; }
-        .rank-2 { color: #c0c0c0; font-weight: bold; }
-        .rank-3 { color: #cd7f32; font-weight: bold; }
-
-        /* Efecto de carga */
-        .loading { opacity: 0.5; pointer-events: none; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #00ff41; color: #000; padding: 12px; text-transform: uppercase; font-size: 14px; }
+        td { padding: 12px; border-bottom: 1px solid #333; }
+        tr:hover { background: #222; }
+        .rank-1 { background: rgba(255, 215, 0, 0.05); }
+        .highlight { color: #00ff41; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>PIXEL STORE - RANKING GLOBAL</h1>
-        <p>Sincronizado en tiempo real con el sistema RPG Survival</p>
-        
-        <button class="btn-refresh" onclick="cargarDatos()">🔄 Actualizar Datos</button>
+        <h1>PIXEL STORE - DASHBOARD</h1>
+        <p style="margin-bottom: 25px; color: #888;">Sistema de Supervivencia RPG Pro</p>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Jugadores</h3>
+                <p id="stat-players">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Bajas Totales (NPC)</h3>
+                <p id="stat-npcs">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Nivel Más Alto</h3>
+                <p id="stat-maxlevel">0</p>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <input type="text" id="searchInput" class="search-box" placeholder="Buscar superviviente por nombre..." onkeyup="filtrarTabla()">
+            <button class="btn-refresh" onclick="cargarDatos()">🔄</button>
+        </div>
 
         <table id="leaderboard">
             <thead>
@@ -86,59 +109,72 @@
                     <th>PVP Kills</th>
                 </tr>
             </thead>
-            <tbody>
-                </tbody>
+            <tbody></tbody>
         </table>
     </div>
 
     <script>
         const SHEET_ID = '1B_pbsnPwrVCwwMXEag7ILOdpav_gss2qVezE5yS-DUQ';
         const URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
+        let datosLocales = [];
 
         async function cargarDatos() {
-            const container = document.querySelector('.container');
-            container.classList.add('loading'); // Efecto visual de carga
-            
             try {
                 const response = await fetch(URL);
                 const text = await response.text();
                 const json = JSON.parse(text.substr(47).slice(0, -2));
-                const filas = json.table.rows;
-                const tbody = document.querySelector('#leaderboard tbody');
+                datosLocales = json.table.rows;
+                renderizarTabla(datosLocales);
+                actualizarEstadisticas(datosLocales);
+            } catch (e) { console.error("Error:", e); }
+        }
 
-                filas.sort((a, b) => {
-                    let nivelA = a.c[2] ? a.c[2].v : 0;
-                    let nivelB = b.c[2] ? b.c[2].v : 0;
-                    return nivelB - nivelA;
-                });
+        function actualizarEstadisticas(filas) {
+            let totalNPCs = 0;
+            let maxLevel = 0;
+            filas.forEach(f => {
+                totalNPCs += f.c[4] ? f.c[4].v : 0;
+                let lvl = f.c[2] ? f.c[2].v : 0;
+                if(lvl > maxLevel) maxLevel = lvl;
+            });
+            document.getElementById('stat-players').innerText = filas.length;
+            document.getElementById('stat-npcs').innerText = totalNPCs.toLocaleString();
+            document.getElementById('stat-maxlevel').innerText = maxLevel;
+        }
 
-                tbody.innerHTML = '';
-                
-                filas.forEach((fila, index) => {
-                    let nombre = fila.c[1] ? fila.c[1].v : "Desconocido";
-                    let nivel  = fila.c[2] ? fila.c[2].v : 0;
-                    let npc    = fila.c[4] ? fila.c[4].v : 0;
-                    let pvp    = fila.c[5] ? fila.c[5].v : 0;
+        function renderizarTabla(filas) {
+            const tbody = document.querySelector('#leaderboard tbody');
+            filas.sort((a, b) => (b.c[2] ? b.c[2].v : 0) - (a.c[2] ? a.c[2].v : 0));
+            
+            tbody.innerHTML = '';
+            filas.forEach((fila, index) => {
+                let nombre = fila.c[1] ? fila.c[1].v : "---";
+                let nivel  = fila.c[2] ? fila.c[2].v : 0;
+                let npc    = fila.c[4] ? fila.c[4].v : 0;
+                let pvp    = fila.c[5] ? fila.c[5].v : 0;
 
-                    let rowHtml = `
-                        <tr class="rank-${index + 1}">
-                            <td>${index + 1}</td>
-                            <td style="color: #00ff41; font-weight: bold;">${nombre}</td>
-                            <td>${nivel}</td>
-                            <td>${npc}</td>
-                            <td>${pvp}</td>
-                        </tr>`;
-                    tbody.innerHTML += rowHtml;
-                });
-            } catch (error) {
-                console.error("Error:", error);
-            } finally {
-                container.classList.remove('loading');
-            }
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td class="highlight">${nombre}</td>
+                        <td>${nivel}</td>
+                        <td>${npc}</td>
+                        <td>${pvp}</td>
+                    </tr>`;
+            });
+        }
+
+        function filtrarTabla() {
+            let input = document.getElementById("searchInput").value.toLowerCase();
+            let filasFiltradas = datosLocales.filter(f => {
+                let nombre = f.c[1] ? f.c[1].v.toLowerCase() : "";
+                return nombre.includes(input);
+            });
+            renderizarTabla(filasFiltradas);
         }
 
         cargarDatos();
-        setInterval(cargarDatos, 30000); // Sigue actualizando solo cada 30s
+        setInterval(cargarDatos, 60000);
     </script>
 </body>
 </html>
