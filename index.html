@@ -38,7 +38,7 @@
             border-bottom: 1px solid #333;
         }
         tr:hover { background: #252525; }
-        .rank-1 { color: #ffd700; font-weight: bold; } /* Oro */
+        .rank-1 { color: #ffd700; font-weight: bold; font-size: 1.2em; } /* Oro */
         .rank-2 { color: #c0c0c0; font-weight: bold; } /* Plata */
         .rank-3 { color: #cd7f32; font-weight: bold; } /* Bronce */
     </style>
@@ -49,22 +49,22 @@
         <h1>PIXEL STORE - RANKING GLOBAL</h1>
         <p>Sincronizado en tiempo real con el sistema RPG Survival</p>
         
-     <table id="leaderboard">
-    <thead>
-        <tr>
-            <th>Pos</th>
-            <th>Jugador</th>
-            <th>Nivel</th>
-            <th>Bajas (NPC)</th>
-            <th>PVP Kills</th>
-        </tr>
-    </thead>
-    <tbody></tbody>
-</table>
+        <table id="leaderboard">
+            <thead>
+                <tr>
+                    <th>Pos</th>
+                    <th>Jugador</th>
+                    <th>Nivel</th>
+                    <th>Bajas (NPC)</th>
+                    <th>PVP Kills</th>
+                </tr>
+            </thead>
+            <tbody>
+                </tbody>
+        </table>
     </div>
 
     <script>
-        // PEGA AQUÍ TU ID DE GOOGLE SHEET
         const SHEET_ID = '1B_pbsnPwrVCwwMXEag7ILOdpav_gss2qVezE5yS-DUQ';
         const URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
 
@@ -72,32 +72,45 @@
             try {
                 const response = await fetch(URL);
                 const text = await response.text();
+                // Limpiamos la respuesta de Google
                 const json = JSON.parse(text.substr(47).slice(0, -2));
                 const filas = json.table.rows;
                 const tbody = document.querySelector('#leaderboard tbody');
 
-                // Ordenar por Nivel (Columna C es index 2)
-                filas.sort((a, b) => b.c[2].v - a.c[2].v);
+                // Ordenar por Nivel (Columna index 2) de mayor a menor
+                filas.sort((a, b) => {
+                    let nivelA = a.c[2] ? a.c[2].v : 0;
+                    let nivelB = b.c[2] ? b.c[2].v : 0;
+                    return nivelB - nivelA;
+                });
 
                 tbody.innerHTML = '';
+                
                 filas.forEach((fila, index) => {
+                    // Verificación de seguridad para celdas vacías
+                    let nombre = fila.c[1] ? fila.c[1].v : "Desconocido";
+                    let nivel  = fila.c[2] ? fila.c[2].v : 0;
+                    let npc    = fila.c[4] ? fila.c[4].v : 0;
+                    let pvp    = fila.c[5] ? fila.c[5].v : 0;
+
                     let rowHtml = `
                         <tr class="rank-${index + 1}">
                             <td>${index + 1}</td>
-                            <td>${fila.c[1].v}</td>
-                            <td>${fila.c[2].v}</td>
-                            <td>${fila.c[4].v}</td>
-                            <td>${fila.c[5] ? fila.c[5].v : 0}</td>
+                            <td style="color: #00ff41; font-weight: bold;">${nombre}</td>
+                            <td>${nivel}</td>
+                            <td>${npc}</td>
+                            <td>${pvp}</td>
                         </tr>`;
                     tbody.innerHTML += rowHtml;
                 });
             } catch (error) {
-                console.error("Error cargando datos:", error);
+                console.error("Error cargando datos de Google:", error);
             }
         }
 
+        // Ejecutar al cargar y cada 30 segundos
         cargarDatos();
-        setInterval(cargarDatos, 30000); // Recarga cada 30 segundos
+        setInterval(cargarDatos, 30000);
     </script>
 </body>
 </html>
