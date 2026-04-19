@@ -22,10 +22,32 @@
             border: 1px solid #333;
             box-shadow: 0 0 20px rgba(0,255,65,0.1);
         }
+
+        /* BOTÓN DE REFRESCAR */
+        .btn-refresh {
+            background-color: transparent;
+            color: #00ff41;
+            border: 2px solid #00ff41;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+            text-transform: uppercase;
+            transition: 0.3s;
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px rgba(0,255,65,0.2);
+        }
+        .btn-refresh:hover {
+            background-color: #00ff41;
+            color: #000;
+            box-shadow: 0 0 20px #00ff41;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 10px;
         }
         th {
             background-color: #00ff41;
@@ -38,9 +60,12 @@
             border-bottom: 1px solid #333;
         }
         tr:hover { background: #252525; }
-        .rank-1 { color: #ffd700; font-weight: bold; font-size: 1.2em; } /* Oro */
-        .rank-2 { color: #c0c0c0; font-weight: bold; } /* Plata */
-        .rank-3 { color: #cd7f32; font-weight: bold; } /* Bronce */
+        .rank-1 { color: #ffd700; font-weight: bold; font-size: 1.2em; }
+        .rank-2 { color: #c0c0c0; font-weight: bold; }
+        .rank-3 { color: #cd7f32; font-weight: bold; }
+
+        /* Efecto de carga */
+        .loading { opacity: 0.5; pointer-events: none; }
     </style>
 </head>
 <body>
@@ -49,6 +74,8 @@
         <h1>PIXEL STORE - RANKING GLOBAL</h1>
         <p>Sincronizado en tiempo real con el sistema RPG Survival</p>
         
+        <button class="btn-refresh" onclick="cargarDatos()">🔄 Actualizar Datos</button>
+
         <table id="leaderboard">
             <thead>
                 <tr>
@@ -69,15 +96,16 @@
         const URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
 
         async function cargarDatos() {
+            const container = document.querySelector('.container');
+            container.classList.add('loading'); // Efecto visual de carga
+            
             try {
                 const response = await fetch(URL);
                 const text = await response.text();
-                // Limpiamos la respuesta de Google
                 const json = JSON.parse(text.substr(47).slice(0, -2));
                 const filas = json.table.rows;
                 const tbody = document.querySelector('#leaderboard tbody');
 
-                // Ordenar por Nivel (Columna index 2) de mayor a menor
                 filas.sort((a, b) => {
                     let nivelA = a.c[2] ? a.c[2].v : 0;
                     let nivelB = b.c[2] ? b.c[2].v : 0;
@@ -87,7 +115,6 @@
                 tbody.innerHTML = '';
                 
                 filas.forEach((fila, index) => {
-                    // Verificación de seguridad para celdas vacías
                     let nombre = fila.c[1] ? fila.c[1].v : "Desconocido";
                     let nivel  = fila.c[2] ? fila.c[2].v : 0;
                     let npc    = fila.c[4] ? fila.c[4].v : 0;
@@ -104,13 +131,14 @@
                     tbody.innerHTML += rowHtml;
                 });
             } catch (error) {
-                console.error("Error cargando datos de Google:", error);
+                console.error("Error:", error);
+            } finally {
+                container.classList.remove('loading');
             }
         }
 
-        // Ejecutar al cargar y cada 30 segundos
         cargarDatos();
-        setInterval(cargarDatos, 30000);
+        setInterval(cargarDatos, 30000); // Sigue actualizando solo cada 30s
     </script>
 </body>
 </html>
