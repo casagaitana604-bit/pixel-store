@@ -4,161 +4,140 @@
     <meta charset="UTF-8">
     <title>PIXEL STORE - RPG Dashboard</title>
     <style>
-        body {
-            background-color: #0b0b0b;
-            color: #e0e0e0;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            margin: 0; padding: 20px;
-        }
-        h1 { color: #00ff41; text-shadow: 0 0 10px #00ff41; margin-bottom: 5px; }
-        .container {
-            max-width: 1000px;
-            margin: auto;
-            background: #1a1a1a;
-            padding: 25px;
-            border-radius: 15px;
-            border: 1px solid #333;
-            box-shadow: 0 0 30px rgba(0,255,65,0.1);
-        }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-        .stat-card {
-            background: #252525;
-            padding: 15px;
-            border-radius: 10px;
-            border-left: 4px solid #00ff41;
-            text-align: left;
-        }
-        .stat-card h3 { margin: 0; font-size: 12px; text-transform: uppercase; color: #888; }
-        .stat-card p { margin: 5px 0 0; font-size: 24px; font-weight: bold; color: #00ff41; }
-        .search-box {
-            flex-grow: 1;
-            padding: 12px;
-            background: #000;
-            border: 1px solid #00ff41;
-            color: #00ff41;
-            border-radius: 5px;
-            font-size: 16px;
-            outline: none;
-        }
-        .btn-refresh {
-            background: transparent;
-            color: #00ff41;
-            border: 2px solid #00ff41;
-            padding: 10px 20px;
-            cursor: pointer;
-            border-radius: 5px;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-        .btn-refresh:hover { background: #00ff41; color: #000; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th { background: #00ff41; color: #000; padding: 12px; text-transform: uppercase; }
-        td { padding: 12px; border-bottom: 1px solid #333; text-align: center; }
-        .highlight { color: #00ff41; font-weight: bold; }
+        body { background-color: #0b0b0b; color: #e0e0e0; font-family: 'Segoe UI', sans-serif; text-align: center; padding: 20px; }
+        .container { max-width: 1000px; margin: auto; background: #1a1a1a; padding: 25px; border-radius: 15px; border: 1px solid #333; box-shadow: 0 0 30px rgba(0,255,65,0.1); }
+        h1 { color: #00ff41; text-shadow: 0 0 10px #00ff41; margin-bottom: 20px; }
+        
+        /* Stats */
+        .stats-row { display: flex; justify-content: space-around; margin-bottom: 25px; gap: 15px; }
+        .stat-box { background: #222; padding: 15px; border-radius: 10px; flex: 1; border-bottom: 3px solid #00ff41; }
+        .stat-box small { color: #888; font-size: 11px; text-transform: uppercase; }
+        .stat-box div { color: #fff; font-size: 24px; font-weight: bold; }
+
+        /* Buscador */
+        .search-container { margin-bottom: 20px; display: flex; gap: 10px; }
+        #searchInput { flex-grow: 1; padding: 12px; background: #000; border: 1px solid #00ff41; color: #00ff41; border-radius: 5px; outline: none; }
+        
+        /* Tabla */
+        table { width: 100%; border-collapse: collapse; background: #111; border-radius: 10px; overflow: hidden; }
+        th { background: #00ff41; color: #000; padding: 15px; text-transform: uppercase; font-size: 13px; }
+        td { padding: 12px; border-bottom: 1px solid #222; }
+        tr:hover { background: #1d1d1d; }
+
+        /* RANGOS Y MEDALLAS */
+        .badge { font-size: 18px; margin-right: 8px; }
+        .rango-txt { font-size: 10px; text-transform: uppercase; padding: 2px 6px; border-radius: 4px; font-weight: bold; margin-left: 10px; }
+        
+        .rango-recluta { color: #cd7f32; border: 1px solid #cd7f32; } /* Bronce */
+        .rango-veterano { color: #c0c0c0; border: 1px solid #c0c0c0; } /* Plata */
+        .rango-elite { color: #ffd700; border: 1px solid #ffd700; text-shadow: 0 0 5px #ffd700; } /* Oro */
+        .rango-leyenda { color: #00f2ff; border: 1px solid #00f2ff; text-shadow: 0 0 10px #00f2ff; animation: shine 2s infinite; } /* Diamante */
+
+        @keyframes shine { 0% { opacity: 0.7; } 50% { opacity: 1; } 100% { opacity: 0.7; } }
+        
+        .name-cell { display: flex; align-items: center; justify-content: center; color: #00ff41; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>PIXEL STORE - DASHBOARD</h1>
-        <p style="color: #888; margin-bottom: 25px;">Ranking y Estadísticas Globales</p>
+<div class="container">
+    <h1>PIXEL STORE - RANKING GLOBAL</h1>
 
-        <div class="stats-grid">
-            <div class="stat-card">
-                <h3>Supervivientes</h3>
-                <p id="stat-players">0</p>
-            </div>
-            <div class="stat-card">
-                <h3>Bajas Totales</h3>
-                <p id="stat-npcs">0</p>
-            </div>
-            <div class="stat-card">
-                <h3>Nivel Récord</h3>
-                <p id="stat-maxlevel">0</p>
-            </div>
-        </div>
-
-        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-            <input type="text" id="searchInput" class="search-box" placeholder="Buscar jugador..." onkeyup="filtrar()">
-            <button class="btn-refresh" onclick="cargarDatos()">🔄</button>
-        </div>
-
-        <table id="leaderboard">
-            <thead>
-                <tr>
-                    <th>Pos</th>
-                    <th>Jugador</th>
-                    <th>Nivel</th>
-                    <th>NPC Kills</th>
-                    <th>PVP Kills</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
+    <div class="stats-row">
+        <div class="stat-box"><small>Supervivientes</small><div id="totalP">0</div></div>
+        <div class="stat-box"><small>Bajas Totales</small><div id="totalN">0</div></div>
+        <div style="cursor:pointer; background:#00ff41; color:#000; padding:15px; border-radius:10px; font-weight:bold;" onclick="cargar()">🔄</div>
     </div>
 
-    <script>
-        const SHEET_ID = '1B_pbsnPwrVCwwMXEag7ILOdpav_gss2qVezE5yS-DUQ';
-        const URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
-        let datosGlobales = [];
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Escribe el nombre de un superviviente..." onkeyup="filtrar()">
+    </div>
 
-        async function cargarDatos() {
-            try {
-                const res = await fetch(URL);
-                const text = await res.text();
-                const json = JSON.parse(text.substr(47).slice(0, -2));
-                datosGlobales = json.table.rows;
-                
-                actualizarStats(datosGlobales);
-                mostrarTabla(datosGlobales);
-            } catch (err) { console.error("Error cargando datos", err); }
-        }
+    <table id="tablaRank">
+        <thead>
+            <tr>
+                <th>Pos</th>
+                <th>Superviviente / Rango</th>
+                <th>Nivel</th>
+                <th>NPC</th>
+                <th>PVP</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
 
-        function actualizarStats(filas) {
-            let totalNPC = 0;
-            let maxLvl = 0;
-            filas.forEach(f => {
-                totalNPC += (f.c[4] ? f.c[4].v : 0);
-                let l = (f.c[2] ? f.c[2].v : 0);
-                if(l > maxLvl) maxLvl = l;
-            });
-            document.getElementById('stat-players').innerText = filas.length;
-            document.getElementById('stat-npcs').innerText = totalNPC;
-            document.getElementById('stat-maxlevel').innerText = maxLvl;
-        }
+<script>
+    const SHEET_ID = '1B_pbsnPwrVCwwMXEag7ILOdpav_gss2qVezE5yS-DUQ';
+    const URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
+    let globalData = [];
 
-        function mostrarTabla(filas) {
-            const tbody = document.querySelector('#leaderboard tbody');
-            // Ordenar por nivel (columna 2)
-            filas.sort((a,b) => (b.c[2] ? b.c[2].v : 0) - (a.c[2] ? a.c[2].v : 0));
-            
-            tbody.innerHTML = '';
-            filas.forEach((f, i) => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${i+1}</td>
-                        <td class="highlight">${f.c[1] ? f.c[1].v : "---"}</td>
-                        <td>${f.c[2] ? f.c[2].v : 0}</td>
-                        <td>${f.c[4] ? f.c[4].v : 0}</td>
-                        <td>${f.c[5] ? f.c[5].v : 0}</td>
-                    </tr>`;
-            });
-        }
+    async function cargar() {
+        try {
+            const res = await fetch(URL);
+            const raw = await res.text();
+            const json = JSON.parse(raw.substr(47).slice(0, -2));
+            globalData = json.table.rows;
+            actualizar(globalData);
+        } catch (e) { console.log("Error de conexión"); }
+    }
 
-        function filtrar() {
-            let term = document.getElementById('searchInput').value.toLowerCase();
-            let filtrados = datosGlobales.filter(f => 
-                (f.c[1] ? f.c[1].v.toLowerCase() : "").includes(term)
-            );
-            mostrarTabla(filtrados);
-        }
+    function obtenerRango(nivel) {
+        if (nivel >= 51) return { medalla: "💎", clase: "rango-leyenda", titulo: "Leyenda" };
+        if (nivel >= 31) return { medalla: "🥇", clase: "rango-elite", titulo: "Élite" };
+        if (nivel >= 11) return { medalla: "🥈", clase: "rango-veterano", titulo: "Veterano" };
+        return { medalla: "🥉", clase: "rango-recluta", titulo: "Recluta" };
+    }
 
-        cargarDatos();
-    </script>
+    function actualizar(filas) {
+        const tbody = document.querySelector("#tablaRank tbody");
+        let sumaNPC = 0;
+        
+        filas.sort((a,b) => {
+            let nA = (a.c[2] && a.c[2].v) ? a.c[2].v : 0;
+            let nB = (b.c[2] && b.c[2].v) ? b.c[2].v : 0;
+            return nB - nA;
+        });
+
+        tbody.innerHTML = "";
+        filas.forEach((f, i) => {
+            let nom = (f.c[1] && f.c[1].v) ? f.c[1].v : "---";
+            let lvl = (f.c[2] && f.c[2].v) ? f.c[2].v : 0;
+            let npc = (f.c[4] && f.c[4].v) ? f.c[4].v : 0;
+            let pvp = (f.c[5] && f.c[5].v) ? f.c[5].v : 0;
+            sumaNPC += npc;
+
+            let rango = obtenerRango(lvl);
+
+            tbody.innerHTML += `<tr>
+                <td>${i+1}</td>
+                <td>
+                    <div class="name-cell">
+                        <span class="badge">${rango.medalla}</span>
+                        <span>${nom}</span>
+                        <span class="rango-txt ${rango.clase}">${rango.titulo}</span>
+                    </div>
+                </td>
+                <td style="font-weight:bold; font-size:18px;">${lvl}</td>
+                <td>${npc}</td>
+                <td>${pvp}</td>
+            </tr>`;
+        });
+
+        document.getElementById("totalP").innerText = filas.length;
+        document.getElementById("totalN").innerText = sumaNPC.toLocaleString();
+    }
+
+    function filtrar() {
+        let txt = document.getElementById("searchInput").value.toLowerCase();
+        let filtrados = globalData.filter(f => {
+            let n = (f.c[1] && f.c[1].v) ? f.c[1].v.toLowerCase() : "";
+            return n.includes(txt);
+        });
+        actualizar(filtrados);
+    }
+
+    cargar();
+</script>
 </body>
 </html>
