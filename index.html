@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>PIXEL STORE - RPG Survival Leaderboard</title>
+    <style>
+        /* ESTILO GAMER SURVIVAL */
+        body {
+            background-color: #0b0b0b;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            margin: 0; padding: 20px;
+        }
+        h1 { color: #00ff41; text-shadow: 0 0 10px #00ff41; }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #333;
+            box-shadow: 0 0 20px rgba(0,255,65,0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th {
+            background-color: #00ff41;
+            color: #000;
+            padding: 12px;
+            text-transform: uppercase;
+        }
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #333;
+        }
+        tr:hover { background: #252525; }
+        .rank-1 { color: #ffd700; font-weight: bold; } /* Oro */
+        .rank-2 { color: #c0c0c0; font-weight: bold; } /* Plata */
+        .rank-3 { color: #cd7f32; font-weight: bold; } /* Bronce */
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>PIXEL STORE - RANKING GLOBAL</h1>
+        <p>Sincronizado en tiempo real con el sistema RPG Survival</p>
+        
+        <table id="leaderboard">
+            <thead>
+                <tr>
+                    <th>Pos</th>
+                    <th>Jugador</th>
+                    <th>Nivel</th>
+                    <th>Bajas (NPC)</th>
+                    <th>PVP Kills</th>
+                </tr>
+            </thead>
+            <tbody>
+                </tbody>
+        </table>
+    </div>
+
+    <script>
+        // PEGA AQUÍ TU ID DE GOOGLE SHEET
+        const SHEET_ID = '1B_pbsnPwrVCwwMXEag7ILOdpav_gss2qVezE5yS-DUQ';
+        const URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
+
+        async function cargarDatos() {
+            try {
+                const response = await fetch(URL);
+                const text = await response.text();
+                const json = JSON.parse(text.substr(47).slice(0, -2));
+                const filas = json.table.rows;
+                const tbody = document.querySelector('#leaderboard tbody');
+
+                // Ordenar por Nivel (Columna C es index 2)
+                filas.sort((a, b) => b.c[2].v - a.c[2].v);
+
+                tbody.innerHTML = '';
+                filas.forEach((fila, index) => {
+                    let rowHtml = `
+                        <tr class="rank-${index + 1}">
+                            <td>${index + 1}</td>
+                            <td>${fila.c[1].v}</td>
+                            <td>${fila.c[2].v}</td>
+                            <td>${fila.c[4].v}</td>
+                            <td>${fila.c[5] ? fila.c[5].v : 0}</td>
+                        </tr>`;
+                    tbody.innerHTML += rowHtml;
+                });
+            } catch (error) {
+                console.error("Error cargando datos:", error);
+            }
+        }
+
+        cargarDatos();
+        setInterval(cargarDatos, 30000); // Recarga cada 30 segundos
+    </script>
+</body>
+</html>
