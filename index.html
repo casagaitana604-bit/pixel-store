@@ -98,7 +98,6 @@
         .data-item { background: #222; padding: 10px; border-radius: 8px; border: 1px solid #333; }
         .data-item small { color: #00ff41; font-size: 10px; text-transform: uppercase; display: block; margin-bottom: 5px; }
         .data-item span { font-size: 18px; font-weight: bold; color: #fff; }
-        .uuid-txt { font-family: monospace; font-size: 9px; color: #555; margin-top: 15px; word-break: break-all; }
     </style>
 </head>
 <body>
@@ -148,8 +147,7 @@
             <div class="data-item"><small>NPC Kills</small><span id="m-npc">0</span></div>
             <div class="data-item"><small>XP Total</small><span id="m-xp" style="color:#ffd700;">0</span></div>
         </div>
-
-        <div class="uuid-txt">ID: <span id="m-uuid">0000-0000-0000-0000</span></div>
+        
         <p style="font-size:11px; color:#444; margin-top:15px; border-top:1px solid #222; padding-top:10px;">EXPEDIENTE OFICIAL DE SUPERVIVENCIA - PIXEL STORE</p>
     </div>
 </div>
@@ -201,7 +199,6 @@
         let sn = 0; tbody.innerHTML = "";
         
         f.forEach((r, i) => {
-            let uuid = r.c[0]?.v || "Desconocido";
             let nom  = r.c[1]?.v || "---";
             let lvl  = r.c[2]?.v || 0;
             let xp   = r.c[3]?.v || 0;
@@ -212,7 +209,7 @@
             
             let row = document.createElement("tr");
             row.innerHTML = `<td>${i+1}</td><td><div class="name-cell">${rg.m} ${nom} <span class="rango-txt ${rg.c}">${rg.t}</span></div></td><td>${lvl}</td><td>${npc}</td><td>${pvp}</td>`;
-            row.onclick = () => verFicha(nom, lvl, pvp, npc, xp, uuid, rg.t, rg.c);
+            row.onclick = () => verFicha(nom, lvl, pvp, npc, xp, rg.t, rg.c);
             tbody.appendChild(row);
         });
 
@@ -222,14 +219,13 @@
         document.getElementById("goal-bar").style.width = Math.min((sn/META)*100, 100) + "%";
     }
 
-    function verFicha(nom, lvl, pvp, npc, xp, uuid, rt, rc) {
+    function verFicha(nom, lvl, pvp, npc, xp, rt, rc) {
         beep(400);
         document.getElementById("m-nom").innerText = nom;
         document.getElementById("m-lvl").innerText = lvl;
         document.getElementById("m-pvp").innerText = pvp;
         document.getElementById("m-npc").innerText = npc;
         document.getElementById("m-xp").innerText = xp.toLocaleString();
-        document.getElementById("m-uuid").innerText = uuid;
         document.getElementById("m-rango").innerText = rt;
         document.getElementById("m-rango").className = "rango-txt " + rc;
         document.getElementById("pModal").style.display = "block";
