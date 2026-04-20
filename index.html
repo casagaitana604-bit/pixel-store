@@ -3,187 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PIXEL STORE - RPG SURVIVAL HUB</title>
+    <title>PIXEL RPG - Dashboard</title>
     <style>
-        :root {
-            --primary: #ff4500; /* Naranja supervivencia */
-            --bg: #050505;
-            --card: #121212;
-            --hero: #e0b0ff;
-            --legend: #ff00ff;
-        }
+        :root { --primary: #ff4500; --bg: #0a0a0a; --card: #161616; --text: #e0e0e0; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); color: var(--text); margin: 0; }
+        
+        /* NAVBAR */
+        .main-nav { background: #000; display: flex; justify-content: space-between; align-items: center; padding: 15px 50px; border-bottom: 2px solid var(--primary); position: sticky; top: 0; z-index: 1000; }
+        .nav-logo { color: #fff; font-weight: bold; font-size: 1.4rem; letter-spacing: 2px; }
+        .nav-logo span { color: var(--primary); }
+        .nav-links a { color: #ccc; text-decoration: none; margin-left: 25px; font-weight: bold; font-size: 0.9rem; }
+        .nav-active { color: var(--primary) !important; border-bottom: 2px solid var(--primary); padding-bottom: 5px; }
 
-        body {
-            font-family: 'Courier New', Courier, monospace;
-            background-color: var(--bg);
-            color: #ccc;
-            margin: 0;
-            padding: 20px;
-        }
+        /* CONTENIDO */
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 40px; }
+        .stat-box { background: var(--card); padding: 25px; border-radius: 10px; text-align: center; border-bottom: 3px solid var(--primary); }
+        .stat-box h2 { font-size: 2.5rem; margin: 10px 0; color: #fff; }
 
-        /* --- ESTILOS DEL DASHBOARD --- */
-        .main-header {
-            text-align: center;
-            border: 2px solid var(--primary);
-            padding: 20px;
-            margin-bottom: 30px;
-            background: rgba(255, 69, 0, 0.1);
-        }
-
-        .main-header h1 { color: var(--primary); margin: 0; font-size: 2.5rem; text-shadow: 2px 2px #000; }
-
-        .quick-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        .stat-box {
-            background: var(--card);
-            padding: 20px;
-            border-left: 4px solid var(--primary);
-            text-align: center;
-        }
-
-        .stat-box h2 { font-size: 2rem; color: #fff; margin: 10px 0; }
-
-        /* --- LISTA DE SUPERVIVIENTES --- */
-        .survival-list {
-            width: 100%;
-            border-collapse: collapse;
-            background: var(--card);
-        }
-
-        .survival-list th {
-            background: #222;
-            color: var(--primary);
-            padding: 15px;
-            text-align: left;
-        }
-
-        .survival-list td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #222;
-        }
-
-        .rango-tag {
-            padding: 4px 8px;
-            border-radius: 3px;
-            font-weight: bold;
-            font-size: 0.75rem;
-        }
-
-        /* Colores de Rango según tu Script LSL */
-        .HEROE { background: #ffd700; color: #000; }
-        .LEGENDARIO { background: #ff00ff; color: #fff; }
-        .MAESTRO { background: #00d4ff; color: #000; }
-        .ELITE { background: #32cd32; color: #000; }
-        .SOLDADO { background: #808080; color: #fff; }
-
-        .btn-page {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 10px 20px;
-            background: var(--primary);
-            color: #fff;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .muerto { color: #ff0000; font-weight: bold; text-decoration: line-through; }
+        .survival-table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 10px; overflow: hidden; }
+        .survival-table th { background: #222; color: var(--primary); padding: 15px; text-align: left; }
+        .survival-table td { padding: 15px; border-bottom: 1px solid #282828; }
+        
+        .rango { padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; color: #000; }
+        .HEROE { background: #ffd700; } .MAESTRO { background: #00d4ff; } .SOLDADO { background: #888; }
+        .loading { text-align: center; padding: 50px; color: var(--primary); }
     </style>
 </head>
 <body>
 
-<header class="main-header">
-    <h1>SISTEMA RPG CLOUD PRO</h1>
-    <p>CONEXIÓN ESTABLE CON SECOND LIFE</p>
-    <a href="facciones.html" class="btn-page">VER FACCIONES Y TOPS →</a>
-</header>
+<nav class="main-nav">
+    <div class="nav-logo">PIXEL RPG <span>SURVIVAL</span></div>
+    <div class="nav-links">
+        <a href="index.html" class="nav-active">INICIO</a>
+        <a href="facciones.html">FACCIONES / TOPS</a>
+    </div>
+</nav>
 
-<div class="quick-stats">
-    <div class="stat-box">
-        <span>TOTAL SUPERVIVIENTES</span>
-        <h2 id="total-jugadores">0</h2>
+<div class="container">
+    <div class="stats-grid">
+        <div class="stat-box"><span>JUGADORES</span><h2 id="count-jug">0</h2></div>
+        <div class="stat-box"><span>ZOMBIES ABATIDOS</span><h2 id="count-npc">0</h2></div>
+        <div class="stat-box"><span>BAJAS PVP</span><h2 id="count-pvp">0</h2></div>
     </div>
-    <div class="stat-box">
-        <span>BAJAS TOTALES (NPC)</span>
-        <h2 id="total-npc">0</h2>
-    </div>
-    <div class="stat-box">
-        <span>MUERTES PVP</span>
-        <h2 id="total-pvp">0</h2>
-    </div>
+
+    <table class="survival-table">
+        <thead>
+            <tr>
+                <th>JUGADOR</th>
+                <th>RANGO</th>
+                <th>NIVEL</th>
+                <th>XP TOTAL</th>
+                <th>KILLS (NPC/PVP)</th>
+            </tr>
+        </thead>
+        <tbody id="table-players"><tr><td colspan="5" class="loading">Sincronizando datos...</td></tr></tbody>
+    </table>
 </div>
 
-<table class="survival-list">
-    <thead>
-        <tr>
-            <th>SUPERVIVIENTE</th>
-            <th>RANGO</th>
-            <th>NIVEL</th>
-            <th>XP</th>
-            <th>KILLS (Z/PVP)</th>
-            <th>ESTADO</th>
-        </tr>
-    </thead>
-    <tbody id="tabla-body">
-        </tbody>
-</table>
-
 <script>
-    const SCRIPT_URL = "TU_URL_DE_APPS_SCRIPT";
-
-    async function cargarGlobal() {
+    const API = "REEMPLAZA_CON_TU_URL";
+    async function fetchData() {
         try {
-            const response = await fetch(SCRIPT_URL);
-            const data = await response.json();
-            
-            let totalNPC = 0;
-            let totalPVP = 0;
-            let totalJug = 0;
-            const tbody = document.getElementById('tabla-body');
-            tbody.innerHTML = '';
+            const res = await fetch(API);
+            const data = await res.json();
+            let players = [], npc = 0, pvp = 0;
+            const body = document.getElementById('table-players');
+            body.innerHTML = '';
 
-            data.forEach(faccion => {
-                faccion.lista_integrantes.forEach(j => {
-                    totalJug++;
-                    totalNPC += parseInt(j.npc || 0);
-                    totalPVP += parseInt(j.pvp || 0);
-
-                    // Lógica de rango igual a tu script LSL
-                    let rango = "RECLUTA";
-                    const n = parseInt(j.nivel);
-                    if (n >= 90) rango = "HEROE";
-                    else if (n >= 70) rango = "LEGENDARIO";
-                    else if (n >= 40) rango = "MAESTRO";
-                    else if (n >= 20) rango = "ELITE";
-                    else if (n >= 10) rango = "SOLDADO";
-
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${j.nombre}</td>
-                        <td><span class="rango-tag ${rango}">${rango}</span></td>
-                        <td>${j.nivel}</td>
-                        <td>${j.xp}</td>
-                        <td>💀 ${j.npc} / ⚔️ ${j.pvp}</td>
-                        <td><span class="online">ACTIVO</span></td>
-                    `;
-                    tbody.appendChild(tr);
+            data.forEach(f => {
+                f.lista_integrantes.forEach(j => {
+                    players.push(j);
+                    npc += parseInt(j.npc); pvp += parseInt(j.pvp);
+                    let rng = j.nivel >= 90 ? "HEROE" : j.nivel >= 40 ? "MAESTRO" : "SOLDADO";
+                    body.innerHTML += `
+                        <tr>
+                            <td>${j.nombre}</td>
+                            <td><span class="rango ${rng}">${rng}</span></td>
+                            <td>${j.nivel}</td>
+                            <td>${j.xp}</td>
+                            <td>💀 ${j.npc} / ⚔️ ${j.pvp}</td>
+                        </tr>`;
                 });
             });
-
-            document.getElementById('total-jugadores').innerText = totalJug;
-            document.getElementById('total-npc').innerText = totalNPC;
-            document.getElementById('total-pvp').innerText = totalPVP;
-
+            document.getElementById('count-jug').innerText = players.length;
+            document.getElementById('count-npc').innerText = npc;
+            document.getElementById('count-pvp').innerText = pvp;
         } catch (e) { console.error(e); }
     }
-
-    cargarGlobal();
-    setInterval(cargarGlobal, 30000);
+    fetchData();
+    setInterval(fetchData, 30000);
 </script>
-
 </body>
 </html>
