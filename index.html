@@ -3,96 +3,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PIXEL RPG - Dashboard</title>
+    <title>PIXEL RPG - Cyber Survival</title>
     <style>
-        :root { --primary: #ff4500; --bg: #0a0a0a; --card: #161616; --text: #e0e0e0; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); color: var(--text); margin: 0; }
+        :root { 
+            --neon-green: #39FF14; 
+            --neon-orange: #FF5F1F; 
+            --bg: #000000; 
+            --card: #0d0d0d; 
+            --text: #ffffff; 
+        }
         
-        /* NAVBAR */
-        .main-nav { background: #000; display: flex; justify-content: space-between; align-items: center; padding: 15px 50px; border-bottom: 2px solid var(--primary); position: sticky; top: 0; z-index: 1000; }
-        .nav-logo { color: #fff; font-weight: bold; font-size: 1.4rem; letter-spacing: 2px; }
-        .nav-logo span { color: var(--primary); }
-        .nav-links a { color: #ccc; text-decoration: none; margin-left: 25px; font-weight: bold; font-size: 0.9rem; }
-        .nav-active { color: var(--primary) !important; border-bottom: 2px solid var(--primary); padding-bottom: 5px; }
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            margin: 0; 
+            text-transform: uppercase;
+        }
 
-        /* CONTENIDO */
-        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 40px; }
-        .stat-box { background: var(--card); padding: 25px; border-radius: 10px; text-align: center; border-bottom: 3px solid var(--primary); }
-        .stat-box h2 { font-size: 2.5rem; margin: 10px 0; color: #fff; }
+        /* NAVBAR NEO */
+        .main-nav { 
+            background: #000; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 15px 50px; 
+            border-bottom: 2px solid var(--neon-orange);
+            box-shadow: 0 0 15px var(--neon-orange);
+            position: sticky; top: 0; z-index: 1000; 
+        }
+        .nav-logo { color: #fff; font-weight: bold; font-size: 1.4rem; letter-spacing: 3px; }
+        .nav-logo span { color: var(--neon-green); text-shadow: 0 0 10px var(--neon-green); }
+        .nav-links a { color: #ccc; text-decoration: none; margin-left: 25px; font-weight: bold; font-size: 0.9rem; transition: 0.3s; }
+        .nav-links a:hover { color: var(--neon-green); }
 
-        .survival-table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 10px; overflow: hidden; }
-        .survival-table th { background: #222; color: var(--primary); padding: 15px; text-align: left; }
-        .survival-table td { padding: 15px; border-bottom: 1px solid #282828; }
-        
-        .rango { padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; color: #000; }
-        .HEROE { background: #ffd700; } .MAESTRO { background: #00d4ff; } .SOLDADO { background: #888; }
-        .loading { text-align: center; padding: 50px; color: var(--primary); }
+        .container { 
+            max-width: 1300px; margin: 30px auto; padding: 0 20px; 
+            display: grid; grid-template-columns: 1fr 350px; gap: 25px; 
+        }
+
+        /* STATS BOXES */
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
+        .stat-box { 
+            background: var(--card); padding: 20px; border-radius: 5px; 
+            text-align: center; border: 1px solid #222;
+            box-shadow: inset 0 0 10px rgba(57, 255, 20, 0.1);
+        }
+        .stat-box span { color: var(--neon-green); font-size: 0.8rem; letter-spacing: 1px; }
+        .stat-box h2 { font-size: 2.2rem; margin: 5px 0; color: #fff; text-shadow: 0 0 5px #fff; }
+
+        /* TABLA SURVIVAL */
+        .survival-table { width: 100%; border-collapse: separate; border-spacing: 0 8px; cursor: pointer; }
+        .survival-table th { color: var(--neon-orange); padding: 12px; text-align: left; font-size: 0.8rem; border-bottom: 1px solid var(--neon-orange); }
+        .survival-table td { background: var(--card); padding: 15px; border-top: 1px solid #222; border-bottom: 1px solid #222; }
+        .survival-table tr:hover td { border-color: var(--neon-green); color: var(--neon-green); }
+
+        /* LOG DE EVENTOS NEÓN */
+        .event-log { 
+            background: var(--card); padding: 20px; border-radius: 5px; 
+            border: 1px solid var(--neon-green); box-shadow: 0 0 10px rgba(57, 255, 20, 0.2);
+            height: fit-content; max-height: 600px; overflow-y: hidden;
+        }
+        .event-log h3 { color: var(--neon-green); font-size: 1rem; margin-top: 0; text-shadow: 0 0 5px var(--neon-green); }
+        .event-item { font-size: 0.8rem; padding: 12px 0; border-bottom: 1px solid #222; animation: fadeIn 0.5s ease; }
+        .event-time { color: var(--neon-orange); font-weight: bold; margin-right: 8px; }
+        .alert-pvp { color: #fff; background: rgba(255, 0, 0, 0.2); border-left: 3px solid red; padding: 5px; animation: pulse 1s infinite; }
+
+        /* MODAL PERFIL */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); align-items: center; justify-content: center; }
+        .modal-content { 
+            background: #000; padding: 40px; border-radius: 5px; 
+            border: 2px solid var(--neon-green); box-shadow: 0 0 30px var(--neon-green);
+            width: 90%; max-width: 400px; text-align: center; position: relative; 
+        }
+        .profile-img { width: 150px; height: 150px; border-radius: 5px; border: 2px solid var(--neon-orange); margin-bottom: 20px; box-shadow: 0 0 15px var(--neon-orange); }
+        .xp-bar-container { background: #111; height: 12px; border-radius: 0; margin: 20px 0; border: 1px solid #333; }
+        .xp-bar-fill { background: var(--neon-green); height: 100%; box-shadow: 0 0 10px var(--neon-green); width: 0%; transition: 1.5s; }
+
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: translateX(0); } }
+        @media (max-width: 900px) { .container { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
 <nav class="main-nav">
-    <div class="nav-logo">PIXEL RPG <span>SURVIVAL</span></div>
+    <div class="nav-logo">PIXEL <span>SURVIVAL</span></div>
     <div class="nav-links">
-        <a href="index.html" class="nav-active">INICIO</a>
+        <a href="index.html" style="color:var(--neon-green)">DASHBOARD</a>
         <a href="facciones.html">FACCIONES / TOPS</a>
     </div>
 </nav>
 
 <div class="container">
-    <div class="stats-grid">
-        <div class="stat-box"><span>JUGADORES</span><h2 id="count-jug">0</h2></div>
-        <div class="stat-box"><span>ZOMBIES ABATIDOS</span><h2 id="count-npc">0</h2></div>
-        <div class="stat-box"><span>BAJAS PVP</span><h2 id="count-pvp">0</h2></div>
+    <div class="main-content">
+        <div class="stats-grid">
+            <div class="stat-box"><span>SISTEMA JUGADORES</span><h2 id="count-jug">0</h2></div>
+            <div class="stat-box"><span>VIRUS ELIMINADO</span><h2 id="count-npc">0</h2></div>
+            <div class="stat-box"><span>AVATARES CAÍDOS</span><h2 id="count-pvp">0</h2></div>
+        </div>
+
+        <table class="survival-table">
+            <thead>
+                <tr>
+                    <th>IDENTIDAD</th>
+                    <th>NIVEL</th>
+                    <th>ESTADÍSTICAS</th>
+                </tr>
+            </thead>
+            <tbody id="table-players"></tbody>
+        </table>
     </div>
 
-    <table class="survival-table">
-        <thead>
-            <tr>
-                <th>JUGADOR</th>
-                <th>RANGO</th>
-                <th>NIVEL</th>
-                <th>XP TOTAL</th>
-                <th>KILLS (NPC/PVP)</th>
-            </tr>
-        </thead>
-        <tbody id="table-players"><tr><td colspan="5" class="loading">Sincronizando datos...</td></tr></tbody>
-    </table>
+    <div class="event-log">
+        <h3>📂 REGISTRO DE ACTIVIDAD_</h3>
+        <div id="log-content"></div>
+    </div>
+</div>
+
+<div id="playerModal" class="modal">
+    <div class="modal-content">
+        <span onclick="closeModal()" style="position:absolute; top:15px; right:20px; cursor:pointer; color:var(--neon-orange)">[CERRAR]</span>
+        <img id="p-img" src="" class="profile-img">
+        <h2 id="p-name" style="margin:5px 0; color:var(--neon-green); letter-spacing:2px;">NOMBRE</h2>
+        <p id="p-rango" style="font-weight:bold; color:var(--neon-orange); font-size:0.8rem;">RANGO_CARGANDO</p>
+        <div class="xp-bar-container"><div id="p-xp-fill" class="xp-bar-fill"></div></div>
+        <p id="p-xp-text" style="font-size:0.7rem; letter-spacing:1px;">XP: 0 / 0</p>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:20px;">
+            <div style="background:#0a0a0a; padding:10px; border: 1px solid #222;">
+                <small style="color:var(--neon-green)">NPC_KILLS</small><br><strong id="p-npc" style="font-size:1.2rem;">0</strong>
+            </div>
+            <div style="background:#0a0a0a; padding:10px; border: 1px solid #222;">
+                <small style="color:var(--neon-orange)">PVP_KILLS</small><br><strong id="p-pvp" style="font-size:1.2rem;">0</strong>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
-    const API = "https://script.google.com/macros/s/AKfycby1ttmSQQZwIORCcPe-xsnrhym2kNBxKFt1vlrozut7iVq7hHsNvdxUjtDIwaWZiFsD/exec";
-    async function fetchData() {
+    const API = "REEMPLAZA_CON_TU_URL"; 
+    let cachePlayers = [];
+
+    async function update() {
         try {
             const res = await fetch(API);
             const data = await res.json();
-            let players = [], npc = 0, pvp = 0;
             const body = document.getElementById('table-players');
             body.innerHTML = '';
+            let list = [], n_total = 0, p_total = 0;
 
             data.forEach(f => {
                 f.lista_integrantes.forEach(j => {
-                    players.push(j);
-                    npc += parseInt(j.npc); pvp += parseInt(j.pvp);
-                    let rng = j.nivel >= 90 ? "HEROE" : j.nivel >= 40 ? "MAESTRO" : "SOLDADO";
+                    list.push(j);
+                    n_total += parseInt(j.npc || 0);
+                    p_total += parseInt(j.pvp || 0);
                     body.innerHTML += `
-                        <tr>
-                            <td>${j.nombre}</td>
-                            <td><span class="rango ${rng}">${rng}</span></td>
-                            <td>${j.nivel}</td>
-                            <td>${j.xp}</td>
-                            <td>💀 ${j.npc} / ⚔️ ${j.pvp}</td>
+                        <tr onclick="openProfile('${j.uuid}')">
+                            <td>
+                                <img src="https://secondlife.com/app/image/${j.uuid}/1" style="width:30px; height:30px; border:1px solid var(--neon-green); vertical-align:middle; margin-right:12px;"> 
+                                ${j.nombre}
+                            </td>
+                            <td><span style="color:var(--neon-green)">LVL ${j.nivel}</span></td>
+                            <td style="color:#888; font-size:0.8rem">💀 ${j.npc}  |  ⚔️ ${j.pvp}</td>
                         </tr>`;
                 });
             });
-            document.getElementById('count-jug').innerText = players.length;
-            document.getElementById('count-npc').innerText = npc;
-            document.getElementById('count-pvp').innerText = pvp;
-        } catch (e) { console.error(e); }
+            
+            if(cachePlayers.length > 0) compareData(list);
+            cachePlayers = list;
+            document.getElementById('count-jug').innerText = list.length;
+            document.getElementById('count-npc').innerText = n_total;
+            document.getElementById('count-pvp').innerText = p_total;
+        } catch (e) { console.log("Error sincronización."); }
     }
-    fetchData();
-    setInterval(fetchData, 30000);
+
+    function compareData(newList) {
+        newList.forEach(nj => {
+            let old = cachePlayers.find(o => o.uuid === nj.uuid);
+            if(old) {
+                if(parseInt(nj.nivel) > parseInt(old.nivel)) {
+                    addLog(`🌟 NIVEL UP: ${nj.nombre} ALCANZÓ EL NIVEL ${nj.nivel}`, "green");
+                }
+                if(parseInt(nj.pvp) > parseInt(old.pvp)) {
+                    addLog(`⚔️ PVP_KILL: ${nj.nombre} HA ELIMINADO A UN OBJETIVO`, "orange");
+                }
+            }
+        });
+    }
+
+    function addLog(msg, colorType) {
+        const log = document.getElementById('log-content');
+        const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
+        const color = colorType === "green" ? "var(--neon-green)" : "var(--neon-orange)";
+        
+        log.innerHTML = `
+            <div class="event-item">
+                <span class="event-time">[${time}]</span>
+                <span style="color:${color}">${msg}</span>
+            </div>` + log.innerHTML;
+        
+        if(log.children.length > 10) log.lastChild.remove();
+    }
+
+    function openProfile(uuid) {
+        const p = cachePlayers.find(x => x.uuid === uuid);
+        if(!p) return;
+        document.getElementById('p-img').src = `https://secondlife.com/app/image/${uuid}/1`;
+        document.getElementById('p-name').innerText = p.nombre;
+        document.getElementById('p-npc').innerText = p.npc;
+        document.getElementById('p-pvp').innerText = p.pvp;
+        
+        const req = parseInt(p.nivel) * 500;
+        const pct = (parseInt(p.xp) / req) * 100;
+        document.getElementById('p-xp-fill').style.width = pct + "%";
+        document.getElementById('p-xp-text').innerText = `XP CARGADA: ${p.xp} / ${req} [${Math.round(pct)}%]`;
+        
+        let rango = p.nivel >= 90 ? "HEROE_SUPREMO" : p.nivel >= 40 ? "MAESTRO_GUERRERO" : "SUPERVIVIENTE";
+        document.getElementById('p-rango').innerText = ">> " + rango + " <<";
+        document.getElementById('playerModal').style.display = 'flex';
+    }
+
+    function closeModal() { document.getElementById('playerModal').style.display = 'none'; }
+
+    update();
+    setInterval(update, 20000); // Sincronización cada 20 segundos
 </script>
 </body>
 </html>
