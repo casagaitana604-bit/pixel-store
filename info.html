@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PIXEL RPG - Manual de Sistema</title>
+    <style>
+        :root { 
+            --neon-green: #39FF14; 
+            --neon-orange: #FF5F1F; 
+            --bg-overlay: rgba(0, 0, 0, 0.9);
+            --card: rgba(20, 20, 20, 0.95);
+        }
+        
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background-image: linear-gradient(var(--bg-overlay), var(--bg-overlay)), url('https://w0.peakpx.com/wallpaper/538/103/HD-wallpaper-cs-go-cyberpunk-overpass-counter-strike-global-offensive.jpg');
+            background-size: cover; background-position: center; background-attachment: fixed;
+            color: #eee; margin: 0; text-transform: uppercase; line-height: 1.6;
+        }
+
+        .main-nav { 
+            background: rgba(0, 0, 0, 0.95); display: flex; justify-content: space-between; align-items: center; padding: 15px 50px; 
+            border-bottom: 2px solid var(--neon-orange); box-shadow: 0 0 15px var(--neon-orange);
+            position: sticky; top: 0; z-index: 1000; 
+        }
+        .nav-logo { color: #fff; font-weight: bold; font-size: 1.4rem; letter-spacing: 2px; }
+        .nav-links a { color: #ccc; text-decoration: none; margin-left: 25px; font-weight: bold; font-size: 0.9rem; }
+        .nav-active { color: var(--neon-green) !important; border-bottom: 2px solid var(--neon-green); padding-bottom: 5px; }
+
+        .hero-header { text-align: center; padding: 60px 20px; }
+        .main-title { font-size: 4rem; font-weight: 900; color: #fff; text-shadow: 0 0 20px var(--neon-green); margin: 0; }
+
+        .container { max-width: 1000px; margin: 0 auto 50px auto; padding: 0 20px; }
+
+        .info-section { 
+            background: var(--card); border: 1px solid #333; border-left: 5px solid var(--neon-green);
+            padding: 30px; margin-bottom: 30px; border-radius: 5px; backdrop-filter: blur(10px);
+        }
+
+        h2 { color: var(--neon-green); border-bottom: 1px solid #333; padding-bottom: 10px; letter-spacing: 2px; }
+        h3 { color: var(--neon-orange); margin-top: 25px; }
+        p { font-size: 0.95rem; color: #bbb; text-transform: none; } /* Texto normal para lectura */
+
+        .highlight { color: var(--neon-green); font-weight: bold; }
+        ul { list-style: none; padding: 0; }
+        li { margin-bottom: 10px; border-bottom: 1px solid #222; padding-bottom: 5px; }
+        li::before { content: "> "; color: var(--neon-green); }
+    </style>
+</head>
+<body>
+
+<nav class="main-nav">
+    <div class="nav-logo">PIXEL <span>SURVIVAL</span></div>
+    <div class="nav-links">
+        <a href="index.html">INICIO</a>
+        <a href="facciones.html">FACCIONES</a>
+        <a href="info.html" class="nav-active">INFORMACIÓN</a>
+    </div>
+</nav>
+
+<header class="hero-header">
+    <h1 class="main-title">DATABASE_INFO</h1>
+    <div style="background:var(--neon-green); color:#000; display:inline-block; padding:5px 20px; font-weight:bold; margin-top:10px;">
+        MANUAL DE OPERACIONES TÁCTICAS
+    </div>
+</header>
+
+<div class="container">
+    <section class="info-section">
+        <h2>01. EL SISTEMA DE PROGRESIÓN</h2>
+        <p>Tu supervivencia en PIXEL STORE depende de tu capacidad para evolucionar. El HUD rastrea cada una de tus acciones en tiempo real.</p>
+        
+        <h3>EXPERIENCIA (XP) Y NIVELES</h3>
+        <ul>
+            <li>Cada baja confirmada te otorga XP. Los <span class="highlight">Avatares (PVP)</span> otorgan 400 XP, mientras que los <span class="highlight">NPCs</span> otorgan 100 XP.</li>
+            <li>La curva de nivel es constante: <span class="highlight">Nivel actual x 500 XP</span> es lo necesario para ascender.</li>
+            <li>Al subir de nivel, tu salud máxima aumenta permanentemente y recibes una poción de regalo.</li>
+        </ul>
+
+        <h3>RANGOS MILITARES</h3>
+        <p>Tu rango define tu estatus en la web y en el juego:</p>
+        <ul>
+            <li><strong>RECLUTA:</strong> Niveles 1-9.</li>
+            <li><strong>SOLDADO:</strong> Niveles 10-19.</li>
+            <li><strong>ELITE:</strong> Niveles 20-39.</li>
+            <li><strong>MAESTRO:</strong> Niveles 40-69.</li>
+            <li><strong>LEGENDARIO:</strong> Niveles 70-89.</li>
+            <li><strong>HEROE:</strong> Nivel 90+.</li>
+        </ul>
+    </section>
+
+    <section class="info-section" style="border-left-color: var(--neon-orange);">
+        <h2>02. FACCIONES Y ALIANZAS</h2>
+        <p>No camines solo. Las facciones permiten agrupar fuerzas para dominar el territorio.</p>
+        
+        <h3>GESTIÓN DE GRUPOS</h3>
+        <ul>
+            <li>Cualquier jugador de <span class="highlight">Nivel 5+</span> puede fundar una facción.</li>
+            <li>Existen 3 clases: <span class="highlight">Militares, Saqueadores y Civiles</span>.</li>
+            <li>Las facciones suben de nivel mediante la <span class="highlight">Donación de Suministros (Pociones)</span>.</li>
+            <li>Subir de nivel la facción otorga XP masiva a todos los miembros online.</li>
+        </ul>
+
+        <h3>PUNTOS DE GUERRA</h3>
+        <p>En la página de FACCIONES, los puntos de guerra representan las bajas totales que el grupo ha conseguido. ¡Lidera el ranking para ser la facción más temida!</p>
+    </section>
+
+    <section class="info-section">
+        <h2>03. INTERFAZ Y COMANDOS</h2>
+        <ul>
+            <li><strong>BUSCADOR:</strong> En el Dashboard puedes localizar a cualquier superviviente por su nombre.</li>
+            <li><strong>LOG DE ACTIVIDAD:</strong> Muestra en tiempo real subidas de nivel y muertes confirmadas.</li>
+            <li><strong>PANEL INDIVIDUAL:</strong> Haz clic en cualquier nombre para ver su foto, rango y progreso exacto de XP.</li>
+            <li><strong>GÉNERO:</strong> Puedes alternar tu identidad visual (♂/♀) directamente desde la web en la sección de facciones.</li>
+        </ul>
+    </section>
+</div>
+
+</body>
+</html>
