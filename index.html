@@ -8,14 +8,13 @@
         :root { 
             --neon-green: #39FF14; 
             --neon-orange: #FF5F1F; 
-            --bg-overlay: rgba(0, 0, 0, 0.85); /* Superposición para legibilidad */
-            --card: rgba(13, 13, 13, 0.9); /* Tarjetas semi-translúcidas */
+            --bg-overlay: rgba(0, 0, 0, 0.85);
+            --card: rgba(13, 13, 13, 0.9);
             --text: #ffffff; 
         }
         
         body { 
             font-family: 'Segoe UI', sans-serif; 
-            /* IMAGEN DE FONDO ESTILO CYBER/CS */
             background-image: linear-gradient(var(--bg-overlay), var(--bg-overlay)), url('https://w0.peakpx.com/wallpaper/538/103/HD-wallpaper-cs-go-cyberpunk-overpass-counter-strike-global-offensive.jpg');
             background-size: cover;
             background-position: center;
@@ -23,6 +22,41 @@
             color: var(--text); 
             margin: 0; 
             text-transform: uppercase; 
+        }
+
+        /* --- NUEVOS ESTILOS PARA EL TÍTULO GIGANTE --- */
+        .hero-header {
+            text-align: center;
+            padding: 60px 20px 20px 20px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
+        }
+
+        .main-title {
+            font-size: 5rem;
+            font-weight: 900;
+            margin: 0;
+            color: #fff;
+            letter-spacing: -2px;
+            text-shadow: 0 0 20px var(--neon-orange), 0 0 40px var(--neon-orange);
+            line-height: 1;
+            animation: titlePulse 4s infinite;
+        }
+
+        .subtitle-bar {
+            background: var(--neon-orange);
+            color: #000;
+            display: inline-block;
+            padding: 5px 25px;
+            font-weight: 900;
+            letter-spacing: 5px;
+            margin-top: 15px;
+            font-size: 1rem;
+            box-shadow: 0 0 20px var(--neon-orange);
+        }
+
+        @keyframes titlePulse {
+            0%, 100% { opacity: 1; filter: brightness(1); }
+            50% { opacity: 0.8; filter: brightness(1.2); }
         }
 
         /* NAVBAR NEO */
@@ -37,7 +71,7 @@
         .nav-links a:hover { color: var(--neon-green); text-shadow: 0 0 5px var(--neon-green); }
 
         .container { 
-            max-width: 1300px; margin: 30px auto; padding: 0 20px; 
+            max-width: 1300px; margin: 10px auto; padding: 0 20px; 
             display: grid; grid-template-columns: 1fr 350px; gap: 25px; 
         }
 
@@ -52,17 +86,16 @@
         #avatarSearch:focus { box-shadow: 0 0 15px var(--neon-green); border-color: var(--neon-green); }
         #avatarSearch::placeholder { color: #555; }
 
-        /* STATS BOXES */
-        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
+        /* STATS BOXES RE-DISEÑADAS */
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 30px; }
         .stat-box { background: var(--card); padding: 20px; border-radius: 5px; text-align: center; border: 1px solid #222; backdrop-filter: blur(10px); }
-        .stat-box span { color: var(--neon-green); font-size: 0.8rem; letter-spacing: 1px; }
-        .stat-box h2 { font-size: 2.2rem; margin: 5px 0; color: #fff; text-shadow: 0 0 5px #fff; }
+        .stat-label { color: var(--neon-green); font-size: 0.75rem; letter-spacing: 2px; display: block; margin-bottom: 5px; }
+        .stat-box h2 { font-size: 2.2rem; margin: 5px 0; color: #fff; text-shadow: 0 0 10px #fff; }
 
         /* TABLA SURVIVAL */
         .survival-table { width: 100%; border-collapse: separate; border-spacing: 0 8px; cursor: pointer; }
         .survival-table th { color: var(--neon-orange); padding: 12px; text-align: left; font-size: 0.8rem; border-bottom: 1px solid var(--neon-orange); text-shadow: 0 0 5px var(--neon-orange); }
         .survival-table td { background: var(--card); padding: 15px; border-top: 1px solid #222; border-bottom: 1px solid #222; transition: 0.2s; backdrop-filter: blur(5px); }
-        
         .survival-table tr:hover td { border-color: var(--neon-green); color: var(--neon-green); box-shadow: 0 0 10px rgba(57, 255, 20, 0.2); }
 
         /* LOG DE EVENTOS */
@@ -87,7 +120,11 @@
         .xp-bar-fill { background: var(--neon-green); height: 100%; width: 0%; transition: 1.5s; box-shadow: 0 0 10px var(--neon-green); }
 
         @keyframes modalSpawn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
-        @media (max-width: 900px) { .container { grid-template-columns: 1fr; } .main-nav { padding: 15px 20px; } }
+        @media (max-width: 900px) { 
+            .container { grid-template-columns: 1fr; } 
+            .main-nav { padding: 15px 20px; }
+            .main-title { font-size: 2.8rem; }
+        }
     </style>
 </head>
 <body>
@@ -103,12 +140,17 @@
     </div>
 </nav>
 
+<header class="hero-header">
+    <h1 class="main-title">PIXEL STORE: RPG SURVIVAL</h1>
+    <div class="subtitle-bar">SISTEMA DE GESTIÓN DE SUPERVIVIENTES V3.0</div>
+</header>
+
 <div class="container">
     <div class="main-content">
         <div class="stats-grid">
-            <div class="stat-box"><span>SYSTEM_JUG</span><h2 id="count-jug">0</h2></div>
-            <div class="stat-box"><span>VIRUS_DEL</span><h2 id="count-npc">0</h2></div>
-            <div class="stat-box"><span>KILLS_CONFIRMED</span><h2 id="count-pvp">0</h2></div>
+            <div class="stat-box"><span class="stat-label">OPERATIVOS_ACTIVOS</span><h2 id="count-jug">0</h2></div>
+            <div class="stat-box"><span class="stat-label">AMENAZAS_ELIMINADAS</span><h2 id="count-npc">0</h2></div>
+            <div class="stat-box"><span class="stat-label">CONFIRMACIONES_PVP</span><h2 id="count-pvp">0</h2></div>
         </div>
 
         <div class="search-container">
@@ -199,7 +241,6 @@
                 sndHover.play();
             });
             
-            // CORRECCIÓN DE FOTO EN TABLA
             row.innerHTML = `
                     <td>
                         <img src="https://secondlife.com/app/image/${j.uuid}/2" 
@@ -248,7 +289,6 @@
         sndOpen.volume = 0.5;
         sndOpen.play();
         
-        // CORRECCIÓN DE FOTO EN MODAL
         const imgElement = document.getElementById('p-img');
         imgElement.src = `https://secondlife.com/app/image/${uuid}/2`;
         imgElement.onerror = function() {
