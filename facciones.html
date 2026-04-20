@@ -5,10 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PIXEL RPG - Facciones</title>
     <style>
-        :root { --primary: #ff4500; --gold: #ffd700; --bg: #0a0a0a; --card: #1a1a1a; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: #ccc; margin: 0; }
+        :root { 
+            --primary: #ff4500; 
+            --gold: #ffd700; 
+            --bg: #0a0a0a; 
+            --card: #1a1a1a; 
+            --neon-green: #39FF14;
+        }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: #ccc; margin: 0; text-transform: uppercase; }
         
-        /* NAVBAR REPETIDO PARA CONSISTENCIA */
         .main-nav { background: #000; display: flex; justify-content: space-between; align-items: center; padding: 15px 50px; border-bottom: 2px solid var(--primary); position: sticky; top: 0; z-index: 1000; }
         .nav-logo { color: #fff; font-weight: bold; font-size: 1.4rem; letter-spacing: 2px; }
         .nav-logo span { color: var(--primary); }
@@ -16,15 +21,28 @@
         .nav-active { color: var(--primary) !important; border-bottom: 2px solid var(--primary); padding-bottom: 5px; }
 
         .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        
         .top-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 40px; }
-        .top-card { background: #111; border: 1px solid var(--gold); padding: 20px; border-radius: 10px; }
-        .top-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #222; }
+        .top-card { background: #111; border: 1px solid var(--gold); padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(255, 215, 0, 0.1); }
+        .top-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #222; font-size: 0.85rem; }
 
-        .fac-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-        .fac-card { background: var(--card); padding: 20px; border-radius: 10px; border: 1px solid #333; }
-        .gen-btn { cursor: pointer; border: none; padding: 5px 10px; border-radius: 4px; font-weight: bold; margin-left: 10px; font-size: 0.7rem; }
+        .fac-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
+        .fac-card { background: var(--card); padding: 20px; border-radius: 10px; border: 1px solid #333; position: relative; }
+        
+        .fac-card h2 { color: var(--neon-green); margin: 0 0 5px 0; font-size: 1.4rem; }
+        .status-tag { background: var(--primary); color: white; padding: 2px 8px; font-size: 0.7rem; border-radius: 3px; float: right; }
+
+        .member-item { display: flex; align-items: center; background: rgba(0,0,0,0.3); padding: 8px; margin: 8px 0; border-radius: 5px; border-left: 3px solid var(--primary); }
+        .member-img { width: 35px; height: 35px; border-radius: 5px; border: 1px solid #444; margin-right: 10px; object-fit: cover; }
+        
+        .xp-bar-container { background: #000; height: 8px; border: 1px solid #333; margin: 10px 0; overflow: hidden; }
+        .xp-bar-fill { background: var(--gold); height: 100%; transition: 1s; box-shadow: 0 0 5px var(--gold); }
+
+        .gen-btn { cursor: pointer; border: none; padding: 4px 8px; border-radius: 4px; font-weight: bold; margin-left: auto; font-size: 0.7rem; }
         .male { background: #0055ff; color: white; }
         .female { background: #ff0077; color: white; }
+        
+        small { color: #888; letter-spacing: 1px; }
     </style>
 </head>
 <body>
@@ -39,46 +57,96 @@
 
 <div class="container">
     <div class="top-grid">
-        <div class="top-card"><h3>🏆 TOP XP</h3><div id="top-xp"></div></div>
-        <div class="top-card"><h3>💀 TOP KILLS</h3><div id="top-kills"></div></div>
+        <div class="top-card"><h3>🏆 TOP 5 EXPERIENCIA</h3><div id="top-xp"></div></div>
+        <div class="top-card"><h3>💀 TOP 5 ASESINOS</h3><div id="top-kills"></div></div>
     </div>
     <div id="facciones-list" class="fac-grid"></div>
 </div>
 
 <script>
-    const API = ""https://script.google.com/macros/s/AKfycby1ttmSQQZwIORCcPe-xsnrhym2kNBxKFt1vlrozut7iVq7hHsNvdxUjtDIwaWZiFsD/exec;
+    const API = "https://script.google.com/macros/s/AKfycby1ttmSQQZwIORCcPe-xsnrhym2kNBxKFt1vlrozut7iVq7hHsNvdxUjtDIwaWZiFsD/exec";
 
     async function load() {
-        const res = await fetch(API);
-        const data = await res.json();
-        const facList = document.getElementById('facciones-list');
-        facList.innerHTML = '';
-        let all = [];
+        try {
+            const res = await fetch(API);
+            const data = await res.json();
+            const facList = document.getElementById('facciones-list');
+            facList.innerHTML = '';
+            let allPlayers = [];
 
-        data.forEach(f => {
-            all = all.concat(f.lista_integrantes);
-            let html = `<div class="fac-card"><h2>${f.nombre}</h2><small>Comandante: ${f.comandante}</small><hr>`;
-            f.lista_integrantes.forEach(j => {
-                html += `<div style="margin: 10px 0;">${j.nombre} 
-                    <button class="gen-btn ${j.genero == 'm' ? 'male' : 'female'}" onclick="changeG('${j.uuid}','${j.genero}')">
-                    ${j.genero == 'm' ? '♂' : '♀'}</button></div>`;
+            data.forEach(f => {
+                allPlayers = allPlayers.concat(f.lista_integrantes);
+                
+                // Cálculo de suministros para subir de nivel (Basado en tu LSL)
+                let costoLvl = 5 * Math.pow(2, parseInt(f.nivel) - 1);
+                let pctSuministros = Math.min(100, (parseInt(f.suministros || 0) / costoLvl) * 100);
+
+                let html = `
+                    <div class="fac-card">
+                        <span class="status-tag">${f.status || 'CIVILES'}</span>
+                        <h2>${f.nombre}</h2>
+                        <small>COMANDANTE: ${f.comandante}</small>
+                        <div style="margin-top: 15px; font-size: 0.75rem;">
+                            Suministros Nivel ${parseInt(f.nivel) + 1}: ${f.suministros || 0} / ${costoLvl}
+                        </div>
+                        <div class="xp-bar-container">
+                            <div class="xp-bar-fill" style="width: ${pctSuministros}%"></div>
+                        </div>
+                        <div style="margin-bottom: 10px;"><small>GUERRA: ${f.puntos} BAJAS</small></div>
+                        <hr style="border: 0; border-top: 1px solid #333;">
+                        <div class="members-list">
+                `;
+
+                f.lista_integrantes.forEach(j => {
+                    html += `
+                        <div class="member-item">
+                            <img class="member-img" src="https://secondlife.com/app/image/${j.uuid}/2" 
+                                 onerror="this.src='https://secondlife.com/app/image/00000000-0000-0000-0000-000000000000/1'">
+                            <div>
+                                <div style="font-size: 0.8rem; color: #fff;">${j.nombre}</div>
+                                <div style="font-size: 0.65rem; color: var(--neon-green);">LVL ${j.nivel}</div>
+                            </div>
+                            <button class="gen-btn ${j.genero == 'f' ? 'female' : 'male'}" onclick="changeG('${j.uuid}','${j.genero}')">
+                                ${j.genero == 'f' ? '♀' : '♂'}
+                            </button>
+                        </div>`;
+                });
+
+                facList.innerHTML += html + `</div></div>`;
             });
-            facList.innerHTML += html + `</div>`;
-        });
 
-        // TOP XP
-        document.getElementById('top-xp').innerHTML = [...all].sort((a,b)=>b.xp-a.xp).slice(0,5).map(j=>`<div class="top-item"><span>${j.nombre}</span><span>${j.xp} XP</span></div>`).join('');
-        // TOP KILLS
-        document.getElementById('top-kills').innerHTML = [...all].sort((a,b)=>(parseInt(b.npc)+parseInt(b.pvp))-(parseInt(a.npc)+parseInt(a.pvp))).slice(0,5).map(j=>`<div class="top-item"><span>${j.nombre}</span><span>${parseInt(j.npc)+parseInt(j.pvp)}</span></div>`).join('');
+            // TOP 5 XP
+            document.getElementById('top-xp').innerHTML = [...allPlayers].sort((a,b)=>b.xp-a.xp).slice(0,5).map(j=>`
+                <div class="top-item">
+                    <span><img src="https://secondlife.com/app/image/${j.uuid}/2" style="width:20px; vertical-align:middle; margin-right:5px; border-radius:3px;"> ${j.nombre}</span>
+                    <span style="color:var(--gold)">${j.xp} XP</span>
+                </div>`).join('');
+
+            // TOP 5 ASESINOS
+            document.getElementById('top-kills').innerHTML = [...allPlayers].sort((a,b)=>(parseInt(b.npc)+parseInt(b.pvp))-(parseInt(a.npc)+parseInt(a.pvp))).slice(0,5).map(j=>`
+                <div class="top-item">
+                    <span><img src="https://secondlife.com/app/image/${j.uuid}/2" style="width:20px; vertical-align:middle; margin-right:5px; border-radius:3px;"> ${j.nombre}</span>
+                    <span style="color:var(--primary)">${parseInt(j.npc)+parseInt(j.pvp)} KILLS</span>
+                </div>`).join('');
+
+        } catch (error) {
+            console.error("Error cargando facciones:", error);
+        }
     }
 
     async function changeG(id, g) {
         let ng = g == 'm' ? 'f' : 'm';
-        alert("Cambiando género...");
-        await fetch(`${API}?action=setGender&id=${id}&genero=${ng}`, {method:'POST'});
-        load();
+        alert("Actualizando Género de Identidad...");
+        try {
+            await fetch(`${API}?action=setGender&id=${id}&genero=${ng}`, {method:'POST'});
+            load();
+        } catch (e) {
+            alert("Error al conectar con la base de datos.");
+        }
     }
+
     load();
+    setInterval(load, 60000); // Recarga automática cada minuto
 </script>
 </body>
 </html>
