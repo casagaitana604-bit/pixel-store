@@ -325,14 +325,16 @@
             document.getElementById('btn-f').classList.toggle('active', gender === 'f');
         }
 
-        async function cargarDatos() {
-            try {
-                const res = await fetch(URL_SISTEMA);
-                const data = await res.json();
-                cachedData = data;
-                renderizar(data);
-            } catch (err) { console.error("Error cargando base de datos"); }
-        }
+      async function cargarDatos() {
+    try {
+        const response = await fetch(URL_DATA);
+        const data = await response.json(); // Cambiamos .text() por .json()
+        cachedData = data; 
+        renderizar(data); // Mandamos los datos directos
+    } catch (err) { 
+        console.error("Error cargando base de datos", err); 
+    }
+}
 
         function getRangoInfo(nivel) {
             if (nivel >= 51) return { t: "Leyenda", c: "r-leyenda", m: "💎" };
