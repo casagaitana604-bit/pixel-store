@@ -11,28 +11,73 @@
             --bg: #0a0a0a; 
             --card: #1a1a1a; 
             --neon-green: #39FF14;
+            --bg-overlay: rgba(0, 0, 0, 0.85);
         }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: #ccc; margin: 0; text-transform: uppercase; }
+
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background-image: linear-gradient(var(--bg-overlay), var(--bg-overlay)), url('https://w0.peakpx.com/wallpaper/538/103/HD-wallpaper-cs-go-cyberpunk-overpass-counter-strike-global-offensive.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #ccc; 
+            margin: 0; 
+            text-transform: uppercase; 
+        }
         
-        .main-nav { background: #000; display: flex; justify-content: space-between; align-items: center; padding: 15px 50px; border-bottom: 2px solid var(--primary); position: sticky; top: 0; z-index: 1000; }
+        /* NAVBAR NEO */
+        .main-nav { 
+            background: rgba(0, 0, 0, 0.9); display: flex; justify-content: space-between; align-items: center; padding: 15px 50px; 
+            border-bottom: 2px solid var(--primary); box-shadow: 0 0 15px var(--primary);
+            position: sticky; top: 0; z-index: 1000; 
+        }
         .nav-logo { color: #fff; font-weight: bold; font-size: 1.4rem; letter-spacing: 2px; }
         .nav-logo span { color: var(--primary); }
         .nav-links a { color: #ccc; text-decoration: none; margin-left: 25px; font-weight: bold; font-size: 0.9rem; }
         .nav-active { color: var(--primary) !important; border-bottom: 2px solid var(--primary); padding-bottom: 5px; }
 
-        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        /* --- TÍTULO GIGANTE --- */
+        .hero-header {
+            text-align: center;
+            padding: 60px 20px 20px 20px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
+        }
+        .main-title {
+            font-size: 5rem;
+            font-weight: 900;
+            margin: 0;
+            color: #fff;
+            letter-spacing: -2px;
+            text-shadow: 0 0 20px var(--primary), 0 0 40px var(--primary);
+            line-height: 1;
+            animation: titlePulse 4s infinite;
+        }
+        .subtitle-bar {
+            background: var(--primary);
+            color: #000;
+            display: inline-block;
+            padding: 5px 25px;
+            font-weight: 900;
+            letter-spacing: 5px;
+            margin-top: 15px;
+            font-size: 1rem;
+            box-shadow: 0 0 20px var(--primary);
+        }
+
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
         
+        /* TOPS */
         .top-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 40px; }
-        .top-card { background: #111; border: 1px solid var(--gold); padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(255, 215, 0, 0.1); }
+        .top-card { background: rgba(17,17,17,0.9); border: 1px solid var(--gold); padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(255, 215, 0, 0.1); backdrop-filter: blur(10px); }
         .top-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #222; font-size: 0.85rem; }
 
+        /* FACCIONES */
         .fac-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
-        .fac-card { background: var(--card); padding: 20px; border-radius: 10px; border: 1px solid #333; position: relative; }
-        
-        .fac-card h2 { color: var(--neon-green); margin: 0 0 5px 0; font-size: 1.4rem; }
-        .status-tag { background: var(--primary); color: white; padding: 2px 8px; font-size: 0.7rem; border-radius: 3px; float: right; }
+        .fac-card { background: var(--card); padding: 20px; border-radius: 10px; border: 1px solid #333; position: relative; backdrop-filter: blur(10px); }
+        .fac-card h2 { color: var(--neon-green); margin: 0 0 5px 0; font-size: 1.4rem; text-shadow: 0 0 5px var(--neon-green); }
+        .status-tag { background: var(--primary); color: white; padding: 2px 8px; font-size: 0.7rem; border-radius: 3px; float: right; font-weight: bold; }
 
-        .member-item { display: flex; align-items: center; background: rgba(0,0,0,0.3); padding: 8px; margin: 8px 0; border-radius: 5px; border-left: 3px solid var(--primary); }
+        .member-item { display: flex; align-items: center; background: rgba(0,0,0,0.5); padding: 8px; margin: 8px 0; border-radius: 5px; border-left: 3px solid var(--primary); }
         .member-img { width: 35px; height: 35px; border-radius: 5px; border: 1px solid #444; margin-right: 10px; object-fit: cover; }
         
         .xp-bar-container { background: #000; height: 8px; border: 1px solid #333; margin: 10px 0; overflow: hidden; }
@@ -41,8 +86,12 @@
         .gen-btn { cursor: pointer; border: none; padding: 4px 8px; border-radius: 4px; font-weight: bold; margin-left: auto; font-size: 0.7rem; }
         .male { background: #0055ff; color: white; }
         .female { background: #ff0077; color: white; }
-        
-        small { color: #888; letter-spacing: 1px; }
+
+        @keyframes titlePulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } }
+        @media (max-width: 900px) { 
+            .main-title { font-size: 2.8rem; }
+            .top-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -54,6 +103,11 @@
         <a href="facciones.html" class="nav-active">FACCIONES / TOPS</a>
     </div>
 </nav>
+
+<header class="hero-header">
+    <h1 class="main-title">PIXEL: FACCIONES</h1>
+    <div class="subtitle-bar">COMANDO CENTRAL DE ALIANZAS</div>
+</header>
 
 <div class="container">
     <div class="top-grid">
@@ -76,8 +130,6 @@
 
             data.forEach(f => {
                 allPlayers = allPlayers.concat(f.lista_integrantes);
-                
-                // Cálculo de suministros para subir de nivel (Basado en tu LSL)
                 let costoLvl = 5 * Math.pow(2, parseInt(f.nivel) - 1);
                 let pctSuministros = Math.min(100, (parseInt(f.suministros || 0) / costoLvl) * 100);
 
@@ -85,13 +137,9 @@
                     <div class="fac-card">
                         <span class="status-tag">${f.status || 'CIVILES'}</span>
                         <h2>${f.nombre}</h2>
-                        <small>COMANDANTE: ${f.comandante}</small>
-                        <div style="margin-top: 15px; font-size: 0.75rem;">
-                            Suministros Nivel ${parseInt(f.nivel) + 1}: ${f.suministros || 0} / ${costoLvl}
-                        </div>
-                        <div class="xp-bar-container">
-                            <div class="xp-bar-fill" style="width: ${pctSuministros}%"></div>
-                        </div>
+                        <small>CMDT: ${f.comandante}</small>
+                        <div style="margin-top: 15px; font-size: 0.7rem; color:var(--gold)">SUMINISTROS_LVL_${parseInt(f.nivel)+1}: ${f.suministros || 0} / ${costoLvl}</div>
+                        <div class="xp-bar-container"><div class="xp-bar-fill" style="width: ${pctSuministros}%"></div></div>
                         <div style="margin-bottom: 10px;"><small>GUERRA: ${f.puntos} BAJAS</small></div>
                         <hr style="border: 0; border-top: 1px solid #333;">
                         <div class="members-list">
@@ -115,38 +163,29 @@
                 facList.innerHTML += html + `</div></div>`;
             });
 
-            // TOP 5 XP
             document.getElementById('top-xp').innerHTML = [...allPlayers].sort((a,b)=>b.xp-a.xp).slice(0,5).map(j=>`
                 <div class="top-item">
                     <span><img src="https://secondlife.com/app/image/${j.uuid}/2" style="width:20px; vertical-align:middle; margin-right:5px; border-radius:3px;"> ${j.nombre}</span>
                     <span style="color:var(--gold)">${j.xp} XP</span>
                 </div>`).join('');
 
-            // TOP 5 ASESINOS
             document.getElementById('top-kills').innerHTML = [...allPlayers].sort((a,b)=>(parseInt(b.npc)+parseInt(b.pvp))-(parseInt(a.npc)+parseInt(a.pvp))).slice(0,5).map(j=>`
                 <div class="top-item">
                     <span><img src="https://secondlife.com/app/image/${j.uuid}/2" style="width:20px; vertical-align:middle; margin-right:5px; border-radius:3px;"> ${j.nombre}</span>
                     <span style="color:var(--primary)">${parseInt(j.npc)+parseInt(j.pvp)} KILLS</span>
                 </div>`).join('');
-
-        } catch (error) {
-            console.error("Error cargando facciones:", error);
-        }
+        } catch (error) { console.error(error); }
     }
 
     async function changeG(id, g) {
         let ng = g == 'm' ? 'f' : 'm';
-        alert("Actualizando Género de Identidad...");
-        try {
-            await fetch(`${API}?action=setGender&id=${id}&genero=${ng}`, {method:'POST'});
-            load();
-        } catch (e) {
-            alert("Error al conectar con la base de datos.");
-        }
+        alert("Actualizando Identidad...");
+        await fetch(`${API}?action=setGender&id=${id}&genero=${ng}`, {method:'POST'});
+        load();
     }
 
     load();
-    setInterval(load, 60000); // Recarga automática cada minuto
+    setInterval(load, 60000);
 </script>
 </body>
 </html>
