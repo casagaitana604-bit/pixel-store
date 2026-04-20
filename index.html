@@ -63,7 +63,6 @@
         .survival-table th { color: var(--neon-orange); padding: 12px; text-align: left; font-size: 0.8rem; border-bottom: 1px solid var(--neon-orange); text-shadow: 0 0 5px var(--neon-orange); }
         .survival-table td { background: var(--card); padding: 15px; border-top: 1px solid #222; border-bottom: 1px solid #222; transition: 0.2s; backdrop-filter: blur(5px); }
         
-        /* EFECTO HOVER CON SONIDO (vía JS) */
         .survival-table tr:hover td { border-color: var(--neon-green); color: var(--neon-green); box-shadow: 0 0 10px rgba(57, 255, 20, 0.2); }
 
         /* LOG DE EVENTOS */
@@ -83,7 +82,7 @@
             box-shadow: 0 0 30px var(--neon-green); width: 90%; max-width: 400px; text-align: center; position: relative; 
             animation: modalSpawn 0.3s ease-out;
         }
-        .profile-img { width: 150px; height: 150px; border-radius: 5px; border: 2px solid var(--neon-orange); box-shadow: 0 0 15px var(--neon-orange); }
+        .profile-img { width: 150px; height: 150px; border-radius: 5px; border: 2px solid var(--neon-orange); box-shadow: 0 0 15px var(--neon-orange); object-fit: cover; }
         .xp-bar-container { background: #111; height: 12px; border: 1px solid #333; margin: 20px 0; }
         .xp-bar-fill { background: var(--neon-green); height: 100%; width: 0%; transition: 1.5s; box-shadow: 0 0 10px var(--neon-green); }
 
@@ -157,7 +156,6 @@
     const API = "https://script.google.com/macros/s/AKfycbw8NwXzBPiTDqmPMe1KpNH492owK9bVEhFJZTbZm1zk2BmbXt-xoPXMaCo8xIgYWkW1/exec"; 
     let cachePlayers = [];
     
-    // ELEMENTOS DE SONIDO
     const sndHover = document.getElementById('snd-hover');
     const sndOpen = document.getElementById('snd-open');
 
@@ -195,27 +193,25 @@
         players.forEach(j => {
             const row = document.createElement('tr');
             
-            // AGREGAR SONIDO HOVER vía JS
             row.addEventListener('mouseover', () => {
-                sndHover.currentTime = 0; // Reiniciar sonido si ya estaba sonando
-                sndHover.volume = 0.2; // Volumen bajo para no molestar
+                sndHover.currentTime = 0;
+                sndHover.volume = 0.2;
                 sndHover.play();
             });
             
-            row.addEventListener('click', () => openProfile('${j.uuid}') ); // Cambiado para pasarlo correcto
-
+            // CORRECCIÓN DE FOTO EN TABLA
             row.innerHTML = `
                     <td>
-                        <img src="https://secondlife.com/app/image/${j.uuid}/1" style="width:30px; height:30px; border:1px solid var(--neon-green); vertical-align:middle; margin-right:12px; box-shadow: 0 0 5px var(--neon-green);"> 
+                        <img src="https://secondlife.com/app/image/${j.uuid}/2" 
+                             onerror="this.src='https://secondlife.com/app/image/00000000-0000-0000-0000-000000000000/1'"
+                             style="width:30px; height:30px; border:1px solid var(--neon-green); vertical-align:middle; margin-right:12px; box-shadow: 0 0 5px var(--neon-green); object-fit: cover;"> 
                         ${j.nombre}
                     </td>
                     <td><span style="color:var(--neon-green); text-shadow: 0 0 5px var(--neon-green);">LVL ${j.nivel}</span></td>
                     <td style="color:#aaa; font-size:0.8rem">💀 ${j.npc}  |  ⚔️ ${j.pvp}</td>
                 `;
             
-            // Corregir la llamada onclick que estaba mal formateada en el template string anterior
             row.setAttribute('onclick', "openProfile('" + j.uuid + "')");
-                
             body.appendChild(row);
         });
     }
@@ -241,19 +237,24 @@
         const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
         const color = colorType === "green" ? "var(--neon-green)" : "var(--neon-orange)";
         log.innerHTML = `<div class="event-item"><span class="event-time">[${time}]</span> <span style="color:${color}">${msg}</span></div>` + log.innerHTML;
-        if(log.children.length > 12) log.lastChild.remove(); // Un poco más largo el log
+        if(log.children.length > 12) log.lastChild.remove();
     }
 
     function openProfile(uuid) {
         const p = cachePlayers.find(x => x.uuid === uuid);
         if(!p) return;
         
-        // SONIDO DE APERTURA
         sndOpen.currentTime = 0;
         sndOpen.volume = 0.5;
         sndOpen.play();
         
-        document.getElementById('p-img').src = `https://secondlife.com/app/image/${uuid}/1`;
+        // CORRECCIÓN DE FOTO EN MODAL
+        const imgElement = document.getElementById('p-img');
+        imgElement.src = `https://secondlife.com/app/image/${uuid}/2`;
+        imgElement.onerror = function() {
+            this.src = 'https://secondlife.com/app/image/00000000-0000-0000-0000-000000000000/1';
+        };
+
         document.getElementById('p-name').innerText = p.nombre;
         document.getElementById('p-npc').innerText = p.npc;
         document.getElementById('p-pvp').innerText = p.pvp;
@@ -269,7 +270,7 @@
     function closeModal() { document.getElementById('playerModal').style.display = 'none'; }
 
     update();
-    setInterval(update, 30000); // Actualización cada 30 segundos
+    setInterval(update, 30000);
 </script>
 </body>
 </html>
