@@ -25,7 +25,7 @@
             text-transform: uppercase; 
         }
         
-        /* NAVBAR NEO UNIFICADA */
+        /* NAVBAR NEO */
         .main-nav { 
             background: rgba(0, 0, 0, 0.9); display: flex; justify-content: space-between; align-items: center; padding: 15px 50px; 
             border-bottom: 2px solid var(--primary); box-shadow: 0 0 15px var(--primary);
@@ -37,7 +37,7 @@
         .nav-links a:hover { color: var(--primary); text-shadow: 0 0 5px var(--primary); }
         .nav-active { color: var(--primary) !important; border-bottom: 2px solid var(--primary); padding-bottom: 5px; }
 
-        /* --- TÍTULO GIGANTE HERO --- */
+        /* TÍTULO GIGANTE */
         .hero-header {
             text-align: center;
             padding: 60px 20px 20px 20px;
@@ -66,13 +66,10 @@
         }
 
         .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
-        
-        /* TOPS */
         .top-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 40px; }
         .top-card { background: rgba(17,17,17,0.9); border: 1px solid var(--gold); padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(255, 215, 0, 0.1); backdrop-filter: blur(10px); }
         .top-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #222; font-size: 0.85rem; }
 
-        /* FACCIONES */
         .fac-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
         .fac-card { background: var(--card); padding: 20px; border-radius: 10px; border: 1px solid #333; position: relative; backdrop-filter: blur(10px); }
         .fac-card h2 { color: var(--neon-green); margin: 0 0 5px 0; font-size: 1.4rem; text-shadow: 0 0 5px var(--neon-green); }
@@ -109,12 +106,12 @@
 
 <header class="hero-header">
     <h1 class="main-title">PIXEL: FACCIONES</h1>
-    <div class="subtitle-bar">COMANDO CENTRAL DE ALIANZAS Y PODER</div>
+    <div class="subtitle-bar">COMANDO CENTRAL DE ALIANZAS</div>
 </header>
 
 <div class="container">
     <div class="top-grid">
-        <div class="top-card"><h3>🏆 TOP 5 EXPERIENCIA</h3><div id="top-xp"></div></div>
+        <div class="top-card"><h3>🏆 TOP 5 EXPERIENCIA GLOBAL</h3><div id="top-xp"></div></div>
         <div class="top-card"><h3>💀 TOP 5 ASESINOS</h3><div id="top-kills"></div></div>
     </div>
     <div id="facciones-list" class="fac-grid"></div>
@@ -122,6 +119,13 @@
 
 <script>
     const API = "https://script.google.com/macros/s/AKfycby1ttmSQQZwIORCcPe-xsnrhym2kNBxKFt1vlrozut7iVq7hHsNvdxUjtDIwaWZiFsD/exec";
+
+    // FÓRMULA XP GLOBAL
+    function calcularXPGlobal(n, xp) {
+        let lvl = parseInt(n);
+        let xpAcumulada = ((lvl - 1) * lvl / 2) * 500;
+        return xpAcumulada + parseInt(xp);
+    }
 
     async function load() {
         try {
@@ -166,13 +170,18 @@
                 facList.innerHTML += html + `</div></div>`;
             });
 
-            document.getElementById('top-xp').innerHTML = [...allPlayers].sort((a,b)=>b.xp-a.xp).slice(0,5).map(j=>`
+            // TOP 5 XP GLOBAL CORREGIDO
+            document.getElementById('top-xp').innerHTML = [...allPlayers]
+                .sort((a,b) => calcularXPGlobal(b.nivel, b.xp) - calcularXPGlobal(a.nivel, a.xp))
+                .slice(0,5).map(j=>`
                 <div class="top-item">
                     <span><img src="https://secondlife.com/app/image/${j.uuid}/2" style="width:20px; vertical-align:middle; margin-right:5px; border-radius:3px;"> ${j.nombre}</span>
-                    <span style="color:var(--gold)">${j.xp} XP</span>
+                    <span style="color:var(--gold)">${calcularXPGlobal(j.nivel, j.xp).toLocaleString()} XP</span>
                 </div>`).join('');
 
-            document.getElementById('top-kills').innerHTML = [...allPlayers].sort((a,b)=>(parseInt(b.npc)+parseInt(b.pvp))-(parseInt(a.npc)+parseInt(a.pvp))).slice(0,5).map(j=>`
+            document.getElementById('top-kills').innerHTML = [...allPlayers]
+                .sort((a,b)=>(parseInt(b.npc)+parseInt(b.pvp))-(parseInt(a.npc)+parseInt(a.pvp)))
+                .slice(0,5).map(j=>`
                 <div class="top-item">
                     <span><img src="https://secondlife.com/app/image/${j.uuid}/2" style="width:20px; vertical-align:middle; margin-right:5px; border-radius:3px;"> ${j.nombre}</span>
                     <span style="color:var(--primary)">${parseInt(j.npc)+parseInt(j.pvp)} KILLS</span>
@@ -183,12 +192,8 @@
     async function changeG(id, g) {
         let ng = g == 'm' ? 'f' : 'm';
         alert("Actualizando Identidad Digital...");
-        try {
-            await fetch(`${API}?action=setGender&id=${id}&genero=${ng}`, {method:'POST'});
-            load();
-        } catch (e) {
-            console.error("Error al cambiar género");
-        }
+        await fetch(`${API}?action=setGender&id=${id}&genero=${ng}`, {method:'POST'});
+        load();
     }
 
     load();
