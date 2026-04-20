@@ -184,7 +184,7 @@
     <div class="modal-content">
         <span onclick="closeModal()" style="position:absolute; top:20px; right:25px; cursor:pointer; color:var(--neon-orange); font-weight:bold; font-size:1.5rem;">[X]</span>
         <img id="p-img" src="" class="profile-img">
-        <h2 id="p-name" style="margin:5px 0; color:var(--neon-green); letter-spacing:3px; text-shadow: 0 0 15px var(--neon-green);">NOMBRE</h2>
+        <h2 id="p-name" style="margin:5px 0; color:var(--neon-green); letter-spacing:2px; text-shadow: 0 0 15px var(--neon-green);">NOMBRE</h2>
         <p id="p-rango" style="font-weight:bold; color:var(--neon-orange); font-size:0.9rem; text-shadow: 0 0 8px var(--neon-orange); margin-bottom: 20px;">RANGO_ANALYSIS</p>
         
         <div class="xp-bar-container"><div id="p-xp-fill" class="xp-bar-fill"></div></div>
@@ -208,6 +208,13 @@
     let cachePlayers = [];
     const sndHover = document.getElementById('snd-hover');
     const sndOpen = document.getElementById('snd-open');
+
+    // FÓRMULA XP GLOBAL (SUMA DE NIVELES ANTERIORES)
+    function calcularXPGlobal(n, xp) {
+        let lvl = parseInt(n);
+        let xpAcumulada = ((lvl - 1) * lvl / 2) * 500;
+        return xpAcumulada + parseInt(xp);
+    }
 
     async function update() {
         try {
@@ -321,7 +328,10 @@
         const req = parseInt(p.nivel) * 500;
         const pct = (parseInt(p.xp) / req) * 100;
         document.getElementById('p-xp-fill').style.width = pct + "%";
-        document.getElementById('p-xp-text').innerText = `PROGRESO DE DATOS: ${p.xp} / ${req} [${Math.round(pct)}%]`;
+        
+        // MOSTRAR XP GLOBAL EN EL PERFIL
+        let xpGlobal = calcularXPGlobal(p.nivel, p.xp);
+        document.getElementById('p-xp-text').innerText = `PROGRESO NIVEL: ${p.xp} / ${req} | XP GLOBAL: ${xpGlobal.toLocaleString()}`;
         
         let rango = "RECLUTA";
         const n = parseInt(p.nivel);
@@ -337,9 +347,8 @@
 
     function closeModal() { document.getElementById('playerModal').style.display = 'none'; }
 
-    // Ejecución Inicial
     update();
-    setInterval(update, 30000); // 30 Segundos para no saturar la API
+    setInterval(update, 30000);
 </script>
 </body>
 </html>
