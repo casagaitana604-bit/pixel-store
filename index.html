@@ -3,94 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PIXEL RPG - Cyber Survival</title>
+    <title>PIXEL RPG - Cyber Search</title>
     <style>
         :root { 
             --neon-green: #39FF14; 
             --neon-orange: #FF5F1F; 
-            --bg: #000000; 
-            --card: #0d0d0d; 
+            --bg-overlay: rgba(0, 0, 0, 0.85); /* Superposición para legibilidad */
+            --card: rgba(13, 13, 13, 0.9); /* Tarjetas semi-translúcidas */
             --text: #ffffff; 
         }
         
         body { 
             font-family: 'Segoe UI', sans-serif; 
-            background: var(--bg); 
+            /* IMAGEN DE FONDO ESTILO CYBER/CS */
+            background-image: linear-gradient(var(--bg-overlay), var(--bg-overlay)), url('https://w0.peakpx.com/wallpaper/538/103/HD-wallpaper-cs-go-cyberpunk-overpass-counter-strike-global-offensive.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             color: var(--text); 
             margin: 0; 
-            text-transform: uppercase;
+            text-transform: uppercase; 
         }
 
         /* NAVBAR NEO */
         .main-nav { 
-            background: #000; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 15px 50px; 
-            border-bottom: 2px solid var(--neon-orange);
-            box-shadow: 0 0 15px var(--neon-orange);
+            background: rgba(0, 0, 0, 0.9); display: flex; justify-content: space-between; align-items: center; padding: 15px 50px; 
+            border-bottom: 2px solid var(--neon-orange); box-shadow: 0 0 15px var(--neon-orange);
             position: sticky; top: 0; z-index: 1000; 
         }
         .nav-logo { color: #fff; font-weight: bold; font-size: 1.4rem; letter-spacing: 3px; }
         .nav-logo span { color: var(--neon-green); text-shadow: 0 0 10px var(--neon-green); }
         .nav-links a { color: #ccc; text-decoration: none; margin-left: 25px; font-weight: bold; font-size: 0.9rem; transition: 0.3s; }
-        .nav-links a:hover { color: var(--neon-green); }
+        .nav-links a:hover { color: var(--neon-green); text-shadow: 0 0 5px var(--neon-green); }
 
         .container { 
             max-width: 1300px; margin: 30px auto; padding: 0 20px; 
             display: grid; grid-template-columns: 1fr 350px; gap: 25px; 
         }
 
+        /* BUSCADOR NEÓN */
+        .search-container { margin-bottom: 20px; position: relative; }
+        #avatarSearch {
+            width: 100%; padding: 15px; background: rgba(0,0,0,0.7); border: 1px solid var(--neon-orange);
+            color: var(--neon-green); border-radius: 5px; font-family: 'Segoe UI', sans-serif;
+            font-weight: bold; text-transform: uppercase; outline: none; box-sizing: border-box;
+            transition: 0.3s; backdrop-filter: blur(5px);
+        }
+        #avatarSearch:focus { box-shadow: 0 0 15px var(--neon-green); border-color: var(--neon-green); }
+        #avatarSearch::placeholder { color: #555; }
+
         /* STATS BOXES */
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
-        .stat-box { 
-            background: var(--card); padding: 20px; border-radius: 5px; 
-            text-align: center; border: 1px solid #222;
-            box-shadow: inset 0 0 10px rgba(57, 255, 20, 0.1);
-        }
+        .stat-box { background: var(--card); padding: 20px; border-radius: 5px; text-align: center; border: 1px solid #222; backdrop-filter: blur(10px); }
         .stat-box span { color: var(--neon-green); font-size: 0.8rem; letter-spacing: 1px; }
         .stat-box h2 { font-size: 2.2rem; margin: 5px 0; color: #fff; text-shadow: 0 0 5px #fff; }
 
         /* TABLA SURVIVAL */
         .survival-table { width: 100%; border-collapse: separate; border-spacing: 0 8px; cursor: pointer; }
-        .survival-table th { color: var(--neon-orange); padding: 12px; text-align: left; font-size: 0.8rem; border-bottom: 1px solid var(--neon-orange); }
-        .survival-table td { background: var(--card); padding: 15px; border-top: 1px solid #222; border-bottom: 1px solid #222; }
-        .survival-table tr:hover td { border-color: var(--neon-green); color: var(--neon-green); }
+        .survival-table th { color: var(--neon-orange); padding: 12px; text-align: left; font-size: 0.8rem; border-bottom: 1px solid var(--neon-orange); text-shadow: 0 0 5px var(--neon-orange); }
+        .survival-table td { background: var(--card); padding: 15px; border-top: 1px solid #222; border-bottom: 1px solid #222; transition: 0.2s; backdrop-filter: blur(5px); }
+        
+        /* EFECTO HOVER CON SONIDO (vía JS) */
+        .survival-table tr:hover td { border-color: var(--neon-green); color: var(--neon-green); box-shadow: 0 0 10px rgba(57, 255, 20, 0.2); }
 
-        /* LOG DE EVENTOS NEÓN */
+        /* LOG DE EVENTOS */
         .event-log { 
-            background: var(--card); padding: 20px; border-radius: 5px; 
-            border: 1px solid var(--neon-green); box-shadow: 0 0 10px rgba(57, 255, 20, 0.2);
-            height: fit-content; max-height: 600px; overflow-y: hidden;
+            background: var(--card); padding: 20px; border-radius: 5px; border: 1px solid var(--neon-green); 
+            height: fit-content; max-height: 600px; backdrop-filter: blur(10px);
+            box-shadow: 0 0 10px rgba(57, 255, 20, 0.1);
         }
-        .event-log h3 { color: var(--neon-green); font-size: 1rem; margin-top: 0; text-shadow: 0 0 5px var(--neon-green); }
-        .event-item { font-size: 0.8rem; padding: 12px 0; border-bottom: 1px solid #222; animation: fadeIn 0.5s ease; }
+        .event-log h3 { color: var(--neon-green); font-size: 1rem; text-shadow: 0 0 5px var(--neon-green); }
+        .event-item { font-size: 0.8rem; padding: 12px 0; border-bottom: 1px solid #222; }
         .event-time { color: var(--neon-orange); font-weight: bold; margin-right: 8px; }
-        .alert-pvp { color: #fff; background: rgba(255, 0, 0, 0.2); border-left: 3px solid red; padding: 5px; animation: pulse 1s infinite; }
 
         /* MODAL PERFIL */
-        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); align-items: center; justify-content: center; }
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); align-items: center; justify-content: center; backdrop-filter: blur(10px); }
         .modal-content { 
-            background: #000; padding: 40px; border-radius: 5px; 
-            border: 2px solid var(--neon-green); box-shadow: 0 0 30px var(--neon-green);
-            width: 90%; max-width: 400px; text-align: center; position: relative; 
+            background: #000; padding: 40px; border-radius: 5px; border: 2px solid var(--neon-green);
+            box-shadow: 0 0 30px var(--neon-green); width: 90%; max-width: 400px; text-align: center; position: relative; 
+            animation: modalSpawn 0.3s ease-out;
         }
-        .profile-img { width: 150px; height: 150px; border-radius: 5px; border: 2px solid var(--neon-orange); margin-bottom: 20px; box-shadow: 0 0 15px var(--neon-orange); }
-        .xp-bar-container { background: #111; height: 12px; border-radius: 0; margin: 20px 0; border: 1px solid #333; }
-        .xp-bar-fill { background: var(--neon-green); height: 100%; box-shadow: 0 0 10px var(--neon-green); width: 0%; transition: 1.5s; }
+        .profile-img { width: 150px; height: 150px; border-radius: 5px; border: 2px solid var(--neon-orange); box-shadow: 0 0 15px var(--neon-orange); }
+        .xp-bar-container { background: #111; height: 12px; border: 1px solid #333; margin: 20px 0; }
+        .xp-bar-fill { background: var(--neon-green); height: 100%; width: 0%; transition: 1.5s; box-shadow: 0 0 10px var(--neon-green); }
 
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: translateX(0); } }
-        @media (max-width: 900px) { .container { grid-template-columns: 1fr; } }
+        @keyframes modalSpawn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+        @media (max-width: 900px) { .container { grid-template-columns: 1fr; } .main-nav { padding: 15px 20px; } }
     </style>
 </head>
 <body>
 
+<audio id="snd-hover" src="https://cdn.pixabay.com/audio/2022/03/15/audio_2193498967.mp3" preload="auto"></audio>
+<audio id="snd-open" src="https://cdn.pixabay.com/audio/2022/03/19/audio_1333333333.mp3" preload="auto"></audio>
+
 <nav class="main-nav">
     <div class="nav-logo">PIXEL <span>SURVIVAL</span></div>
     <div class="nav-links">
-        <a href="index.html" style="color:var(--neon-green)">DASHBOARD</a>
+        <a href="index.html" style="color:var(--neon-green); text-shadow: 0 0 10px var(--neon-green);">DASHBOARD</a>
         <a href="facciones.html">FACCIONES / TOPS</a>
     </div>
 </nav>
@@ -98,9 +107,13 @@
 <div class="container">
     <div class="main-content">
         <div class="stats-grid">
-            <div class="stat-box"><span>SISTEMA JUGADORES</span><h2 id="count-jug">0</h2></div>
-            <div class="stat-box"><span>VIRUS ELIMINADO</span><h2 id="count-npc">0</h2></div>
-            <div class="stat-box"><span>AVATARES CAÍDOS</span><h2 id="count-pvp">0</h2></div>
+            <div class="stat-box"><span>SYSTEM_JUG</span><h2 id="count-jug">0</h2></div>
+            <div class="stat-box"><span>VIRUS_DEL</span><h2 id="count-npc">0</h2></div>
+            <div class="stat-box"><span>KILLS_CONFIRMED</span><h2 id="count-pvp">0</h2></div>
+        </div>
+
+        <div class="search-container">
+            <input type="text" id="avatarSearch" placeholder="BUSCAR SUPERVIVIENTE POR IDENTIDAD..." onkeyup="filterPlayers()">
         </div>
 
         <table class="survival-table">
@@ -116,40 +129,42 @@
     </div>
 
     <div class="event-log">
-        <h3>📂 REGISTRO DE ACTIVIDAD_</h3>
+        <h3>📂 REGISTRO_ACTIVIDAD_V3.0</h3>
         <div id="log-content"></div>
     </div>
 </div>
 
 <div id="playerModal" class="modal">
     <div class="modal-content">
-        <span onclick="closeModal()" style="position:absolute; top:15px; right:20px; cursor:pointer; color:var(--neon-orange)">[CERRAR]</span>
+        <span onclick="closeModal()" style="position:absolute; top:15px; right:20px; cursor:pointer; color:var(--neon-orange); font-weight:bold;">[X]</span>
         <img id="p-img" src="" class="profile-img">
-        <h2 id="p-name" style="margin:5px 0; color:var(--neon-green); letter-spacing:2px;">NOMBRE</h2>
-        <p id="p-rango" style="font-weight:bold; color:var(--neon-orange); font-size:0.8rem;">RANGO_CARGANDO</p>
+        <h2 id="p-name" style="margin:5px 0; color:var(--neon-green); letter-spacing:2px; text-shadow: 0 0 10px var(--neon-green);">NOMBRE</h2>
+        <p id="p-rango" style="font-weight:bold; color:var(--neon-orange); font-size:0.8rem; text-shadow: 0 0 5px var(--neon-orange);">RANGO_ANALYSIS</p>
         <div class="xp-bar-container"><div id="p-xp-fill" class="xp-bar-fill"></div></div>
         <p id="p-xp-text" style="font-size:0.7rem; letter-spacing:1px;">XP: 0 / 0</p>
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:20px;">
-            <div style="background:#0a0a0a; padding:10px; border: 1px solid #222;">
-                <small style="color:var(--neon-green)">NPC_KILLS</small><br><strong id="p-npc" style="font-size:1.2rem;">0</strong>
+            <div style="background:rgba(10,10,10,0.8); border: 1px solid #222; padding:10px;">
+                <small style="color:var(--neon-green)">NPC_K</small><br><strong id="p-npc" style="font-size:1.2rem;">0</strong>
             </div>
-            <div style="background:#0a0a0a; padding:10px; border: 1px solid #222;">
-                <small style="color:var(--neon-orange)">PVP_KILLS</small><br><strong id="p-pvp" style="font-size:1.2rem;">0</strong>
+            <div style="background:rgba(10,10,10,0.8); border: 1px solid #222; padding:10px;">
+                <small style="color:var(--neon-orange)">PVP_K</small><br><strong id="p-pvp" style="font-size:1.2rem;">0</strong>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    const API = "https://script.google.com/macros/s/AKfycbz5Tv1O2-_bNqSFSsbD1iymYBiu9KOB3Iz46EOanWzQER1XXRwNBNujXx0bPJRFt8Rj/exec"; 
+    const API = "https://script.google.com/macros/s/AKfycbw8NwXzBPiTDqmPMe1KpNH492owK9bVEhFJZTbZm1zk2BmbXt-xoPXMaCo8xIgYWkW1/exec"; 
     let cachePlayers = [];
+    
+    // ELEMENTOS DE SONIDO
+    const sndHover = document.getElementById('snd-hover');
+    const sndOpen = document.getElementById('snd-open');
 
     async function update() {
         try {
             const res = await fetch(API);
             const data = await res.json();
-            const body = document.getElementById('table-players');
-            body.innerHTML = '';
             let list = [], n_total = 0, p_total = 0;
 
             data.forEach(f => {
@@ -157,76 +172,104 @@
                     list.push(j);
                     n_total += parseInt(j.npc || 0);
                     p_total += parseInt(j.pvp || 0);
-                    body.innerHTML += `
-                        <tr onclick="openProfile('${j.uuid}')">
-                            <td>
-                                <img src="https://secondlife.com/app/image/${j.uuid}/1" style="width:30px; height:30px; border:1px solid var(--neon-green); vertical-align:middle; margin-right:12px;"> 
-                                ${j.nombre}
-                            </td>
-                            <td><span style="color:var(--neon-green)">LVL ${j.nivel}</span></td>
-                            <td style="color:#888; font-size:0.8rem">💀 ${j.npc}  |  ⚔️ ${j.pvp}</td>
-                        </tr>`;
                 });
             });
             
             if(cachePlayers.length > 0) compareData(list);
             cachePlayers = list;
+            renderPlayers(list);
+
             document.getElementById('count-jug').innerText = list.length;
             document.getElementById('count-npc').innerText = n_total;
             document.getElementById('count-pvp').innerText = p_total;
-        } catch (e) { console.log("Error sincronización."); }
+        } catch (e) { console.log("Falla sincronización."); }
+    }
+
+    function renderPlayers(players) {
+        const body = document.getElementById('table-players');
+        body.innerHTML = '';
+        if(players.length === 0) {
+            body.innerHTML = '<tr><td colspan="3" style="text-align:center; color:red; padding:20px;">SIN RESULTADOS_</td></tr>';
+            return;
+        }
+        players.forEach(j => {
+            const row = document.createElement('tr');
+            
+            // AGREGAR SONIDO HOVER vía JS
+            row.addEventListener('mouseover', () => {
+                sndHover.currentTime = 0; // Reiniciar sonido si ya estaba sonando
+                sndHover.volume = 0.2; // Volumen bajo para no molestar
+                sndHover.play();
+            });
+            
+            row.addEventListener('click', () => openProfile('${j.uuid}') ); // Cambiado para pasarlo correcto
+
+            row.innerHTML = `
+                    <td>
+                        <img src="https://secondlife.com/app/image/${j.uuid}/1" style="width:30px; height:30px; border:1px solid var(--neon-green); vertical-align:middle; margin-right:12px; box-shadow: 0 0 5px var(--neon-green);"> 
+                        ${j.nombre}
+                    </td>
+                    <td><span style="color:var(--neon-green); text-shadow: 0 0 5px var(--neon-green);">LVL ${j.nivel}</span></td>
+                    <td style="color:#aaa; font-size:0.8rem">💀 ${j.npc}  |  ⚔️ ${j.pvp}</td>
+                `;
+            
+            // Corregir la llamada onclick que estaba mal formateada en el template string anterior
+            row.setAttribute('onclick', "openProfile('" + j.uuid + "')");
+                
+            body.appendChild(row);
+        });
+    }
+
+    function filterPlayers() {
+        const text = document.getElementById('avatarSearch').value.toLowerCase();
+        const filtered = cachePlayers.filter(p => p.nombre.toLowerCase().includes(text));
+        renderPlayers(filtered);
     }
 
     function compareData(newList) {
         newList.forEach(nj => {
             let old = cachePlayers.find(o => o.uuid === nj.uuid);
             if(old) {
-                if(parseInt(nj.nivel) > parseInt(old.nivel)) {
-                    addLog(`🌟 NIVEL UP: ${nj.nombre} ALCANZÓ EL NIVEL ${nj.nivel}`, "green");
-                }
-                if(parseInt(nj.pvp) > parseInt(old.pvp)) {
-                    addLog(`⚔️ PVP_KILL: ${nj.nombre} HA ELIMINADO A UN OBJETIVO`, "orange");
-                }
+                if(parseInt(nj.nivel) > parseInt(old.nivel)) addLog(`NIVEL UP: ${nj.nombre}`, "green");
+                if(parseInt(nj.pvp) > parseInt(old.pvp)) addLog(`PVP_KILL: ${nj.nombre}`, "orange");
             }
         });
     }
 
     function addLog(msg, colorType) {
         const log = document.getElementById('log-content');
-        const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
+        const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
         const color = colorType === "green" ? "var(--neon-green)" : "var(--neon-orange)";
-        
-        log.innerHTML = `
-            <div class="event-item">
-                <span class="event-time">[${time}]</span>
-                <span style="color:${color}">${msg}</span>
-            </div>` + log.innerHTML;
-        
-        if(log.children.length > 10) log.lastChild.remove();
+        log.innerHTML = `<div class="event-item"><span class="event-time">[${time}]</span> <span style="color:${color}">${msg}</span></div>` + log.innerHTML;
+        if(log.children.length > 12) log.lastChild.remove(); // Un poco más largo el log
     }
 
     function openProfile(uuid) {
         const p = cachePlayers.find(x => x.uuid === uuid);
         if(!p) return;
+        
+        // SONIDO DE APERTURA
+        sndOpen.currentTime = 0;
+        sndOpen.volume = 0.5;
+        sndOpen.play();
+        
         document.getElementById('p-img').src = `https://secondlife.com/app/image/${uuid}/1`;
         document.getElementById('p-name').innerText = p.nombre;
         document.getElementById('p-npc').innerText = p.npc;
         document.getElementById('p-pvp').innerText = p.pvp;
-        
         const req = parseInt(p.nivel) * 500;
         const pct = (parseInt(p.xp) / req) * 100;
         document.getElementById('p-xp-fill').style.width = pct + "%";
-        document.getElementById('p-xp-text').innerText = `XP CARGADA: ${p.xp} / ${req} [${Math.round(pct)}%]`;
-        
-        let rango = p.nivel >= 90 ? "HEROE_SUPREMO" : p.nivel >= 40 ? "MAESTRO_GUERRERO" : "SUPERVIVIENTE";
-        document.getElementById('p-rango').innerText = ">> " + rango + " <<";
+        document.getElementById('p-xp-text').innerText = `XP CARGADA: ${p.xp} / ${req}`;
+        let rango = p.nivel >= 90 ? "HEROE" : p.nivel >= 40 ? "MAESTRO" : "SOLDADO";
+        document.getElementById('p-rango').innerText = ">> DATOS_RANGO: " + rango;
         document.getElementById('playerModal').style.display = 'flex';
     }
 
     function closeModal() { document.getElementById('playerModal').style.display = 'none'; }
 
     update();
-    setInterval(update, 20000); // Sincronización cada 20 segundos
+    setInterval(update, 30000); // Actualización cada 30 segundos
 </script>
 </body>
 </html>
