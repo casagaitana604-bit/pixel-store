@@ -25,7 +25,7 @@
             text-transform: uppercase; 
         }
         
-        /* NAVBAR NEO */
+        /* NAVBAR NEO UNIFICADA */
         .main-nav { 
             background: rgba(0, 0, 0, 0.9); display: flex; justify-content: space-between; align-items: center; padding: 15px 50px; 
             border-bottom: 2px solid var(--primary); box-shadow: 0 0 15px var(--primary);
@@ -33,10 +33,11 @@
         }
         .nav-logo { color: #fff; font-weight: bold; font-size: 1.4rem; letter-spacing: 2px; }
         .nav-logo span { color: var(--primary); }
-        .nav-links a { color: #ccc; text-decoration: none; margin-left: 25px; font-weight: bold; font-size: 0.9rem; }
+        .nav-links a { color: #ccc; text-decoration: none; margin-left: 25px; font-weight: bold; font-size: 0.9rem; transition: 0.3s; }
+        .nav-links a:hover { color: var(--primary); text-shadow: 0 0 5px var(--primary); }
         .nav-active { color: var(--primary) !important; border-bottom: 2px solid var(--primary); padding-bottom: 5px; }
 
-        /* --- TÍTULO GIGANTE --- */
+        /* --- TÍTULO GIGANTE HERO --- */
         .hero-header {
             text-align: center;
             padding: 60px 20px 20px 20px;
@@ -91,6 +92,7 @@
         @media (max-width: 900px) { 
             .main-title { font-size: 2.8rem; }
             .top-grid { grid-template-columns: 1fr; }
+            .main-nav { padding: 15px 20px; }
         }
     </style>
 </head>
@@ -101,12 +103,13 @@
     <div class="nav-links">
         <a href="index.html">INICIO</a>
         <a href="facciones.html" class="nav-active">FACCIONES / TOPS</a>
+        <a href="info.html">INFORMACIÓN</a>
     </div>
 </nav>
 
 <header class="hero-header">
     <h1 class="main-title">PIXEL: FACCIONES</h1>
-    <div class="subtitle-bar">COMANDO CENTRAL DE ALIANZAS</div>
+    <div class="subtitle-bar">COMANDO CENTRAL DE ALIANZAS Y PODER</div>
 </header>
 
 <div class="container">
@@ -179,9 +182,13 @@
 
     async function changeG(id, g) {
         let ng = g == 'm' ? 'f' : 'm';
-        alert("Actualizando Identidad...");
-        await fetch(`${API}?action=setGender&id=${id}&genero=${ng}`, {method:'POST'});
-        load();
+        alert("Actualizando Identidad Digital...");
+        try {
+            await fetch(`${API}?action=setGender&id=${id}&genero=${ng}`, {method:'POST'});
+            load();
+        } catch (e) {
+            console.error("Error al cambiar género");
+        }
     }
 
     load();
