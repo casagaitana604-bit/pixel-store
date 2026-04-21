@@ -25,7 +25,6 @@
             text-transform: uppercase; 
         }
         
-        /* NAVBAR NEO */
         .main-nav { 
             background: rgba(0, 0, 0, 0.9); display: flex; justify-content: space-between; align-items: center; padding: 15px 50px; 
             border-bottom: 2px solid var(--primary); box-shadow: 0 0 15px var(--primary);
@@ -37,7 +36,6 @@
         .nav-links a:hover { color: var(--primary); text-shadow: 0 0 5px var(--primary); }
         .nav-active { color: var(--primary) !important; border-bottom: 2px solid var(--primary); padding-bottom: 5px; }
 
-        /* TÍTULO GIGANTE */
         .hero-header {
             text-align: center;
             padding: 60px 20px 20px 20px;
@@ -71,7 +69,7 @@
         .top-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #222; font-size: 0.85rem; }
 
         .fac-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
-        .fac-card { background: var(--card); padding: 20px; border-radius: 10px; border: 1px solid #333; position: relative; backdrop-filter: blur(10px); }
+        .fac-card { background: var(--card); padding: 20px; border-radius: 10px; border: 1px solid #333; position: relative; backdrop-filter: blur(10px); margin-bottom: 20px; }
         .fac-card h2 { color: var(--neon-green); margin: 0 0 5px 0; font-size: 1.4rem; text-shadow: 0 0 5px var(--neon-green); }
         .status-tag { background: var(--primary); color: white; padding: 2px 8px; font-size: 0.7rem; border-radius: 3px; float: right; font-weight: bold; }
 
@@ -118,59 +116,67 @@
 </div>
 
 <script>
-    const API = "https://script.google.com/macros/s/AKfycbzkXiboT7rUWYzt_sn-AjtxcosoiEcMGKMVVsLZGbynkJyozSpn3xoGSm82Kt18QEv6/exec";
+    // USA TU URL DE GOOGLE APPS SCRIPT AQUÍ
+    const API = "https://script.google.com/macros/s/AKfycbzJfYKoxSmQZvZMriqMdvM28Jqq7BkmNsIBG0OnohY3hMpJbkRIjDRl3CykArWej8QL/exec";
 
-    // FÓRMULA XP GLOBAL
     function calcularXPGlobal(n, xp) {
-        let lvl = parseInt(n);
-        let xpAcumulada = ((lvl - 1) * lvl / 2) * 500;
-        return xpAcumulada + parseInt(xp);
+        let lvl = parseInt(n) || 1;
+        let xpAcum = ((lvl - 1) * lvl / 2) * 500;
+        return xpAcum + (parseInt(xp) || 0);
     }
 
     async function load() {
         try {
             const res = await fetch(API);
             const data = await res.json();
+            
+            // CORRECCIÓN: Entrar a data.facciones
+            const facciones = data.facciones || [];
             const facList = document.getElementById('facciones-list');
             facList.innerHTML = '';
             let allPlayers = [];
 
-            data.forEach(f => {
-                allPlayers = allPlayers.concat(f.lista_integrantes);
-                let costoLvl = 5 * Math.pow(2, parseInt(f.nivel) - 1);
+            facciones.forEach(f => {
+                if(f.lista_integrantes) {
+                    allPlayers = allPlayers.concat(f.lista_integrantes);
+                }
+
+                let costoLvl = 5 * Math.pow(2, (parseInt(f.nivel) || 1) - 1);
                 let pctSuministros = Math.min(100, (parseInt(f.suministros || 0) / costoLvl) * 100);
 
                 let html = `
                     <div class="fac-card">
                         <span class="status-tag">${f.status || 'CIVILES'}</span>
                         <h2>${f.nombre}</h2>
-                        <small>CMDT: ${f.comandante}</small>
-                        <div style="margin-top: 15px; font-size: 0.7rem; color:var(--gold)">SUMINISTROS_LVL_${parseInt(f.nivel)+1}: ${f.suministros || 0} / ${costoLvl}</div>
+                        <small>CMDT: ${f.comandante || 'SIN ASIGNAR'}</small>
+                        <div style="margin-top: 15px; font-size: 0.7rem; color:var(--gold)">SUMINISTROS_NIVEL_${(parseInt(f.nivel) || 0) + 1}: ${f.suministros || 0} / ${costoLvl}</div>
                         <div class="xp-bar-container"><div class="xp-bar-fill" style="width: ${pctSuministros}%"></div></div>
-                        <div style="margin-bottom: 10px;"><small>GUERRA: ${f.puntos} BAJAS</small></div>
+                        <div style="margin-bottom: 10px;"><small>GUERRA: ${f.puntos || 0} BAJAS</small></div>
                         <hr style="border: 0; border-top: 1px solid #333;">
                         <div class="members-list">
                 `;
 
-                f.lista_integrantes.forEach(j => {
-                    html += `
-                        <div class="member-item">
-                            <img class="member-img" src="https://secondlife.com/app/image/${j.uuid}/2" 
-                                 onerror="this.src='https://secondlife.com/app/image/00000000-0000-0000-0000-000000000000/1'">
-                            <div>
-                                <div style="font-size: 0.8rem; color: #fff;">${j.nombre}</div>
-                                <div style="font-size: 0.65rem; color: var(--neon-green);">LVL ${j.nivel}</div>
-                            </div>
-                            <button class="gen-btn ${j.genero == 'f' ? 'female' : 'male'}" onclick="changeG('${j.uuid}','${j.genero}')">
-                                ${j.genero == 'f' ? '♀' : '♂'}
-                            </button>
-                        </div>`;
-                });
+                if(f.lista_integrantes) {
+                    f.lista_integrantes.forEach(j => {
+                        html += `
+                            <div class="member-item">
+                                <img class="member-img" src="https://secondlife.com/app/image/${j.uuid}/2" 
+                                     onerror="this.src='https://secondlife.com/app/image/00000000-0000-0000-0000-000000000000/1'">
+                                <div>
+                                    <div style="font-size: 0.8rem; color: #fff;">${j.nombre || 'DESCONOCIDO'}</div>
+                                    <div style="font-size: 0.65rem; color: var(--neon-green);">LVL ${j.nivel || 0}</div>
+                                </div>
+                                <button class="gen-btn ${j.genero == 'f' ? 'female' : 'male'}" onclick="changeG('${j.uuid}','${j.genero}')">
+                                    ${j.genero == 'f' ? '♀' : '♂'}
+                                </button>
+                            </div>`;
+                    });
+                }
 
                 facList.innerHTML += html + `</div></div>`;
             });
 
-            // TOP 5 XP GLOBAL CORREGIDO
+            // TOP XP
             document.getElementById('top-xp').innerHTML = [...allPlayers]
                 .sort((a,b) => calcularXPGlobal(b.nivel, b.xp) - calcularXPGlobal(a.nivel, a.xp))
                 .slice(0,5).map(j=>`
@@ -179,21 +185,40 @@
                     <span style="color:var(--gold)">${calcularXPGlobal(j.nivel, j.xp).toLocaleString()} XP</span>
                 </div>`).join('');
 
+            // TOP KILLS
             document.getElementById('top-kills').innerHTML = [...allPlayers]
-                .sort((a,b)=>(parseInt(b.npc)+parseInt(b.pvp))-(parseInt(a.npc)+parseInt(a.pvp)))
+                .sort((a,b)=>(parseInt(b.npc||0)+parseInt(b.pvp||0))-(parseInt(a.npc||0)+parseInt(a.pvp||0)))
                 .slice(0,5).map(j=>`
                 <div class="top-item">
                     <span><img src="https://secondlife.com/app/image/${j.uuid}/2" style="width:20px; vertical-align:middle; margin-right:5px; border-radius:3px;"> ${j.nombre}</span>
-                    <span style="color:var(--primary)">${parseInt(j.npc)+parseInt(j.pvp)} KILLS</span>
+                    <span style="color:var(--primary)">${(parseInt(j.npc||0)+parseInt(j.pvp||0))} KILLS</span>
                 </div>`).join('');
-        } catch (error) { console.error(error); }
+
+        } catch (error) { 
+            console.error("Error cargando facciones:", error); 
+        }
     }
 
     async function changeG(id, g) {
         let ng = g == 'm' ? 'f' : 'm';
-        alert("Actualizando Identidad Digital...");
-        await fetch(`${API}?action=setGender&id=${id}&genero=${ng}`, {method:'POST'});
-        load();
+        if(!confirm("¿Actualizar identidad digital a " + (ng == 'm' ? 'MASCULINO' : 'FEMENINO') + "?")) return;
+        
+        // CORRECCIÓN: URLSearchParams para POST
+        let formData = new URLSearchParams();
+        formData.append('action', 'setGender');
+        formData.append('id', id);
+        formData.append('genero', ng);
+
+        try {
+            await fetch(API, {
+                method: 'POST',
+                mode: 'no-cors', // Evita problemas de CORS
+                body: formData
+            });
+            setTimeout(load, 1000); // Recarga después de un segundo
+        } catch (e) {
+            console.error("Error al cambiar género:", e);
+        }
     }
 
     load();
