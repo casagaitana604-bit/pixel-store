@@ -258,14 +258,16 @@
             rawFacciones.forEach(f => {
                 if (f.lista_integrantes && Array.isArray(f.lista_integrantes)) {
                     f.lista_integrantes.forEach(j => {
-                        list.push(j);
-                        n_total += parseInt(j.npc || 0);
-                        p_total += parseInt(j.pvp || 0);
+                        // --- FILTRO ANTI-FILAS VACÍAS ---
+                        if (j.nombre && j.nombre.trim() !== "") {
+                            list.push(j);
+                            n_total += parseInt(j.npc || 0);
+                            p_total += parseInt(j.pvp || 0);
+                        }
                     });
                 }
             });
             
-            // --- GESTIÓN DE LOG DE ACTIVIDAD ---
             if(cachePlayers.length > 0) {
                 compareData(list);
             } else if (list.length > 0) {
