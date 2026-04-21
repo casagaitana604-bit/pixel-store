@@ -252,9 +252,8 @@
             const res = await fetch(API);
             const data = await res.json();
             
-            // USAMOS data.facciones PORQUE AHORA EL JSON ES UN OBJETO COMPLETO
             let list = [], n_total = 0, p_total = 0;
-            let rawFacciones = data.facciones || data;
+            let rawFacciones = data.facciones || [];
 
             rawFacciones.forEach(f => {
                 if (f.lista_integrantes && Array.isArray(f.lista_integrantes)) {
@@ -266,7 +265,14 @@
                 }
             });
             
-            if(cachePlayers.length > 0) compareData(list);
+            // --- GESTIÓN DE LOG DE ACTIVIDAD ---
+            if(cachePlayers.length > 0) {
+                compareData(list);
+            } else if (list.length > 0) {
+                document.getElementById('log-content').innerHTML = '';
+                addLog("📡 SISTEMA DE RED SINCRONIZADO", "green");
+            }
+
             cachePlayers = list;
             renderPlayers(list);
 
@@ -274,7 +280,6 @@
             document.getElementById('count-npc').innerText = n_total;
             document.getElementById('count-pvp').innerText = p_total;
 
-            // ACTUALIZACIÓN DE BARRA DE EVENTO GLOBAL
             if(data.evento) {
                 let pct = (data.evento.total / data.evento.meta) * 100;
                 if(pct > 100) pct = 100;
