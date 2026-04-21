@@ -8,6 +8,7 @@
         :root { 
             --neon-green: #39FF14; 
             --neon-orange: #FF5F1F; 
+            --neon-blue: #00ffff;
             --bg-overlay: rgba(0, 0, 0, 0.85);
             --card: rgba(13, 13, 13, 0.9);
             --text: #ffffff; 
@@ -67,6 +68,25 @@
         @keyframes titlePulse {
             0%, 100% { opacity: 1; filter: brightness(1) drop-shadow(0 0 10px var(--neon-orange)); }
             50% { opacity: 0.8; filter: brightness(1.3) drop-shadow(0 0 30px var(--neon-orange)); }
+        }
+
+        /* BARRA DE EVENTO GLOBAL */
+        .event-container {
+            max-width: 1400px; margin: 20px auto; padding: 0 25px;
+        }
+        .event-box {
+            background: rgba(0,0,0,0.8); border: 2px solid var(--neon-blue); padding: 20px; border-radius: 5px; 
+            box-shadow: 0 0 20px rgba(0,255,255,0.2); text-align: center; backdrop-filter: blur(10px);
+        }
+        .event-bar-bg {
+            background: #111; height: 30px; border: 1px solid #333; position: relative; border-radius: 15px; overflow: hidden; margin-top: 10px;
+        }
+        .event-bar-fill {
+            background: linear-gradient(90deg, #0088ff, var(--neon-blue)); height: 100%; width: 0%; 
+            transition: 2s cubic-bezier(0.1, 1, 0.1, 1); box-shadow: 0 0 20px var(--neon-blue);
+        }
+        .event-text-overlay {
+            position: absolute; width: 100%; left: 0; top: 5px; font-weight: bold; text-shadow: 1px 1px 2px #000; font-size: 0.9rem;
         }
 
         .container { 
@@ -148,6 +168,18 @@
     <div class="subtitle-bar">ESTADO DE LA RED DE SUPERVIVIENTES V3.0</div>
 </header>
 
+<div class="event-container">
+    <div class="event-box">
+        <h3 style="color: var(--neon-blue); margin: 0 0 5px 0; letter-spacing: 3px;">🎯 OPERACIÓN: LIMPIEZA GLOBAL</h3>
+        <p style="margin: 0; font-size: 0.7rem; color: #aaa;">OBJETIVO: ELIMINAR AMENAZA VIRAL PARA DESBLOQUEAR SUMINISTROS</p>
+        <div class="event-bar-bg">
+            <div id="event-bar-fill" class="event-bar-fill"></div>
+            <div id="event-text" class="event-text-overlay">SINCRONIZANDO OBJETIVO...</div>
+        </div>
+        <p style="margin-top: 10px; font-size: 0.75rem; color: #ccc;">RECOMPENSA: <span style="color:var(--neon-green)">4,000 XP</span> + <span style="color:var(--neon-orange)">25 POCIONES</span> (COBRAR EN EL CUARTEL)</p>
+    </div>
+</div>
+
 <div class="container">
     <div class="main-content">
         <div class="stats-grid">
@@ -184,7 +216,7 @@
     <div class="modal-content">
         <span onclick="closeModal()" style="position:absolute; top:20px; right:25px; cursor:pointer; color:var(--neon-orange); font-weight:bold; font-size:1.5rem;">[X]</span>
         <img id="p-img" src="" class="profile-img">
-        <h2 id="p-name" style="margin:5px 0; color:var(--neon-green); letter-spacing:2px; text-shadow: 0 0 15px var(--neon-green);">NOMBRE</h2>
+        <h2 id="p-name" style="margin:5px 0; color:var(--neon-green); letter-spacing:3px; text-shadow: 0 0 15px var(--neon-green);">NOMBRE</h2>
         <p id="p-rango" style="font-weight:bold; color:var(--neon-orange); font-size:0.9rem; text-shadow: 0 0 8px var(--neon-orange); margin-bottom: 20px;">RANGO_ANALYSIS</p>
         
         <div class="xp-bar-container"><div id="p-xp-fill" class="xp-bar-fill"></div></div>
@@ -209,7 +241,6 @@
     const sndHover = document.getElementById('snd-hover');
     const sndOpen = document.getElementById('snd-open');
 
-    // FÓRMULA XP GLOBAL (SUMA DE NIVELES ANTERIORES)
     function calcularXPGlobal(n, xp) {
         let lvl = parseInt(n);
         let xpAcumulada = ((lvl - 1) * lvl / 2) * 500;
@@ -220,9 +251,12 @@
         try {
             const res = await fetch(API);
             const data = await res.json();
+            
+            // USAMOS data.facciones PORQUE AHORA EL JSON ES UN OBJETO COMPLETO
             let list = [], n_total = 0, p_total = 0;
+            let rawFacciones = data.facciones || data;
 
-            data.forEach(f => {
+            rawFacciones.forEach(f => {
                 if (f.lista_integrantes && Array.isArray(f.lista_integrantes)) {
                     f.lista_integrantes.forEach(j => {
                         list.push(j);
@@ -239,6 +273,20 @@
             document.getElementById('count-jug').innerText = list.length;
             document.getElementById('count-npc').innerText = n_total;
             document.getElementById('count-pvp').innerText = p_total;
+
+            // ACTUALIZACIÓN DE BARRA DE EVENTO GLOBAL
+            if(data.evento) {
+                let pct = (data.evento.total / data.evento.meta) * 100;
+                if(pct > 100) pct = 100;
+                document.getElementById('event-bar-fill').style.width = pct + "%";
+                document.getElementById('event-text').innerText = `PROGRESO: ${data.evento.total.toLocaleString()} / ${data.evento.meta.toLocaleString()} VIRUS ELIMINADOS (${Math.round(pct)}%)`;
+                
+                if(data.evento.completado) {
+                    document.getElementById('event-text').innerText = "¡META ALCANZADA! RECLAMA TU PREMIO EN EL CUARTEL GENERAL";
+                    document.getElementById('event-bar-fill').style.background = "linear-gradient(90deg, #39FF14, #00ffff)";
+                }
+            }
+
         } catch (e) { 
             console.log("Error de Sincronización."); 
             addLog("⚠️ ERROR DE CONEXIÓN CON LA NUBE", "orange");
@@ -329,7 +377,6 @@
         const pct = (parseInt(p.xp) / req) * 100;
         document.getElementById('p-xp-fill').style.width = pct + "%";
         
-        // MOSTRAR XP GLOBAL EN EL PERFIL
         let xpGlobal = calcularXPGlobal(p.nivel, p.xp);
         document.getElementById('p-xp-text').innerText = `PROGRESO NIVEL: ${p.xp} / ${req} | XP GLOBAL: ${xpGlobal.toLocaleString()}`;
         
