@@ -136,7 +136,7 @@
             box-shadow: 0 0 40px var(--neon-green); width: 90%; max-width: 450px; text-align: center; position: relative; 
             animation: modalSpawn 0.4s cubic-bezier(0.17, 0.67, 0.83, 0.67);
         }
-        .profile-img { width: 180px; height: 180px; border-radius: 5px; border: 2px solid var(--neon-orange); box-shadow: 0 0 20px var(--neon-orange); object-fit: cover; margin-bottom: 25px; }
+        .profile-img { width: 180px; height: 180px; border-radius: 5px; border: 2px solid var(--neon-orange); box-shadow: 0 0 20px var(--neon-orange); object-fit: cover; margin-bottom: 25px; background: #111; }
         .xp-bar-container { background: #111; height: 16px; border: 1px solid #333; margin: 25px 0; position: relative; }
         .xp-bar-fill { background: var(--neon-green); height: 100%; width: 0%; transition: 1.8s cubic-bezier(0.1, 1, 0.1, 1); box-shadow: 0 0 15px var(--neon-green); }
 
@@ -258,7 +258,6 @@
             rawFacciones.forEach(f => {
                 if (f.lista_integrantes && Array.isArray(f.lista_integrantes)) {
                     f.lista_integrantes.forEach(j => {
-                        // --- FILTRO ANTI-FILAS VACÍAS ---
                         if (j.nombre && j.nombre.trim() !== "") {
                             list.push(j);
                             n_total += parseInt(j.npc || 0);
@@ -315,18 +314,22 @@
                 sndHover.play(); 
             });
             
+            // --- CORRECCIÓN DE LA URL DE IMAGEN ---
+            const imgUrl = `https://my-secondlife-com.s3.amazonaws.com/users/${j.nombre.replace(/ /g, '.').toLowerCase()}/thumb_sl_image.png`;
+            const fallbackUrl = `https://secondlife.com/app/image/${j.uuid}/1`;
+
             row.innerHTML = `
                 <td>
-                    <img src="https://secondlife.com/app/image/${j.uuid}/2" 
-                         onerror="this.src='https://secondlife.com/app/image/00000000-0000-0000-0000-000000000000/1'"
-                         style="width:35px; height:35px; border:1px solid var(--neon-green); vertical-align:middle; margin-right:15px; box-shadow: 0 0 8px var(--neon-green); object-fit: cover;"> 
+                    <img src="${imgUrl}" 
+                         onerror="this.src='${fallbackUrl}'"
+                         style="width:35px; height:35px; border:1px solid var(--neon-green); vertical-align:middle; margin-right:15px; box-shadow: 0 0 8px var(--neon-green); object-fit: cover; background: #000;"> 
                     ${j.nombre}
                 </td>
                 <td><span style="color:var(--neon-green); text-shadow: 0 0 5px var(--neon-green); font-weight:bold;">NIVEL ${j.nivel}</span></td>
                 <td style="color:#aaa; font-size:0.85rem">💀 NPC: ${j.npc}  |  ⚔️ PVP: ${j.pvp}</td>
             `;
             
-            row.setAttribute('onclick', "openProfile('" + j.uuid + "')");
+            row.setAttribute('onclick', "openProfile('" + j.uuid + "', '" + j.nombre + "')");
             body.appendChild(row);
         });
     }
@@ -367,14 +370,17 @@
         if(log.children.length > 15) log.lastChild.remove();
     }
 
-    function openProfile(uuid) {
+    function openProfile(uuid, nombre) {
         const p = cachePlayers.find(x => x.uuid === uuid);
         if(!p) return;
         
         sndOpen.currentTime = 0; sndOpen.volume = 0.4; sndOpen.play();
         
         const imgElement = document.getElementById('p-img');
-        imgElement.src = `https://secondlife.com/app/image/${uuid}/2`;
+        // --- CORRECCIÓN DE LA URL DE IMAGEN EN EL MODAL ---
+        const imgUrl = `https://my-secondlife-com.s3.amazonaws.com/users/${nombre.replace(/ /g, '.').toLowerCase()}/sl_image.png`;
+        imgElement.src = imgUrl;
+        imgElement.onerror = function() { this.src = `https://secondlife.com/app/image/${uuid}/2`; };
         
         document.getElementById('p-name').innerText = p.nombre;
         document.getElementById('p-npc').innerText = p.npc;
