@@ -189,7 +189,7 @@
     <div class="nav-logo">PIXEL <span>SURVIVAL</span></div>
     <div class="nav-links">
         <a href="index.html" class="nav-active">DASHBOARD</a>
-        <a href="facciones.html">FACCIONES / TOPS</a>
+        <a href="galeria.html">GALERÍA / EVIDENCIAS</a>
         <a href="info.html">INFORMACIÓN</a>
     </div>
 </nav>
@@ -272,6 +272,7 @@
 </div>
 
 <script>
+    // CAMBIA ESTA URL POR TU NUEVA IMPLEMENTACIÓN DE GOOGLE
     const API = "https://script.google.com/macros/s/AKfycbweFgGhl1QakYSRNoEiq2xFtp1DixrFUgpPFDEiP-VudUaUM6tC93LwJt4MAuvPzunG/exec"; 
     let cachePlayers = [];
     const sndHover = document.getElementById('snd-hover');
@@ -303,7 +304,7 @@
                 }
             });
             
-            // --- NUEVO: ORDENAR POR NIVEL (DE MAYOR A MENOR) ---
+            // ORDENAR POR NIVEL (DE MAYOR A MENOR)
             list.sort((a, b) => parseInt(b.nivel) - parseInt(a.nivel));
 
             if(cachePlayers.length > 0) {
@@ -346,7 +347,6 @@
             return;
         }
 
-        // --- SE AÑADE EL ÍNDICE PARA EL RANKING ---
         players.forEach((j, index) => {
             const row = document.createElement('tr');
             row.addEventListener('mouseover', () => { 
@@ -367,7 +367,7 @@
                     ${j.nombre}
                 </td>
                 <td><span style="color:var(--neon-green); text-shadow: 0 0 5px var(--neon-green); font-weight:bold;">NIVEL ${j.nivel}</span></td>
-                <td style="color:#aaa; font-size:0.85rem">💀 NPC: ${j.npc}  |  ⚔️ PVP: ${j.pvp}</td>
+                <td style="color:#aaa; font-size:0.85rem">💀 NPC: ${j.npc} | ⚔️ PVP: ${j.pvp}</td>
             `;
             
             row.setAttribute('onclick', "openProfile('" + j.uuid + "', '" + j.nombre + "')");
