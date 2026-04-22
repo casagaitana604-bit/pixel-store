@@ -3,97 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PIXEL RPG - Galería de Evidencias</title>
+    <title>PIXEL RPG - Evidencias de Combate</title>
     <style>
         :root { 
             --neon-green: #39FF14; 
             --neon-orange: #FF5F1F; 
-            --bg: #050505;
+            --neon-blue: #00ffff;
+            --card: rgba(13, 13, 13, 0.9);
         }
         body { 
-            font-family: 'Segoe UI', sans-serif; background: var(--bg); color: #fff; margin: 0; text-transform: uppercase;
+            font-family: 'Segoe UI', sans-serif; 
+            background: #050505; color: #fff; text-transform: uppercase; margin: 0;
         }
-        .header {
-            text-align: center; padding: 40px; border-bottom: 2px solid var(--neon-green);
-            background: linear-gradient(to bottom, #111, #050505);
+        .main-nav { 
+            background: #000; display: flex; justify-content: space-between; padding: 15px 50px; 
+            border-bottom: 2px solid var(--neon-orange); box-shadow: 0 0 15px var(--neon-orange);
         }
-        .gallery-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px; padding: 40px; max-width: 1400px; margin: auto;
+        .upload-container {
+            max-width: 600px; margin: 50px auto; padding: 30px;
+            background: var(--card); border: 1px solid var(--neon-green);
+            box-shadow: 0 0 20px rgba(57, 255, 20, 0.2); text-align: center;
         }
-        .evidence-card {
-            background: #0d0d0d; border: 1px solid #222; border-radius: 5px; overflow: hidden;
-            transition: 0.4s; position: relative;
+        .preview-img {
+            width: 100%; max-height: 300px; object-fit: contain;
+            margin: 20px 0; border: 1px dashed #444; display: none;
         }
-        .evidence-card:hover {
-            border-color: var(--neon-orange); transform: translateY(-5px);
-            box-shadow: 0 0 20px rgba(255, 95, 31, 0.2);
+        input[type="file"] { display: none; }
+        .custom-file-upload {
+            display: inline-block; padding: 12px 30px; cursor: pointer;
+            border: 1px solid var(--neon-blue); color: var(--neon-blue);
+            font-weight: bold; transition: 0.3s; margin-bottom: 20px;
         }
-        .evidence-img {
-            width: 100%; height: 200px; object-fit: cover; border-bottom: 1px solid #222;
-            cursor: pointer; transition: 0.3s;
+        .custom-file-upload:hover { background: var(--neon-blue); color: #000; }
+        button {
+            width: 100%; padding: 15px; background: var(--neon-green);
+            color: #000; border: none; font-weight: bold; cursor: pointer;
+            letter-spacing: 2px;
         }
-        .evidence-img:hover { filter: brightness(1.2); }
-        .evidence-info { padding: 15px; }
-        .author-tag { color: var(--neon-green); font-weight: bold; font-size: 0.8rem; display: block; }
-        .desc-tag { color: #888; font-size: 0.75rem; margin-top: 5px; display: block; }
-        
-        .btn-upload {
-            position: fixed; bottom: 30px; right: 30px;
-            background: var(--neon-orange); color: #000; padding: 15px 30px;
-            text-decoration: none; font-weight: bold; border-radius: 50px;
-            box-shadow: 0 0 20px var(--neon-orange); z-index: 100;
+        input[type="text"] {
+            width: 100%; padding: 12px; background: #111; border: 1px solid #333;
+            color: #fff; margin-bottom: 20px; box-sizing: border-box;
         }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <h1 style="letter-spacing:10px; margin:0;">ARCHIVOS DE <span style="color:var(--neon-orange)">COMBATE</span></h1>
-    <p style="color:var(--neon-green); font-size:0.8rem;">REGISTRO VISUAL DE BAJAS CONFIRMADAS</p>
-    <a href="index.html" style="color:#555; text-decoration:none; font-size:0.7rem;">[ VOLVER AL DASHBOARD ]</a>
-</div>
+<nav class="main-nav">
+    <div style="font-weight:bold; letter-spacing:3px;">PIXEL <span style="color:var(--neon-green)">SURVIVAL</span></div>
+    <div class="nav-links">
+        <a href="index.html" style="color:#fff; text-decoration:none;">VOLVER AL DASHBOARD</a>
+    </div>
+</nav>
 
-<div class="gallery-grid" id="gallery">
-    <p id="loading" style="text-align:center; width:100%; grid-column: 1/-1;">ACCEDIENDO A LA BASE DE DATOS VISUAL...</p>
-</div>
+<div class="upload-container">
+    <h2 style="color:var(--neon-green); letter-spacing:5px;">SUBIR EVIDENCIA DE BAJA</h2>
+    <p style="font-size:0.7rem; color:#888;">FORMATO REQUERIDO: PNG/JPG | MAX 5MB</p>
 
-<a href="evidencias.html" class="btn-upload">+ SUBIR NUEVA EVIDENCIA</a>
+    <label class="custom-file-upload">
+        <input type="file" id="fileInput" accept="image/*" onchange="previewImage(event)">
+        SELECCIONAR CAPTURA DE PANTALLA
+    </label>
+
+    <img id="imagePreview" class="preview-img">
+
+    <input type="text" id="avatarName" placeholder="NOMBRE DEL AVATAR QUE REALIZÓ LA BAJA">
+    <input type="text" id="description" placeholder="DESCRIPCIÓN (EJ: ELIMINACIÓN EN WESTWALD)">
+
+    <button onclick="uploadToCloud()">ENVIAR A LA BASE DE DATOS</button>
+    <p id="status" style="margin-top:20px; font-size:0.8rem;"></p>
+</div>
 
 <script>
-    const API = "https://script.google.com/macros/s/AKfycbw60TO1Q8J-o2v5BlcPo2l6h_hFvqIcOds1i0bW7iOcjoUzAfdtL-Jewf33KqxJgVlC/exec"; // PON TU URL AQUÍ
-
-    async function loadGallery() {
-        try {
-            const res = await fetch(API + "?accion=GET_EVIDENCIAS");
-            const data = await res.json();
-            const container = document.getElementById('gallery');
-            document.getElementById('loading').remove();
-
-            if (data.evidencias.length === 0) {
-                container.innerHTML = "<p style='grid-column:1/-1; text-align:center;'>NO HAY EVIDENCIAS REGISTRADAS TODAVÍA.</p>";
-                return;
-            }
-
-            data.evidencias.forEach(ev => {
-                const card = document.createElement('div');
-                card.className = 'evidence-card';
-                card.innerHTML = `
-                    <img src="${ev.url}" class="evidence-img" onclick="window.open('${ev.url}')">
-                    <div class="evidence-info">
-                        <span class="author-tag">OPERATIVO: ${ev.autor}</span>
-                        <span class="desc-tag">${ev.desc || 'SIN DESCRIPCIÓN ADICIONAL'}</span>
-                        <small style="color:#444; font-size:0.6rem; display:block; margin-top:10px;">${new Date(ev.fecha).toLocaleString()}</small>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        } catch (e) {
-            document.getElementById('loading').innerText = "❌ ERROR AL SINCRONIZAR GALERÍA";
+    function previewImage(event) {
+        const reader = new FileReader();
+        reader.onload = function() {
+            const output = document.getElementById('imagePreview');
+            output.src = reader.result;
+            output.style.display = 'block';
         }
+        reader.readAsDataURL(event.target.files[0]);
     }
 
-    loadGallery();
+    async function uploadToCloud() {
+        const file = document.getElementById('fileInput').files[0];
+        const name = document.getElementById('avatarName').value;
+        const desc = document.getElementById('description').value;
+        const status = document.getElementById('status');
+
+        if (!file || !name) {
+            status.innerText = "❌ ERROR: FALTA IMAGEN O NOMBRE";
+            status.style.color = "red";
+            return;
+        }
+
+        status.innerText = "📡 CODIFICANDO Y SUBIENDO EVIDENCIA...";
+        
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = async function() {
+            const base64String = reader.result.split(',')[1];
+            
+            const formData = new FormData();
+            formData.append('imagen_base64', base64String);
+            formData.append('nombre_avatar', name);
+            formData.append('descripcion', desc);
+
+            try {
+                // AQUÍ USAS LA MISMA URL DE TU API DE GOOGLE
+                await fetch("https://script.google.com/macros/s/AKfycbw60TO1Q8J-o2v5BlcPo2l6h_hFvqIcOds1i0bW7iOcjoUzAfdtL-Jewf33KqxJgVlC/exec", {
+                    method: "POST",
+                    body: new URLSearchParams(formData)
+                });
+                status.innerText = "✅ EVIDENCIA REGISTRADA CON ÉXITO";
+                status.style.color = "var(--neon-green)";
+            } catch (e) {
+                status.innerText = "❌ ERROR EN EL ENLACE DE RED";
+            }
+        };
+    }
 </script>
 </body>
 </html>
