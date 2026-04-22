@@ -292,60 +292,48 @@
         return xpAcumulada + parseInt(xp);
     }
 
-    async function update() {
-        try {
-            const res = await fetch(API);
-            const data = await res.json();
-            
-            let list = [], n_total = 0, p_total = 0;
-            let rawFacciones = data.facciones || [];
+async function update() {
+    try {
+        const res = await fetch(API);
+        const data = await res.json();
+        
+        let list = [];
+        let n_total = 0;
+        let p_total = 0;
 
-            rawFacciones.forEach(f => {
-                if (f.lista_integrantes && Array.isArray(f.lista_integrantes)) {
-                    f.lista_integrantes.forEach(j => {
-                        if (j.nombre && j.nombre.trim() !== "") {
-                            list.push(j);
-                            n_total += parseInt(j.npc || 0);
-                            p_total += parseInt(j.pvp || 0);
-                        }
-                    });
-                }
+        // Extraemos todos los jugadores de todas las facciones
+        if (data.facciones) {
+            data.facciones.forEach(f => {
+                f.lista_integrantes.forEach(j => {
+                    list.push(j);
+                    n_total += parseInt(j.npc || 0);
+                    p_total += parseInt(j.pvp || 0);
+                });
             });
-            
-            // --- ACTUALIZACIÓN: ORDENAR POR NIVEL (MAYOR A MENOR) ---
-            list.sort((a, b) => parseInt(b.nivel) - parseInt(a.nivel));
-
-            if(cachePlayers.length > 0) {
-                compareData(list);
-            } else if (list.length > 0) {
-                document.getElementById('log-content').innerHTML = '';
-                addLog("📡 SISTEMA DE RED SINCRONIZADO", "green");
-            }
-
-            cachePlayers = list;
-            renderPlayers(list);
-
-            document.getElementById('count-jug').innerText = list.length;
-            document.getElementById('count-npc').innerText = n_total;
-            document.getElementById('count-pvp').innerText = p_total;
-
-            if(data.evento) {
-                let pct = (data.evento.total / data.evento.meta) * 100;
-                if(pct > 100) pct = 100;
-                document.getElementById('event-bar-fill').style.width = pct + "%";
-                document.getElementById('event-text').innerText = `PROGRESO: ${data.evento.total.toLocaleString()} / ${data.evento.meta.toLocaleString()} VIRUS ELIMINADOS (${Math.round(pct)}%)`;
-                
-                if(data.evento.completado) {
-                    document.getElementById('event-text').innerText = "¡META ALCANZADA! RECLAMA TU PREMIO EN EL CUARTEL GENERAL";
-                    document.getElementById('event-bar-fill').style.background = "linear-gradient(90deg, #39FF14, #00ffff)";
-                }
-            }
-
-        } catch (e) { 
-            console.log("Error de Sincronización."); 
-            addLog("⚠️ ERROR DE CONEXIÓN CON LA NUBE", "orange");
         }
+
+        // Ordenar por nivel de mayor a menor
+        list.sort((a, b) => b.nivel - a.nivel);
+
+        cachePlayers = list;
+        renderPlayers(list);
+
+        document.getElementById('count-jug').innerText = list.length;
+        document.getElementById('count-npc').innerText = n_total;
+        document.getElementById('count-pvp').innerText = p_total;
+
+        // Actualizar barra de evento
+        if(data.evento) {
+            let pct = (n_total / data.evento.meta) * 100;
+            document.getElementById('event-bar-fill').style.width = Math.min(pct, 100) + "%";
+            document.getElementById('event-text').innerText = `PROGRESO: ${n_total.toLocaleString()} / ${data.evento.meta.toLocaleString()} VIRUS ELIMINADOS (${Math.round(pct)}%)`;
+        }
+
+    } catch (e) { 
+        console.error("Error:", e);
+        addLog("⚠️ ERROR: DATOS CORRUPTOS O API CAÍDA", "orange");
     }
+}
 
     function renderPlayers(players) {
         const body = document.getElementById('table-players');
