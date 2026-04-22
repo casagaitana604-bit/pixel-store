@@ -13,8 +13,18 @@
         body { 
             font-family: 'Segoe UI', sans-serif; background: var(--bg); color: #fff; margin: 0; text-transform: uppercase;
         }
+        /* NAVBAR INTEGRADA */
+        .main-nav { 
+            background: #000; display: flex; justify-content: space-between; align-items: center; padding: 15px 50px; 
+            border-bottom: 2px solid var(--neon-green); box-shadow: 0 0 15px var(--neon-green);
+            position: sticky; top: 0; z-index: 1000; 
+        }
+        .nav-links a { color: #ccc; text-decoration: none; margin-left: 25px; font-weight: bold; font-size: 0.8rem; transition: 0.3s; }
+        .nav-links a:hover { color: var(--neon-green); }
+        .nav-active { color: var(--neon-orange) !important; border-bottom: 2px solid var(--neon-orange); padding-bottom: 5px; }
+
         .header {
-            text-align: center; padding: 40px; border-bottom: 2px solid var(--neon-green);
+            text-align: center; padding: 40px; 
             background: linear-gradient(to bottom, #111, #050505);
         }
         .gallery-grid {
@@ -33,7 +43,6 @@
             width: 100%; height: 200px; object-fit: cover; border-bottom: 1px solid #222;
             cursor: pointer; transition: 0.3s;
         }
-        .evidence-img:hover { filter: brightness(1.2); }
         .evidence-info { padding: 15px; }
         .author-tag { color: var(--neon-green); font-weight: bold; font-size: 0.8rem; display: block; }
         .desc-tag { color: #888; font-size: 0.75rem; margin-top: 5px; display: block; }
@@ -48,29 +57,38 @@
 </head>
 <body>
 
+<nav class="main-nav">
+    <div style="font-weight:bold; letter-spacing:3px; color:#fff;">PIXEL <span style="color:var(--neon-green)">SURVIVAL</span></div>
+    <div class="nav-links">
+        <a href="index.html">DASHBOARD</a>
+        <a href="facciones.html">FACCIONES</a>
+        <a href="galeria.html" class="nav-active">EVIDENCIAS</a>
+    </div>
+</nav>
+
 <div class="header">
     <h1 style="letter-spacing:10px; margin:0;">ARCHIVOS DE <span style="color:var(--neon-orange)">COMBATE</span></h1>
     <p style="color:var(--neon-green); font-size:0.8rem;">REGISTRO VISUAL DE BAJAS CONFIRMADAS</p>
-    <a href="index.html" style="color:#555; text-decoration:none; font-size:0.7rem;">[ VOLVER AL DASHBOARD ]</a>
 </div>
 
 <div class="gallery-grid" id="gallery">
     <p id="loading" style="text-align:center; width:100%; grid-column: 1/-1;">ACCEDIENDO A LA BASE DE DATOS VISUAL...</p>
 </div>
 
-<a href="evidencias.html" class="btn-upload">+ SUBIR NUEVA EVIDENCIA</a>
+<a href="subir.html" class="btn-upload">+ SUBIR NUEVA EVIDENCIA</a>
 
 <script>
-    const API = "https://script.google.com/macros/s/AKfycbw60TO1Q8J-o2v5BlcPo2l6h_hFvqIcOds1i0bW7iOcjoUzAfdtL-Jewf33KqxJgVlC/exec"; // PON TU URL AQUÍ
+    const API = "https://script.google.com/macros/s/AKfycbw60TO1Q8J-o2v5BlcPo2l6h_hFvqIcOds1i0bW7iOcjoUzAfdtL-Jewf33KqxJgVlC/exec";
 
     async function loadGallery() {
         try {
             const res = await fetch(API + "?accion=GET_EVIDENCIAS");
             const data = await res.json();
             const container = document.getElementById('gallery');
-            document.getElementById('loading').remove();
+            const loader = document.getElementById('loading');
+            if(loader) loader.remove();
 
-            if (data.evidencias.length === 0) {
+            if (!data.evidencias || data.evidencias.length === 0) {
                 container.innerHTML = "<p style='grid-column:1/-1; text-align:center;'>NO HAY EVIDENCIAS REGISTRADAS TODAVÍA.</p>";
                 return;
             }
@@ -92,7 +110,6 @@
             document.getElementById('loading').innerText = "❌ ERROR AL SINCRONIZAR GALERÍA";
         }
     }
-
     loadGallery();
 </script>
 </body>
