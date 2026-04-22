@@ -25,6 +25,46 @@
             text-transform: uppercase; 
         }
 
+        /* --- NUEVO ESTILO: BOTON GLITCH PARPADEO --- */
+        .btn-sl-glitch {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 15px 40px;
+            background: transparent;
+            border: 2px solid var(--neon-green);
+            color: var(--neon-green);
+            text-decoration: none;
+            font-weight: bold;
+            letter-spacing: 4px;
+            font-size: 1.2rem;
+            position: relative;
+            transition: 0.3s;
+            box-shadow: 0 0 15px var(--neon-green);
+            overflow: hidden;
+        }
+
+        .btn-sl-glitch:hover {
+            background: var(--neon-green);
+            color: #000;
+            box-shadow: 0 0 30px var(--neon-green);
+        }
+
+        /* Efecto parpadeo constante */
+        .glitch-blink {
+            animation: blink-anim 2s infinite;
+        }
+
+        @keyframes blink-anim {
+            0%, 100% { opacity: 1; filter: brightness(1); }
+            95% { opacity: 1; filter: brightness(1); }
+            96% { opacity: 0.2; filter: brightness(2); }
+            97% { opacity: 1; filter: brightness(1); }
+            98% { opacity: 0.5; filter: brightness(2); }
+            99% { opacity: 1; filter: brightness(1); }
+        }
+
+        /* --- FIN NUEVO ESTILO --- */
+
         /* NAVBAR NEO */
         .main-nav { 
             background: rgba(0, 0, 0, 0.9); display: flex; justify-content: space-between; align-items: center; padding: 15px 50px; 
@@ -125,7 +165,7 @@
         .event-log h3 { color: var(--neon-green); font-size: 1.2rem; text-shadow: 0 0 8px var(--neon-green); margin-top: 0; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; }
         #log-content { display: flex; flex-direction: column; }
         .event-item { font-size: 0.85rem; padding: 14px 0; border-bottom: 1px solid #222; animation: slideIn 0.4s ease-out; }
-        .event-time { color: var(--neon-orange); font-weight: bold; margin-right: 10px; font-family: monospace; }
+        .event-item .event-time { color: var(--neon-orange); font-weight: bold; margin-right: 10px; font-family: monospace; }
 
         @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
 
@@ -166,6 +206,10 @@
 <header class="hero-header">
     <h1 class="main-title">PIXEL STORE: RPG SURVIVAL</h1>
     <div class="subtitle-bar">ESTADO DE LA RED DE SUPERVIVIENTES V3.0</div>
+    <br>
+    <a href="secondlife://Westwald/72/118/1202" class="btn-sl-glitch glitch-blink">
+        TELEPORT AL SECTOR [WESTWALD]
+    </a>
 </header>
 
 <div class="event-container">
@@ -314,7 +358,6 @@
                 sndHover.play(); 
             });
             
-            // --- CORRECCIÓN DE LA URL DE IMAGEN ---
             const imgUrl = `https://my-secondlife-com.s3.amazonaws.com/users/${j.nombre.replace(/ /g, '.').toLowerCase()}/thumb_sl_image.png`;
             const fallbackUrl = `https://secondlife.com/app/image/${j.uuid}/1`;
 
@@ -377,7 +420,6 @@
         sndOpen.currentTime = 0; sndOpen.volume = 0.4; sndOpen.play();
         
         const imgElement = document.getElementById('p-img');
-        // --- CORRECCIÓN DE LA URL DE IMAGEN EN EL MODAL ---
         const imgUrl = `https://my-secondlife-com.s3.amazonaws.com/users/${nombre.replace(/ /g, '.').toLowerCase()}/sl_image.png`;
         imgElement.src = imgUrl;
         imgElement.onerror = function() { this.src = `https://secondlife.com/app/image/${uuid}/2`; };
