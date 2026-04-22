@@ -1,4 +1,4 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -239,6 +239,7 @@
         <table class="survival-table">
             <thead>
                 <tr>
+                    <th style="width: 50px;">POS</th>
                     <th>IDENTIDAD AVATAR</th>
                     <th>NIVEL</th>
                     <th>REGISTROS DE COMBATE</th>
@@ -311,6 +312,9 @@
                 }
             });
             
+            // --- ACTUALIZACIÓN: ORDENAR POR NIVEL (MAYOR A MENOR) ---
+            list.sort((a, b) => parseInt(b.nivel) - parseInt(a.nivel));
+
             if(cachePlayers.length > 0) {
                 compareData(list);
             } else if (list.length > 0) {
@@ -347,10 +351,12 @@
         const body = document.getElementById('table-players');
         body.innerHTML = '';
         if(players.length === 0) {
-            body.innerHTML = '<tr><td colspan="3" style="text-align:center; color:red; padding:40px; font-weight:bold;">SIN RESULTADOS EN LA BASE DE DATOS_</td></tr>';
+            body.innerHTML = '<tr><td colspan="4" style="text-align:center; color:red; padding:40px; font-weight:bold;">SIN RESULTADOS EN LA BASE DE DATOS_</td></tr>';
             return;
         }
-        players.forEach(j => {
+
+        // --- ACTUALIZACIÓN: INCLUIR POSICIÓN (RANKING) ---
+        players.forEach((j, index) => {
             const row = document.createElement('tr');
             row.addEventListener('mouseover', () => { 
                 sndHover.currentTime = 0; 
@@ -362,6 +368,7 @@
             const fallbackUrl = `https://secondlife.com/app/image/${j.uuid}/1`;
 
             row.innerHTML = `
+                <td style="color:var(--neon-blue); font-weight:bold; font-size:1.1rem; text-align:center;">#${index + 1}</td>
                 <td>
                     <img src="${imgUrl}" 
                          onerror="this.src='${fallbackUrl}'"
