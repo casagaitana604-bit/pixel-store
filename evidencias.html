@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PIXEL RPG - Evidencias de Combate</title>
+    <style>
+        :root { 
+            --neon-green: #39FF14; 
+            --neon-orange: #FF5F1F; 
+            --neon-blue: #00ffff;
+            --card: rgba(13, 13, 13, 0.9);
+        }
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background: #050505; color: #fff; text-transform: uppercase; margin: 0;
+        }
+        .main-nav { 
+            background: #000; display: flex; justify-content: space-between; padding: 15px 50px; 
+            border-bottom: 2px solid var(--neon-orange); box-shadow: 0 0 15px var(--neon-orange);
+        }
+        .upload-container {
+            max-width: 600px; margin: 50px auto; padding: 30px;
+            background: var(--card); border: 1px solid var(--neon-green);
+            box-shadow: 0 0 20px rgba(57, 255, 20, 0.2); text-align: center;
+        }
+        .preview-img {
+            width: 100%; max-height: 300px; object-fit: contain;
+            margin: 20px 0; border: 1px dashed #444; display: none;
+        }
+        input[type="file"] { display: none; }
+        .custom-file-upload {
+            display: inline-block; padding: 12px 30px; cursor: pointer;
+            border: 1px solid var(--neon-blue); color: var(--neon-blue);
+            font-weight: bold; transition: 0.3s; margin-bottom: 20px;
+        }
+        .custom-file-upload:hover { background: var(--neon-blue); color: #000; }
+        button {
+            width: 100%; padding: 15px; background: var(--neon-green);
+            color: #000; border: none; font-weight: bold; cursor: pointer;
+            letter-spacing: 2px;
+        }
+        input[type="text"] {
+            width: 100%; padding: 12px; background: #111; border: 1px solid #333;
+            color: #fff; margin-bottom: 20px; box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="main-nav">
+    <div style="font-weight:bold; letter-spacing:3px;">PIXEL <span style="color:var(--neon-green)">SURVIVAL</span></div>
+    <div class="nav-links">
+        <a href="index.html" style="color:#fff; text-decoration:none;">VOLVER AL DASHBOARD</a>
+    </div>
+</nav>
+
+<div class="upload-container">
+    <h2 style="color:var(--neon-green); letter-spacing:5px;">SUBIR EVIDENCIA DE BAJA</h2>
+    <p style="font-size:0.7rem; color:#888;">FORMATO REQUERIDO: PNG/JPG | MAX 5MB</p>
+
+    <label class="custom-file-upload">
+        <input type="file" id="fileInput" accept="image/*" onchange="previewImage(event)">
+        SELECCIONAR CAPTURA DE PANTALLA
+    </label>
+
+    <img id="imagePreview" class="preview-img">
+
+    <input type="text" id="avatarName" placeholder="NOMBRE DEL AVATAR QUE REALIZÓ LA BAJA">
+    <input type="text" id="description" placeholder="DESCRIPCIÓN (EJ: ELIMINACIÓN EN WESTWALD)">
+
+    <button onclick="uploadToCloud()">ENVIAR A LA BASE DE DATOS</button>
+    <p id="status" style="margin-top:20px; font-size:0.8rem;"></p>
+</div>
+
+<script>
+    function previewImage(event) {
+        const reader = new FileReader();
+        reader.onload = function() {
+            const output = document.getElementById('imagePreview');
+            output.src = reader.result;
+            output.style.display = 'block';
+        }
+        reader.readAsDataURL(event.target.files[0]);
+    }
+
+    async function uploadToCloud() {
+        const file = document.getElementById('fileInput').files[0];
+        const name = document.getElementById('avatarName').value;
+        const desc = document.getElementById('description').value;
+        const status = document.getElementById('status');
+
+        if (!file || !name) {
+            status.innerText = "❌ ERROR: FALTA IMAGEN O NOMBRE";
+            status.style.color = "red";
+            return;
+        }
+
+        status.innerText = "📡 CODIFICANDO Y SUBIENDO EVIDENCIA...";
+        
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = async function() {
+            const base64String = reader.result.split(',')[1];
+            
+            const formData = new FormData();
+            formData.append('imagen_base64', base64String);
+            formData.append('nombre_avatar', name);
+            formData.append('descripcion', desc);
+
+            try {
+                // AQUÍ USAS LA MISMA URL DE TU API DE GOOGLE
+                await fetch("TU_URL_DE_API_GOOGLE", {
+                    method: "POST",
+                    body: new URLSearchParams(formData)
+                });
+                status.innerText = "✅ EVIDENCIA REGISTRADA CON ÉXITO";
+                status.style.color = "var(--neon-green)";
+            } catch (e) {
+                status.innerText = "❌ ERROR EN EL ENLACE DE RED";
+            }
+        };
+    }
+</script>
+</body>
+</html>
