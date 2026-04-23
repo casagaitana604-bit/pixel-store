@@ -5,65 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PIXEL RPG - Subir Evidencias</title>
     <style>
-        :root { 
-            --neon-green: #39FF14; 
-            --neon-orange: #FF5F1F; 
-            --neon-blue: #00ffff;
-            --card: rgba(13, 13, 13, 0.9);
-        }
-        body { 
-            font-family: 'Segoe UI', sans-serif; 
-            background: #050505; color: #fff; text-transform: uppercase; margin: 0;
-        }
-
-        /* NAVBAR SUPERIOR */
-        .main-nav { 
-            background: #000; display: flex; justify-content: space-between; align-items: center; padding: 15px 50px; 
-            border-bottom: 2px solid var(--neon-orange); box-shadow: 0 0 15px var(--neon-orange);
-            position: sticky; top: 0; z-index: 1000; 
-        }
+        :root { --neon-green: #39FF14; --neon-orange: #FF5F1F; --neon-blue: #00ffff; --card: rgba(13, 13, 13, 0.9); }
+        body { font-family: 'Segoe UI', sans-serif; background: #050505; color: #fff; text-transform: uppercase; margin: 0; }
+        .main-nav { background: #000; display: flex; justify-content: space-between; align-items: center; padding: 15px 50px; border-bottom: 2px solid var(--neon-orange); box-shadow: 0 0 15px var(--neon-orange); position: sticky; top: 0; z-index: 1000; }
         .nav-logo { font-weight:bold; letter-spacing:3px; color:#fff; text-decoration: none; }
         .nav-links a { color: #ccc; text-decoration: none; margin-left: 25px; font-weight: bold; font-size: 0.8rem; transition: 0.3s; }
-        .nav-links a:hover { color: var(--neon-green); }
-
-        .upload-container {
-            max-width: 600px; margin: 50px auto; padding: 30px;
-            background: var(--card); border: 1px solid var(--neon-green);
-            box-shadow: 0 0 20px rgba(57, 255, 20, 0.2); text-align: center;
-        }
-        .preview-img {
-            width: 100%; max-height: 300px; object-fit: contain;
-            margin: 20px 0; border: 1px dashed #444; display: none;
-            box-shadow: 0 0 10px rgba(0,255,255,0.1);
-        }
+        .upload-container { max-width: 600px; margin: 50px auto; padding: 30px; background: var(--card); border: 1px solid var(--neon-green); box-shadow: 0 0 20px rgba(57, 255, 20, 0.2); text-align: center; }
+        .preview-img { width: 100%; max-height: 300px; object-fit: contain; margin: 20px 0; border: 1px dashed #444; display: none; }
         input[type="file"] { display: none; }
-        .custom-file-upload {
-            display: inline-block; padding: 12px 30px; cursor: pointer;
-            border: 1px solid var(--neon-blue); color: var(--neon-blue);
-            font-weight: bold; transition: 0.3s; margin-bottom: 20px;
-            letter-spacing: 1px;
-        }
-        .custom-file-upload:hover { background: var(--neon-blue); color: #000; box-shadow: 0 0 15px var(--neon-blue); }
-        
-        button {
-            width: 100%; padding: 15px; background: var(--neon-green);
-            color: #000; border: none; font-weight: bold; cursor: pointer;
-            letter-spacing: 2px; transition: 0.3s;
-        }
-        button:hover { background: #fff; box-shadow: 0 0 20px var(--neon-green); }
-
-        input[type="text"] {
-            width: 100%; padding: 12px; background: #111; border: 1px solid #333;
-            color: #fff; margin-bottom: 20px; box-sizing: border-box;
-            outline: none; text-transform: uppercase;
-        }
-        input[type="text"]:focus { border-color: var(--neon-green); }
-
-        #status { margin-top:20px; font-size:0.8rem; font-weight: bold; min-height: 1.2em; }
+        .custom-file-upload { display: inline-block; padding: 12px 30px; cursor: pointer; border: 1px solid var(--neon-blue); color: var(--neon-blue); font-weight: bold; margin-bottom: 20px; }
+        button { width: 100%; padding: 15px; background: var(--neon-green); color: #000; border: none; font-weight: bold; cursor: pointer; letter-spacing: 2px; }
+        input[type="text"] { width: 100%; padding: 12px; background: #111; border: 1px solid #333; color: #fff; margin-bottom: 20px; box-sizing: border-box; outline: none; text-transform: uppercase; }
+        #status { margin-top:20px; font-size:0.8rem; font-weight: bold; }
     </style>
 </head>
 <body>
-
 <nav class="main-nav">
     <a href="index.html" class="nav-logo">PIXEL <span style="color:var(--neon-green)">SURVIVAL</span></a>
     <div class="nav-links">
@@ -72,29 +28,20 @@
         <a href="galeria.html">GALERÍA</a>
     </div>
 </nav>
-
 <div class="upload-container">
-    <h2 style="color:var(--neon-green); letter-spacing:5px; margin-top:0;">SUBIR EVIDENCIA</h2>
-    <p style="font-size:0.7rem; color:#888; margin-bottom: 25px;">REGISTRO VISUAL PARA VALIDACIÓN DE BAJAS</p>
-
+    <h2 style="color:var(--neon-green); letter-spacing:5px;">SUBIR EVIDENCIA</h2>
     <label class="custom-file-upload">
         <input type="file" id="fileInput" accept="image/*" onchange="previewImage(event)">
-        SELECCIONAR CAPTURA (.PNG / .JPG)
+        SELECCIONAR CAPTURA
     </label>
-
     <img id="imagePreview" class="preview-img">
-
     <input type="text" id="avatarName" placeholder="NOMBRE DEL OPERATIVO">
-    <input type="text" id="description" placeholder="DETALLES DE LA OPERACIÓN (EJ: DEFENSA DE BASE)">
-
+    <input type="text" id="description" placeholder="DETALLES DE LA BAJA">
     <button id="btnEnviar" onclick="uploadToCloud()">TRANSMITIR A LA RED</button>
     <p id="status"></p>
 </div>
-
 <script>
-    // URL DE TU SCRIPT DE GOOGLE
     const API_URL = "https://script.google.com/macros/s/AKfycbwF5gqdh_rWNw51ACHegR92urc9OoZQlNpDJlayRu2JTr7l34_QnW6JsAua__qhzAxd/exec";
-
     function previewImage(event) {
         const file = event.target.files[0];
         if (file) {
@@ -107,67 +54,30 @@
             reader.readAsDataURL(file);
         }
     }
-
     async function uploadToCloud() {
-        const fileInput = document.getElementById('fileInput');
-        const file = fileInput.files[0];
+        const file = document.getElementById('fileInput').files[0];
         const name = document.getElementById('avatarName').value;
         const desc = document.getElementById('description').value;
         const status = document.getElementById('status');
         const btn = document.getElementById('btnEnviar');
-
-        if (!file || !name) {
-            status.innerText = "❌ ERROR: SE REQUIERE IMAGEN Y NOMBRE";
-            status.style.color = "red";
-            return;
-        }
-
-        btn.disabled = true;
-        btn.innerText = "TRANSMITIENDO...";
-        status.innerText = "📡 ENCRIPTANDO DATOS VISUALES...";
-        status.style.color = "var(--neon-blue)";
-        
+        if (!file || !name) { status.innerText = "❌ FALTA IMAGEN O NOMBRE"; return; }
+        btn.disabled = true; status.innerText = "📡 SUBIENDO...";
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = async function() {
             const base64String = reader.result.split(',')[1];
-            
-            // Usamos un objeto simple para asegurar la compatibilidad con el Apps Script
-            const payload = {
-                imagen_base64: base64String,
-                nombre_avatar: name,
-                descripcion: desc
-            };
-
+            const params = new URLSearchParams();
+            params.append('imagen_base64', base64String);
+            params.append('nombre_avatar', name);
+            params.append('descripcion', desc);
             try {
-                // Cambiamos el método de envío a uno más compatible con Google
-                await fetch(API_URL, {
-                    method: "POST",
-                    mode: "no-cors",
-                    cache: "no-cache",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded",
-                    },
-                    body: new URLSearchParams(payload).toString()
-                });
-                
-                // Nota: Con no-cors no podemos leer la respuesta, pero el éxito se asume si no hay error de red
-                status.innerText = "✅ TRANSMISIÓN COMPLETADA EXITOSAMENTE";
-                status.style.color = "var(--neon-green)";
-                
-                // Limpiar formulario tras éxito
-                fileInput.value = "";
+                await fetch(API_URL, { method: "POST", mode: "no-cors", body: params });
+                status.innerText = "✅ ENVIADO CON ÉXITO";
                 document.getElementById('avatarName').value = "";
                 document.getElementById('description').value = "";
                 document.getElementById('imagePreview').style.display = "none";
-                
-            } catch (e) {
-                status.innerText = "❌ ERROR DE CONEXIÓN CON EL SERVIDOR";
-                status.style.color = "red";
-            } finally {
-                btn.disabled = false;
-                btn.innerText = "ENVIAR A LA BASE DE DATOS";
-            }
+            } catch (e) { status.innerText = "❌ ERROR DE RED"; }
+            finally { btn.disabled = false; }
         };
     }
 </script>
