@@ -90,48 +90,44 @@ async function uploadToCloud() {
     const name = document.getElementById('avatarName').value;
     const desc = document.getElementById('description').value;
     const status = document.getElementById('status');
-    const btn = document.getElementById('btnEnviar');
 
     if (!file || !name) {
         status.innerText = "❌ ERROR: FALTA IMAGEN O NOMBRE";
         return;
     }
 
-    btn.disabled = true;
-    status.innerText = "📡 TRANSMITIENDO...";
+    status.innerText = "📡 TRANSMITIENDO EVIDENCIA...";
     
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = async function() {
         const base64String = reader.result.split(',')[1];
         
-        // Creamos un objeto limpio
-        const datosEnvio = {
+        // Creamos el paquete de datos
+        const datosParaEnviar = {
             imagen_base64: base64String,
             nombre_avatar: name,
             descripcion: desc
         };
 
         try {
-            // Enviamos como texto plano para saltar el bloqueo de CORS
             await fetch(API_URL, {
                 method: "POST",
-                mode: "no-cors",
-                headers: { "Content-Type": "text/plain" },
-                body: JSON.stringify(datosEnvio)
+                // Enviamos como text/plain para que Google no se ponga tonto con los permisos CORS
+                headers: { "Content-Type": "text/plain" }, 
+                body: JSON.stringify(datosParaEnviar),
+                mode: "no-cors"
             });
             
-            status.innerText = "✅ TRANSMISIÓN COMPLETADA";
+            status.innerText = "✅ DATOS ENVIADOS AL EXCEL";
             status.style.color = "#39FF14";
+            // Limpiar campos
             document.getElementById('avatarName').value = "";
             document.getElementById('description').value = "";
             document.getElementById('imagePreview').style.display = "none";
             
         } catch (e) {
-            status.innerText = "❌ ERROR DE CONEXIÓN";
-            console.error(e);
-        } finally {
-            btn.disabled = false;
+            status.innerText = "❌ ERROR DE RED";
         }
     };
 }
