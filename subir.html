@@ -122,7 +122,6 @@
             return;
         }
 
-        // Bloquear botón para evitar múltiples clics
         btn.disabled = true;
         btn.innerText = "TRANSMITIENDO...";
         status.innerText = "📡 ENCRIPTANDO DATOS VISUALES...";
@@ -133,19 +132,27 @@
         reader.onload = async function() {
             const base64String = reader.result.split(',')[1];
             
-            const params = new URLSearchParams();
-            params.append('imagen_base64', base64String);
-            params.append('nombre_avatar', name);
-            params.append('descripcion', desc);
+            // Usamos un objeto simple para asegurar la compatibilidad con el Apps Script
+            const payload = {
+                imagen_base64: base64String,
+                nombre_avatar: name,
+                descripcion: desc
+            };
 
             try {
+                // Cambiamos el método de envío a uno más compatible con Google
                 await fetch(API_URL, {
                     method: "POST",
-                    mode: "no-cors", 
-                    body: params
+                    mode: "no-cors",
+                    cache: "no-cache",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                    body: new URLSearchParams(payload).toString()
                 });
                 
-                status.innerText = "✅ EVIDENCIA REGISTRADA EN LA GALERÍA";
+                // Nota: Con no-cors no podemos leer la respuesta, pero el éxito se asume si no hay error de red
+                status.innerText = "✅ TRANSMISIÓN COMPLETADA EXITOSAMENTE";
                 status.style.color = "var(--neon-green)";
                 
                 // Limpiar formulario tras éxito
