@@ -69,7 +69,6 @@
 </div>
 
 <script>
-    // USA TU URL DE SIEMPRE
     const API_URL = "https://script.google.com/macros/s/AKfycbx6441EwuvijM3_JYnzn7r2J5L9Xl266p4y58ysro8jByMeE5FVAssyYYp4h05qpNiN/exec";
 
     function previewImage(event) {
@@ -85,52 +84,61 @@
         }
     }
 
-async function uploadToCloud() {
-    const file = document.getElementById('fileInput').files[0];
-    const name = document.getElementById('avatarName').value;
-    const desc = document.getElementById('description').value;
-    const status = document.getElementById('status');
+    async function uploadToCloud() {
+        const fileInput = document.getElementById('fileInput');
+        const file = fileInput.files[0];
+        const name = document.getElementById('avatarName').value;
+        const desc = document.getElementById('description').value;
+        const status = document.getElementById('status');
+        const btn = document.getElementById('btnEnviar');
 
-    if (!file || !name) {
-        status.innerText = "❌ ERROR: FALTA IMAGEN O NOMBRE";
-        return;
-    }
-
-    status.innerText = "📡 TRANSMITIENDO EVIDENCIA...";
-    
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = async function() {
-        const base64String = reader.result.split(',')[1];
-        
-        // Creamos el paquete de datos
-        const datosParaEnviar = {
-            imagen_base64: base64String,
-            nombre_avatar: name,
-            descripcion: desc
-        };
-
-        try {
-            await fetch(API_URL, {
-                method: "POST",
-                // Enviamos como text/plain para que Google no se ponga tonto con los permisos CORS
-                headers: { "Content-Type": "text/plain" }, 
-                body: JSON.stringify(datosParaEnviar),
-                mode: "no-cors"
-            });
-            
-            status.innerText = "✅ DATOS ENVIADOS AL EXCEL";
-            status.style.color = "#39FF14";
-            // Limpiar campos
-            document.getElementById('avatarName').value = "";
-            document.getElementById('description').value = "";
-            document.getElementById('imagePreview').style.display = "none";
-            
-        } catch (e) {
-            status.innerText = "❌ ERROR DE RED";
+        if (!file || !name) {
+            status.innerText = "❌ ERROR: FALTA IMAGEN O NOMBRE";
+            status.style.color = "red";
+            return;
         }
-    };
-}
+
+        btn.disabled = true;
+        status.innerText = "📡 TRANSMITIENDO EVIDENCIA...";
+        status.style.color = "var(--neon-blue)";
+        
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = async function() {
+            const base64String = reader.result.split(',')[1];
+            
+            const datosParaEnviar = {
+                imagen_base64: base64String,
+                nombre_avatar: name,
+                descripcion: desc
+            };
+
+            try {
+                // Enviamos como JSON en texto plano para evitar bloqueos
+                await fetch(API_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "text/plain" }, 
+                    body: JSON.stringify(datosParaEnviar),
+                    mode: "no-cors"
+                });
+                
+                status.innerText = "✅ TRANSMISIÓN COMPLETADA EXITOSAMENTE";
+                status.style.color = "var(--neon-green)";
+                
+                // Limpiar campos
+                document.getElementById('avatarName').value = "";
+                document.getElementById('description').value = "";
+                document.getElementById('imagePreview').style.display = "none";
+                fileInput.value = "";
+                
+            } catch (e) {
+                status.innerText = "❌ ERROR DE RED O CONEXIÓN";
+                status.style.color = "red";
+            } finally {
+                btn.disabled = false;
+            }
+        };
+    }
 </script>
 </body>
 </html>
