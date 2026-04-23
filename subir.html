@@ -85,54 +85,56 @@
         }
     }
 
-    async function uploadToCloud() {
-        const file = document.getElementById('fileInput').files[0];
-        const name = document.getElementById('avatarName').value;
-        const desc = document.getElementById('description').value;
-        const status = document.getElementById('status');
-        const btn = document.getElementById('btnEnviar');
+async function uploadToCloud() {
+    const file = document.getElementById('fileInput').files[0];
+    const name = document.getElementById('avatarName').value;
+    const desc = document.getElementById('description').value;
+    const status = document.getElementById('status');
+    const btn = document.getElementById('btnEnviar');
 
-        if (!file || !name) {
-            status.innerText = "❌ ERROR: FALTA IMAGEN O NOMBRE";
-            status.style.color = "red";
-            return;
-        }
-
-        btn.disabled = true;
-        status.innerText = "📡 TRANSMITIENDO...";
-        status.style.color = "var(--neon-blue)";
-        
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = async function() {
-            const base64String = reader.result.split(',')[1];
-            
-            const params = new URLSearchParams();
-            params.append('imagen_base64', base64String);
-            params.append('nombre_avatar', name);
-            params.append('descripcion', desc);
-
-            try {
-                await fetch(API_URL, {
-                    method: "POST",
-                    mode: "no-cors",
-                    body: params
-                });
-                
-                status.innerText = "✅ EVIDENCIA REGISTRADA";
-                status.style.color = "var(--neon-green)";
-                document.getElementById('avatarName').value = "";
-                document.getElementById('description').value = "";
-                document.getElementById('imagePreview').style.display = "none";
-                
-            } catch (e) {
-                status.innerText = "❌ ERROR DE RED";
-                status.style.color = "red";
-            } finally {
-                btn.disabled = false;
-            }
-        };
+    if (!file || !name) {
+        status.innerText = "❌ ERROR: FALTA IMAGEN O NOMBRE";
+        return;
     }
+
+    btn.disabled = true;
+    status.innerText = "📡 TRANSMITIENDO...";
+    
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = async function() {
+        const base64String = reader.result.split(',')[1];
+        
+        // Creamos un objeto limpio
+        const datosEnvio = {
+            imagen_base64: base64String,
+            nombre_avatar: name,
+            descripcion: desc
+        };
+
+        try {
+            // Enviamos como texto plano para saltar el bloqueo de CORS
+            await fetch(API_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "text/plain" },
+                body: JSON.stringify(datosEnvio)
+            });
+            
+            status.innerText = "✅ TRANSMISIÓN COMPLETADA";
+            status.style.color = "#39FF14";
+            document.getElementById('avatarName').value = "";
+            document.getElementById('description').value = "";
+            document.getElementById('imagePreview').style.display = "none";
+            
+        } catch (e) {
+            status.innerText = "❌ ERROR DE CONEXIÓN";
+            console.error(e);
+        } finally {
+            btn.disabled = false;
+        }
+    };
+}
 </script>
 </body>
 </html>
