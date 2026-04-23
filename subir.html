@@ -3,48 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PIXEL RPG - Galería</title>
+    <title>PIXEL RPG - Subir Evidencias</title>
     <style>
-        :root { --neon-green: #39FF14; --neon-orange: #FF5F1F; --bg: #050505; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: #fff; margin: 0; text-transform: uppercase; }
-        .main-nav { background: #000; display: flex; justify-content: space-between; align-items: center; padding: 15px 50px; border-bottom: 2px solid var(--neon-green); box-shadow: 0 0 15px var(--neon-green); position: sticky; top: 0; z-index: 1000; }
-        .nav-links a { color: #ccc; text-decoration: none; margin-left: 25px; font-weight: bold; font-size: 0.8rem; }
-        .header { text-align: center; padding: 40px; background: linear-gradient(to bottom, #111, #050505); }
-        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; padding: 40px; max-width: 1400px; margin: auto; }
-        .evidence-card { background: #0d0d0d; border: 1px solid #222; border-radius: 5px; overflow: hidden; transition: 0.4s; }
-        .evidence-img { width: 100%; height: 200px; object-fit: cover; cursor: pointer; }
-        .evidence-info { padding: 15px; }
-        .author-tag { color: var(--neon-green); font-weight: bold; font-size: 0.8rem; }
+        :root { 
+            --neon-green: #39FF14; 
+            --neon-orange: #FF5F1F; 
+            --neon-blue: #00ffff;
+            --card: rgba(13, 13, 13, 0.9);
+        }
+        body { font-family: 'Segoe UI', sans-serif; background: #050505; color: #fff; text-transform: uppercase; margin: 0; }
+        .main-nav { 
+            background: #000; display: flex; justify-content: space-between; align-items: center; padding: 15px 50px; 
+            border-bottom: 2px solid var(--neon-orange); box-shadow: 0 0 15px var(--neon-orange);
+            position: sticky; top: 0; z-index: 1000; 
+        }
+        .nav-logo { font-weight:bold; letter-spacing:3px; color:#fff; text-decoration: none; }
+        .nav-links a { color: #ccc; text-decoration: none; margin-left: 25px; font-weight: bold; font-size: 0.8rem; transition: 0.3s; }
+        .nav-links a:hover { color: var(--neon-green); }
+        .upload-container {
+            max-width: 600px; margin: 50px auto; padding: 30px;
+            background: var(--card); border: 1px solid var(--neon-green);
+            box-shadow: 0 0 20px rgba(57, 255, 20, 0.2); text-align: center;
+        }
+        .preview-img { width: 100%; max-height: 300px; object-fit: contain; margin: 20px 0; border: 1px dashed #444; display: none; }
+        input[type="file"] { display: none; }
+        .custom-file-upload {
+            display: inline-block; padding: 12px 30px; cursor: pointer;
+            border: 1px solid var(--neon-blue); color: var(--neon-blue);
+            font-weight: bold; transition: 0.3s; margin-bottom: 20px;
+        }
+        button {
+            width: 100%; padding: 15px; background: var(--neon-green);
+            color: #000; border: none; font-weight: bold; cursor: pointer;
+            letter-spacing: 2px; transition: 0.3s;
+        }
+        input[type="text"] {
+            width: 100%; padding: 12px; background: #111; border: 1px solid #333;
+            color: #fff; margin-bottom: 20px; box-sizing: border-box; outline: none;
+        }
+        #status { margin-top:20px; font-size:0.8rem; font-weight: bold; min-height: 1.2em; }
     </style>
 </head>
 <body>
+
 <nav class="main-nav">
-    <div style="font-weight:bold; letter-spacing:3px;">PIXEL <span style="color:var(--neon-green)">SURVIVAL</span></div>
+    <a href="index.html" class="nav-logo">PIXEL <span style="color:var(--neon-green)">SURVIVAL</span></a>
     <div class="nav-links">
         <a href="index.html">DASHBOARD</a>
         <a href="facciones.html">FACCIONES</a>
-        <a href="galeria.html" style="color:var(--neon-orange)">GALERÍA</a>
+        <a href="galeria.html">GALERÍA</a>
     </div>
 </nav>
-<div class="header"><h1>ARCHIVOS DE <span style="color:var(--neon-orange)">COMBATE</span></h1></div>
-<div class="gallery-grid" id="gallery"><p id="loading">ACCEDIENDO A LA BASE DE DATOS...</p></div>
+
+<div class="upload-container">
+    <h2 style="color:var(--neon-green); letter-spacing:5px;">SUBIR EVIDENCIA</h2>
+    <label class="custom-file-upload">
+        <input type="file" id="fileInput" accept="image/*" onchange="previewImage(event)">
+        SELECCIONAR CAPTURA
+    </label>
+    <img id="imagePreview" class="preview-img">
+    <input type="text" id="avatarName" placeholder="NOMBRE DEL OPERATIVO">
+    <input type="text" id="description" placeholder="DETALLES DE LA OPERACIÓN">
+    <button id="btnEnviar" onclick="uploadToCloud()">TRANSMITIR A LA RED</button>
+    <p id="status"></p>
+</div>
+
 <script>
-    const API = "https://script.google.com/macros/s/AKfycbylHIDiwNMYsJRUp4a15Sfsvs8CLHeOmcBaCyt1VMQLVuti0hj_Mhlp4zNMympS7EHf/exec";
-    async function loadGallery() {
-        try {
-            const res = await fetch(API + "?accion=GET_EVIDENCIAS");
-            const data = await res.json();
-            const container = document.getElementById('gallery');
-            document.getElementById('loading').remove();
-            data.evidencias.forEach(ev => {
-                const card = document.createElement('div');
-                card.className = 'evidence-card';
-                card.innerHTML = `<img src="${ev.url}" class="evidence-img" onclick="window.open('${ev.url}')"><div class="evidence-info"><span class="author-tag">OPERATIVO: ${ev.autor}</span><p style="font-size:0.7rem; color:#888;">${ev.desc}</p></div>`;
-                container.appendChild(card);
-            });
-        } catch (e) { document.getElementById('loading').innerText = "❌ ERROR AL CARGAR"; }
+    // USA TU URL DE SIEMPRE
+    const API_URL = "https://script.google.com/macros/s/AKfycbxiB8onQmUz8e_L3zMzEQZIQ0PGOpxWQv0qQoq-lbDuqC-3mkzzzjv7gWzZdWaNL6MX/exec";
+
+    function previewImage(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                const output = document.getElementById('imagePreview');
+                output.src = reader.result;
+                output.style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+        }
     }
-    loadGallery();
+
+    async function uploadToCloud() {
+        const file = document.getElementById('fileInput').files[0];
+        const name = document.getElementById('avatarName').value;
+        const desc = document.getElementById('description').value;
+        const status = document.getElementById('status');
+        const btn = document.getElementById('btnEnviar');
+
+        if (!file || !name) {
+            status.innerText = "❌ ERROR: FALTA IMAGEN O NOMBRE";
+            status.style.color = "red";
+            return;
+        }
+
+        btn.disabled = true;
+        status.innerText = "📡 TRANSMITIENDO...";
+        status.style.color = "var(--neon-blue)";
+        
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = async function() {
+            const base64String = reader.result.split(',')[1];
+            
+            const params = new URLSearchParams();
+            params.append('imagen_base64', base64String);
+            params.append('nombre_avatar', name);
+            params.append('descripcion', desc);
+
+            try {
+                await fetch(API_URL, {
+                    method: "POST",
+                    mode: "no-cors",
+                    body: params
+                });
+                
+                status.innerText = "✅ EVIDENCIA REGISTRADA";
+                status.style.color = "var(--neon-green)";
+                document.getElementById('avatarName').value = "";
+                document.getElementById('description').value = "";
+                document.getElementById('imagePreview').style.display = "none";
+                
+            } catch (e) {
+                status.innerText = "❌ ERROR DE RED";
+                status.style.color = "red";
+            } finally {
+                btn.disabled = false;
+            }
+        };
+    }
 </script>
 </body>
 </html>
