@@ -11,7 +11,7 @@
             --bg: #0a0a0a; 
             --card: #1a1a1a; 
             --neon-green: #39FF14;
-            --neon-blue: #00ffff; /* Color para el PVP */
+            --neon-blue: #00ffff;
             --bg-overlay: rgba(0, 0, 0, 0.85);
         }
 
@@ -66,7 +66,6 @@
 
         .container { max-width: 1300px; margin: 20px auto; padding: 0 20px; }
         
-        /* AJUSTE PARA 3 COLUMNAS EN EL TOP */
         .top-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 40px; }
         
         .top-card { background: rgba(17,17,17,0.9); border: 1px solid var(--gold); padding: 15px; border-radius: 10px; box-shadow: 0 0 10px rgba(255, 215, 0, 0.1); backdrop-filter: blur(10px); }
@@ -152,12 +151,16 @@
                     allPlayers = allPlayers.concat(f.lista_integrantes);
                 }
 
+                // FILTRO: Ocultar si es CIVILES o CUARTEL
+                let nombreFac = f.nombre.toUpperCase();
+                if (nombreFac === "CIVILES" || nombreFac === "CUARTEL" || nombreFac === "INDEPENDIENTES") return;
+
                 let costoLvl = 5 * Math.pow(2, (parseInt(f.nivel) || 1) - 1);
                 let pctSuministros = Math.min(100, (parseInt(f.suministros || 0) / costoLvl) * 100);
 
                 let html = `
                     <div class="fac-card">
-                        <span class="status-tag">${f.status || 'CIVILES'}</span>
+                        <span class="status-tag">${f.status || 'ACTIVA'}</span>
                         <h2>${f.nombre}</h2>
                         <small>CMDT: ${f.comandante || 'SIN ASIGNAR'}</small>
                         <div style="margin-top: 15px; font-size: 0.7rem; color:var(--gold)">SUMINISTROS_NIVEL_${(parseInt(f.nivel) || 0) + 1}: ${f.suministros || 0} / ${costoLvl}</div>
@@ -187,8 +190,6 @@
             });
 
             // --- PROCESAMIENTO DE TOPS ---
-
-            // 1. TOP XP
             document.getElementById('top-xp').innerHTML = [...allPlayers]
                 .sort((a,b) => calcularXPGlobal(b.nivel, b.xp) - calcularXPGlobal(a.nivel, a.xp))
                 .slice(0,5).map(j=>`
@@ -197,7 +198,6 @@
                     <span style="color:var(--gold)">${calcularXPGlobal(j.nivel, j.xp).toLocaleString()} XP</span>
                 </div>`).join('');
 
-            // 2. TOP NPC HUNTERS
             document.getElementById('top-kills').innerHTML = [...allPlayers]
                 .sort((a,b) => parseInt(b.npc || 0) - parseInt(a.npc || 0))
                 .slice(0,5).map(j=>`
@@ -206,7 +206,6 @@
                     <span style="color:var(--neon-green)">${j.npc || 0} 💀</span>
                 </div>`).join('');
 
-            // 3. TOP PVP PK (NUEVO)
             document.getElementById('top-pvp').innerHTML = [...allPlayers]
                 .sort((a,b) => parseInt(b.pvp || 0) - parseInt(a.pvp || 0))
                 .slice(0,5).map(j=>`
