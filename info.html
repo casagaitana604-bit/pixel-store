@@ -3,118 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PIXEL RPG - Manual de Sistema</title>
+    <title>PIXEL RPG - Manual de Operaciones</title>
     <style>
         :root { 
             --neon-green: #39FF14; 
             --neon-orange: #FF5F1F; 
-            --bg-overlay: rgba(0, 0, 0, 0.9);
-            --card: rgba(20, 20, 20, 0.95);
+            --neon-cyan: #00F3FF;
+            --bg-overlay: rgba(0, 0, 0, 0.92);
+            --card: rgba(15, 15, 15, 0.98);
         }
         
         body { 
-            font-family: 'Segoe UI', sans-serif; 
+            font-family: 'Segoe UI', Roboto, Helvetica, sans-serif; 
             background-image: linear-gradient(var(--bg-overlay), var(--bg-overlay)), url('https://w0.peakpx.com/wallpaper/538/103/HD-wallpaper-cs-go-cyberpunk-overpass-counter-strike-global-offensive.jpg');
             background-size: cover; background-position: center; background-attachment: fixed;
-            color: #eee; margin: 0; text-transform: uppercase; line-height: 1.6;
+            color: #eee; margin: 0; line-height: 1.6;
         }
 
         .main-nav { 
-            background: rgba(0, 0, 0, 0.95); display: flex; justify-content: space-between; align-items: center; padding: 15px 50px; 
-            border-bottom: 2px solid var(--neon-orange); box-shadow: 0 0 15px var(--neon-orange);
+            background: rgba(0, 0, 0, 0.98); display: flex; justify-content: space-between; align-items: center; padding: 15px 50px; 
+            border-bottom: 2px solid var(--neon-green); box-shadow: 0 0 20px rgba(57, 255, 20, 0.3);
             position: sticky; top: 0; z-index: 1000; 
         }
-        .nav-logo { color: #fff; font-weight: bold; font-size: 1.4rem; letter-spacing: 2px; }
-        .nav-links a { color: #ccc; text-decoration: none; margin-left: 25px; font-weight: bold; font-size: 0.9rem; }
+        .nav-logo { color: #fff; font-weight: bold; font-size: 1.6rem; letter-spacing: 3px; text-transform: uppercase; }
+        .nav-logo span { color: var(--neon-green); }
+        .nav-links a { color: #ccc; text-decoration: none; margin-left: 25px; font-weight: bold; font-size: 0.9rem; text-transform: uppercase; transition: 0.3s; }
+        .nav-links a:hover { color: var(--neon-green); }
         .nav-active { color: var(--neon-green) !important; border-bottom: 2px solid var(--neon-green); padding-bottom: 5px; }
 
-        .hero-header { text-align: center; padding: 60px 20px; }
-        .main-title { font-size: 4rem; font-weight: 900; color: #fff; text-shadow: 0 0 20px var(--neon-green); margin: 0; }
+        .hero-header { text-align: center; padding: 80px 20px; }
+        .main-title { font-size: 4.5rem; font-weight: 900; color: #fff; text-shadow: 0 0 30px var(--neon-green); margin: 0; text-transform: uppercase; }
+        .badge-new { background: var(--neon-orange); color: #fff; padding: 5px 15px; font-size: 0.8rem; border-radius: 3px; vertical-align: middle; margin-left: 10px; box-shadow: 0 0 10px var(--neon-orange); }
 
-        .container { max-width: 1000px; margin: 0 auto 50px auto; padding: 0 20px; }
+        .container { max-width: 1100px; margin: 0 auto 100px auto; padding: 0 20px; }
 
         .info-section { 
-            background: var(--card); border: 1px solid #333; border-left: 5px solid var(--neon-green);
-            padding: 30px; margin-bottom: 30px; border-radius: 5px; backdrop-filter: blur(10px);
+            background: var(--card); border: 1px solid #222; border-left: 5px solid var(--neon-green);
+            padding: 40px; margin-bottom: 40px; border-radius: 8px; backdrop-filter: blur(15px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        h2 { color: var(--neon-green); border-bottom: 1px solid #333; padding-bottom: 10px; letter-spacing: 2px; }
-        h3 { color: var(--neon-orange); margin-top: 25px; }
-        p { font-size: 0.95rem; color: #bbb; text-transform: none; } /* Texto normal para lectura */
+        .grid-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 20px; }
+
+        h2 { color: var(--neon-green); border-bottom: 1px solid #333; padding-bottom: 15px; letter-spacing: 2px; text-transform: uppercase; font-size: 1.8rem; }
+        h3 { color: var(--neon-cyan); margin-top: 30px; text-transform: uppercase; font-size: 1.2rem; display: flex; align-items: center; }
+        h3::before { content: '■'; margin-right: 10px; font-size: 0.8rem; }
+        
+        p { font-size: 1.05rem; color: #ccc; line-height: 1.8; }
 
         .highlight { color: var(--neon-green); font-weight: bold; }
+        .highlight-orange { color: var(--neon-orange); font-weight: bold; }
+        
         ul { list-style: none; padding: 0; }
-        li { margin-bottom: 10px; border-bottom: 1px solid #222; padding-bottom: 5px; }
-        li::before { content: "> "; color: var(--neon-green); }
+        li { margin-bottom: 12px; padding-left: 20px; position: relative; color: #bbb; }
+        li::before { content: '>'; position: absolute; left: 0; color: var(--neon-green); font-weight: bold; }
+
+        .footer-cta { text-align: center; background: var(--neon-green); color: #000; padding: 20px; font-weight: 900; letter-spacing: 2px; border-radius: 5px; margin-top: 50px; cursor: default; }
     </style>
 </head>
 <body>
 
 <nav class="main-nav">
-    <div class="nav-logo">PIXEL <span>SURVIVAL</span></div>
+    <div class="nav-logo">PIXEL <span>SURVIVAL PRO</span></div>
     <div class="nav-links">
         <a href="index.html">INICIO</a>
-        <a href="facciones.html">FACCIONES</a>
-        <a href="info.html" class="nav-active">INFORMACIÓN</a>
+        <a href="factions.html">CUARTELES</a>
+        <a href="info.html" class="nav-active">SISTEMA V2</a>
     </div>
 </nav>
 
 <header class="hero-header">
-    <h1 class="main-title">DATABASE_INFO</h1>
-    <div style="background:var(--neon-green); color:#000; display:inline-block; padding:5px 20px; font-weight:bold; margin-top:10px;">
-        MANUAL DE OPERACIONES TÁCTICAS
+    <h1 class="main-title">TACTICAL_INFO</h1>
+    <div style="background:var(--neon-cyan); color:#000; display:inline-block; padding:8px 25px; font-weight:900; margin-top:15px; text-transform: uppercase; border-radius: 2px;">
+        Sincronización Cloud V2.0 Activa
     </div>
 </header>
 
 <div class="container">
+    
     <section class="info-section">
-        <h2>01. EL SISTEMA DE PROGRESIÓN</h2>
-        <p>Tu supervivencia en PIXEL STORE depende de tu capacidad para evolucionar. El HUD rastrea cada una de tus acciones en tiempo real.</p>
+        <h2>01. EL NÚCLEO DE SUPERVIVENCIA</h2>
+        <p>Bienvenido al sistema RPG más avanzado de Second Life. No es solo un HUD; es tu identidad digital. Cada bala disparada y cada segundo patrullado se sincroniza con nuestra <span class="highlight">Base de Datos Global</span>.</p>
         
-        <h3>EXPERIENCIA (XP) Y NIVELES</h3>
-        <ul>
-            <li>Cada baja confirmada te otorga XP. Los <span class="highlight">Avatares (PVP)</span> otorgan 400 XP, mientras que los <span class="highlight">NPCs</span> otorgan 100 XP.</li>
-            <li>La curva de nivel es constante: <span class="highlight">Nivel actual x 500 XP</span> es lo necesario para ascender.</li>
-            <li>Al subir de nivel, tu salud máxima aumenta permanentemente y recibes una poción de regalo.</li>
-        </ul>
-
-        <h3>RANGOS MILITARES</h3>
-        <p>Tu rango define tu estatus en la web y en el juego:</p>
-        <ul>
-            <li><strong>RECLUTA:</strong> Niveles 1-9.</li>
-            <li><strong>SOLDADO:</strong> Niveles 10-19.</li>
-            <li><strong>ELITE:</strong> Niveles 20-39.</li>
-            <li><strong>MAESTRO:</strong> Niveles 40-69.</li>
-            <li><strong>LEGENDARIO:</strong> Niveles 70-89.</li>
-            <li><strong>HEROE:</strong> Nivel 90+.</li>
-        </ul>
+        <div class="grid-stats">
+            <div>
+                <h3>Biometría y Estados</h3>
+                <ul>
+                    <li><span class="highlight">STAMINA DINÁMICA:</span> Correr y saltar agota tu energía. Si llegas a cero, tu salud empezará a drenarse por fatiga.</li>
+                    <li><span class="highlight">HP ESCALABLE:</span> Tu vida máxima aumenta <span class="highlight">+2 HP</span> por cada nivel alcanzado. ¡Conviértete en un tanque!</li>
+                    <li><span class="highlight">AUTOSAVE:</span> Olvida las pérdidas de datos. Tu progreso se guarda en la nube cada vez que subes de nivel o usas un ítem.</li>
+                </ul>
+            </div>
+            <div>
+                <h3>Rangos de Mando</h3>
+                <ul>
+                    <li><span class="highlight">RECLUTA:</span> Nvl 1-9</li>
+                    <li><span class="highlight">SOLDADO:</span> Nvl 10-19</li>
+                    <li><span class="highlight">ELITE:</span> Nvl 20-39</li>
+                    <li><span class="highlight">MAESTRO:</span> Nvl 40-69</li>
+                    <li><span class="highlight">LEGENDARIO:</span> Nvl 70-89</li>
+                    <li><span class="highlight">HEROE:</span> Nvl 90+ (Estatus Divino)</li>
+                </ul>
+            </div>
+        </div>
     </section>
 
     <section class="info-section" style="border-left-color: var(--neon-orange);">
-        <h2>02. FACCIONES Y ALIANZAS</h2>
-        <p>No camines solo. Las facciones permiten agrupar fuerzas para dominar el territorio.</p>
+        <h2>02. ARSENAL TÁCTICO <span class="badge-new">NUEVO</span></h2>
+        <p>Nuestro sistema de armas utiliza tecnología <span class="highlight-orange">Raycast de alta precisión</span>. Si lo ves en tu mira, puedes destruirlo.</p>
         
-        <h3>GESTIÓN DE GRUPOS</h3>
+        <h3>TECNOLOGÍA DE DISPARO</h3>
         <ul>
-            <li>Cualquier jugador de <span class="highlight">Nivel 5+</span> puede fundar una facción.</li>
-            <li>Existen 3 clases: <span class="highlight">Militares, Saqueadores y Civiles</span>.</li>
-            <li>Las facciones suben de nivel mediante la <span class="highlight">Donación de Suministros (Pociones)</span>.</li>
-            <li>Subir de nivel la facción otorga XP masiva a todos los miembros online.</li>
+            <li><span class="highlight-orange">Detección Táctica:</span> Al apuntar en mouselook, el arma identifica al objetivo, mostrando su Nombre y HP restante en tu HUD.</li>
+            <li><span class="highlight-orange">XP Cooperativa:</span> ¡Se acabó el robo de muertes! El sistema reparte la XP proporcionalmente al daño infligido entre todos los atacantes.</li>
+            <li><span class="highlight-orange">Drop Dinámico:</span> Los enemigos eliminados pueden soltar munición, pociones o pergaminos raros de mejora.</li>
         </ul>
 
-        <h3>PUNTOS DE GUERRA</h3>
-        <p>En la página de FACCIONES, los puntos de guerra representan las bajas totales que el grupo ha conseguido. ¡Lidera el ranking para ser la facción más temida!</p>
+        <h3>SISTEMA DE ENCHANTING</h3>
+        <p>Visita al <span class="highlight-orange">Maestro Enchanter</span> para potenciar tu daño base (hasta +20). Tus pergaminos se guardan en un inventario virtual seguro.</p>
+        <ul>
+            <li>🥉 <span class="highlight">BRONCE:</span> 20% éxito. | 🔹 <span class="highlight">PLATA:</span> 50% éxito. | 🔸 <span class="highlight">ORO:</span> 100% éxito.</li>
+        </ul>
+    </section>
+
+    <section class="info-section" style="border-left-color: var(--neon-cyan);">
+        <h2>03. DOMINACIÓN DE TERRITORIO</h2>
+        <p>Funda un <span class="highlight">Cuartel General</span> y lidera a tu equipo hacia la gloria. El trabajo en equipo es recompensado masivamente.</p>
+        
+        <ul>
+            <li><span class="highlight">XP POR PATRULLA:</span> Quédate en el radio de tu Base de Operaciones para recibir <span class="highlight">XP pasiva cada minuto</span>.</li>
+            <li><span class="highlight">HITOS MILITARES:</span> Acumula bajas en equipo para alcanzar rangos como "División" o "IMPERIO" y desbloquear bonos de XP para todos los miembros.</li>
+            <li><span class="highlight">ALERTA PVP:</span> Envía una señal de socorro a tus aliados con un solo clic si estás bajo ataque enemigo.</li>
+        </ul>
     </section>
 
     <section class="info-section">
-        <h2>03. INTERFAZ Y COMANDOS</h2>
+        <h2>04. INTELIGENCIA DE DATOS</h2>
         <ul>
-            <li><strong>BUSCADOR:</strong> En el Dashboard puedes localizar a cualquier superviviente por su nombre.</li>
-            <li><strong>LOG DE ACTIVIDAD:</strong> Muestra en tiempo real subidas de nivel y muertes confirmadas.</li>
-            <li><strong>PANEL INDIVIDUAL:</strong> Haz clic en cualquier nombre para ver su foto, rango y progreso exacto de XP.</li>
-            <li><strong>GÉNERO:</strong> Puedes alternar tu identidad visual (♂/♀) directamente desde la web en la sección de facciones.</li>
+            <li><strong>GLOBAL RANKING:</strong> Compite por ser el #1 en bajas NPC y PVP en nuestra tabla de líderes sincronizada.</li>
+            <li><strong>BUFFS DE REINO:</strong> Mantente atento a los eventos de <span class="highlight">XP x2</span> que se activan globalmente.</li>
+            <li><strong>GESTIÓN DE ALIANZAS:</strong> Funda tu propia facción al llegar a Nivel 5 y administra a tus soldados desde el panel de mando.</li>
         </ul>
     </section>
+
+    <div class="footer-cta">
+        SISTEMA PIXEL SURVIVAL PRO V2 - PREPÁRATE PARA LA BATALLA
+    </div>
 </div>
 
 </body>
