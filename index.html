@@ -286,15 +286,17 @@
     const sndHover = document.getElementById('snd-hover');
     const sndOpen = document.getElementById('snd-open');
 
-    // --- SISTEMA DE FOTOS SOLDADO (HOMBRE / MUJER) ---
-    const SOLDADO_H = "https://i.pinimg.com/originals/7a/90/73/7a90733737b60098f98013f9999a0996.jpg";
-    const SOLDADO_M = "https://i.pinimg.com/736x/8a/6c/40/8a6c4068305f88417537e2898822557a.jpg";
+    // --- NUEVAS IMÁGENES FIJAS (ESTO NO PUEDE SALIR NEGRO) ---
+    const M_IMG = "https://i.imgur.com/8K9Y3P6.jpg"; // Soldado Hombre
+    const F_IMG = "https://i.imgur.com/k6O660o.jpg"; // Soldado Mujer
 
     function getSoldier(name) {
         let n = name.toLowerCase();
-        // Lógica para detectar género por nombre
-        if (n.includes("ana") || n.includes("nora") || n.includes("lady") || n.includes("miss") || n.endsWith("a")) return SOLDADO_M;
-        return SOLDADO_H;
+        // Lógica simple de género
+        if (n.includes("ana") || n.includes("nora") || n.includes("lady") || n.includes("girl") || n.includes("miss") || n.endsWith("a")) {
+            return F_IMG;
+        }
+        return M_IMG;
     }
 
     function calcularXPGlobal(n, xp) {
@@ -307,11 +309,8 @@ async function update() {
     try {
         const res = await fetch(API);
         const data = await res.json();
-        
         let list = [];
-        let n_total = 0;
-        let p_total = 0;
-
+        let n_total = 0; let p_total = 0;
         if (data.facciones) {
             data.facciones.forEach(f => {
                 f.lista_integrantes.forEach(j => {
@@ -321,56 +320,40 @@ async function update() {
                 });
             });
         }
-
         list.sort((a, b) => b.nivel - a.nivel);
         cachePlayers = list;
         renderPlayers(list);
-
         document.getElementById('count-jug').innerText = list.length;
         document.getElementById('count-npc').innerText = n_total;
         document.getElementById('count-pvp').innerText = p_total;
-
         if(data.evento) {
             let pct = (n_total / data.evento.meta) * 100;
             document.getElementById('event-bar-fill').style.width = Math.min(pct, 100) + "%";
             document.getElementById('event-text').innerText = `PROGRESO: ${n_total.toLocaleString()} / ${data.evento.meta.toLocaleString()} VIRUS ELIMINADOS (${Math.round(pct)}%)`;
         }
-
-    } catch (e) { 
-        console.error("Error:", e);
-    }
+    } catch (e) { console.error("Error:", e); }
 }
 
     function renderPlayers(players) {
         const body = document.getElementById('table-players');
         body.innerHTML = '';
-        if(players.length === 0) {
-            body.innerHTML = '<tr><td colspan="4" style="text-align:center; color:red; padding:40px; font-weight:bold;">SIN RESULTADOS EN LA BASE DE DATOS_</td></tr>';
-            return;
-        }
-
         players.forEach((j, index) => {
             const row = document.createElement('tr');
-            row.addEventListener('mouseover', () => { 
-                sndHover.currentTime = 0; 
-                sndHover.volume = 0.15; 
-                sndHover.play(); 
-            });
+            row.addEventListener('mouseover', () => { sndHover.currentTime = 0; sndHover.volume = 0.15; sndHover.play(); });
             
-            // Usamos el sistema de soldados para evitar fotos negras
-            const imgSoldier = getSoldier(j.nombre);
+            // ASIGNAMOS LA IMAGEN FIJA
+            const avatarImg = getSoldier(j.nombre);
 
             row.innerHTML = `
                 <td style="color:var(--neon-blue); font-weight:bold; font-size:1.1rem; text-align:center;">#${index + 1}</td>
                 <td>
-                    <img src="${imgSoldier}" 
-                         style="width:35px; height:35px; border:1px solid var(--neon-green); vertical-align:middle; margin-right:15px; box-shadow: 0 0 8px var(--neon-green); object-fit: cover; background: #000; border-radius: 3px;"> 
+                    <img src="${avatarImg}" 
+                         style="width:35px; height:35px; border:1px solid var(--neon-green); vertical-align:middle; margin-right:15px; box-shadow: 0 0 8px var(--neon-green); object-fit: cover; border-radius: 3px;"> 
                     ${j.nombre}
                 </td>
                 <td><span style="color:var(--neon-green); text-shadow: 0 0 5px var(--neon-green); font-weight:bold;">NIVEL ${j.nivel}</span></td>
                 <td style="color:#aaa; font-size:0.85rem">💀 NPC: ${j.npc}  |  ⚔️ PVP: ${j.pvp}</td>
             `;
-            
             row.setAttribute('onclick', "openProfile('" + j.uuid + "', '" + j.nombre + "')");
             body.appendChild(row);
         });
@@ -382,36 +365,21 @@ async function update() {
         renderPlayers(filtered);
     }
 
-    function addLog(msg, colorType) {
-        const log = document.getElementById('log-content');
-        const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
-        const color = colorType === "green" ? "var(--neon-green)" : "var(--neon-orange)";
-        
-        const newItem = document.createElement('div');
-        newItem.className = 'event-item';
-        newItem.innerHTML = `<span class="event-time">[${time}]</span> <span style="color:${color}">${msg}</span>`;
-        
-        log.insertBefore(newItem, log.firstChild);
-        if(log.children.length > 15) log.lastChild.remove();
-    }
-
     function openProfile(uuid, nombre) {
         const p = cachePlayers.find(x => x.uuid === uuid);
         if(!p) return;
-        
         sndOpen.currentTime = 0; sndOpen.volume = 0.4; sndOpen.play();
-        
         const imgElement = document.getElementById('p-img');
+        
+        // ASIGNAMOS LA IMAGEN FIJA EN EL MODAL TAMBIÉN
         imgElement.src = getSoldier(nombre);
         
         document.getElementById('p-name').innerText = p.nombre;
         document.getElementById('p-npc').innerText = p.npc;
         document.getElementById('p-pvp').innerText = p.pvp;
-        
         const req = parseInt(p.nivel) * 500;
         const pct = (parseInt(p.xp) / req) * 100;
         document.getElementById('p-xp-fill').style.width = pct + "%";
-        
         let xpGlobal = calcularXPGlobal(p.nivel, p.xp);
         document.getElementById('p-xp-text').innerText = `PROGRESO NIVEL: ${p.xp} / ${req} | XP GLOBAL: ${xpGlobal.toLocaleString()}`;
         
@@ -422,13 +390,11 @@ async function update() {
         else if (n >= 40) rango = "MAESTRO DE GUERRA";
         else if (n >= 20) rango = "ELITE";
         else if (n >= 10) rango = "SOLDADO";
-        
         document.getElementById('p-rango').innerText = ">> CLASIFICACIÓN: " + rango;
         document.getElementById('playerModal').style.display = 'flex';
     }
 
     function closeModal() { document.getElementById('playerModal').style.display = 'none'; }
-
     update();
     setInterval(update, 30000);
 </script>
