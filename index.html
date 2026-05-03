@@ -301,7 +301,6 @@ async function update() {
         let n_total = 0;
         let p_total = 0;
 
-        // Extraemos todos los jugadores de todas las facciones
         if (data.facciones) {
             data.facciones.forEach(f => {
                 f.lista_integrantes.forEach(j => {
@@ -312,9 +311,7 @@ async function update() {
             });
         }
 
-        // Ordenar por nivel de mayor a menor
         list.sort((a, b) => b.nivel - a.nivel);
-
         cachePlayers = list;
         renderPlayers(list);
 
@@ -322,7 +319,6 @@ async function update() {
         document.getElementById('count-npc').innerText = n_total;
         document.getElementById('count-pvp').innerText = p_total;
 
-        // Actualizar barra de evento
         if(data.evento) {
             let pct = (n_total / data.evento.meta) * 100;
             document.getElementById('event-bar-fill').style.width = Math.min(pct, 100) + "%";
@@ -331,7 +327,6 @@ async function update() {
 
     } catch (e) { 
         console.error("Error:", e);
-        addLog("⚠️ ERROR: DATOS CORRUPTOS O API CAÍDA", "orange");
     }
 }
 
@@ -343,7 +338,6 @@ async function update() {
             return;
         }
 
-        // --- ACTUALIZACIÓN: INCLUIR POSICIÓN (RANKING) ---
         players.forEach((j, index) => {
             const row = document.createElement('tr');
             row.addEventListener('mouseover', () => { 
@@ -352,7 +346,9 @@ async function update() {
                 sndHover.play(); 
             });
             
-            const imgUrl = `https://my-secondlife-com.s3.amazonaws.com/users/${j.nombre.replace(/ /g, '.').toLowerCase()}/thumb_sl_image.png`;
+            // CORRECCIÓN SISTEMA DE IMÁGENES
+            const nameClean = j.nombre.replace(/ /g, '.').toLowerCase();
+            const imgUrl = `https://my-secondlife-com.s3.amazonaws.com/users/${nameClean}/thumb_sl_image.png`;
             const fallbackUrl = `https://secondlife.com/app/image/${j.uuid}/1`;
 
             row.innerHTML = `
@@ -378,23 +374,6 @@ async function update() {
         renderPlayers(filtered);
     }
 
-    function compareData(newList) {
-        newList.forEach(nj => {
-            let old = cachePlayers.find(o => o.uuid === nj.uuid);
-            if(old) {
-                if(parseInt(nj.nivel) > parseInt(old.nivel)) {
-                    addLog(`🚀 ${nj.nombre.toUpperCase()} SUBIÓ AL NIVEL ${nj.nivel}`, "green");
-                }
-                if(parseInt(nj.pvp) > parseInt(old.pvp)) {
-                    addLog(`⚔️ PVP CONFIRMADO: ${nj.nombre.toUpperCase()}`, "orange");
-                }
-                if(parseInt(nj.npc) > (parseInt(old.npc) + 5)) {
-                    addLog(`💀 ${nj.nombre.toUpperCase()} ELIMINÓ OLEADA NPC`, "green");
-                }
-            }
-        });
-    }
-
     function addLog(msg, colorType) {
         const log = document.getElementById('log-content');
         const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
@@ -414,9 +393,10 @@ async function update() {
         
         sndOpen.currentTime = 0; sndOpen.volume = 0.4; sndOpen.play();
         
+        // CORRECCIÓN SISTEMA DE IMÁGENES EN MODAL
         const imgElement = document.getElementById('p-img');
-        const imgUrl = `https://my-secondlife-com.s3.amazonaws.com/users/${nombre.replace(/ /g, '.').toLowerCase()}/sl_image.png`;
-        imgElement.src = imgUrl;
+        const nameClean = nombre.replace(/ /g, '.').toLowerCase();
+        imgElement.src = `https://my-secondlife-com.s3.amazonaws.com/users/${nameClean}/sl_image.png`;
         imgElement.onerror = function() { this.src = `https://secondlife.com/app/image/${uuid}/2`; };
         
         document.getElementById('p-name').innerText = p.nombre;
