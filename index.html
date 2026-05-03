@@ -286,6 +286,17 @@
     const sndHover = document.getElementById('snd-hover');
     const sndOpen = document.getElementById('snd-open');
 
+    // --- SISTEMA DE FOTOS SOLDADO (HOMBRE / MUJER) ---
+    const SOLDADO_H = "https://i.pinimg.com/originals/7a/90/73/7a90733737b60098f98013f9999a0996.jpg";
+    const SOLDADO_M = "https://i.pinimg.com/736x/8a/6c/40/8a6c4068305f88417537e2898822557a.jpg";
+
+    function getSoldier(name) {
+        let n = name.toLowerCase();
+        // Lógica para detectar género por nombre
+        if (n.includes("ana") || n.includes("nora") || n.includes("lady") || n.includes("miss") || n.endsWith("a")) return SOLDADO_M;
+        return SOLDADO_H;
+    }
+
     function calcularXPGlobal(n, xp) {
         let lvl = parseInt(n);
         let xpAcumulada = ((lvl - 1) * lvl / 2) * 500;
@@ -346,17 +357,14 @@ async function update() {
                 sndHover.play(); 
             });
             
-            // CORRECCIÓN SISTEMA DE IMÁGENES
-            const nameClean = j.nombre.replace(/ /g, '.').toLowerCase();
-            const imgUrl = `https://my-secondlife-com.s3.amazonaws.com/users/${nameClean}/thumb_sl_image.png`;
-            const fallbackUrl = `https://secondlife.com/app/image/${j.uuid}/1`;
+            // Usamos el sistema de soldados para evitar fotos negras
+            const imgSoldier = getSoldier(j.nombre);
 
             row.innerHTML = `
                 <td style="color:var(--neon-blue); font-weight:bold; font-size:1.1rem; text-align:center;">#${index + 1}</td>
                 <td>
-                    <img src="${imgUrl}" 
-                         onerror="this.src='${fallbackUrl}'"
-                         style="width:35px; height:35px; border:1px solid var(--neon-green); vertical-align:middle; margin-right:15px; box-shadow: 0 0 8px var(--neon-green); object-fit: cover; background: #000;"> 
+                    <img src="${imgSoldier}" 
+                         style="width:35px; height:35px; border:1px solid var(--neon-green); vertical-align:middle; margin-right:15px; box-shadow: 0 0 8px var(--neon-green); object-fit: cover; background: #000; border-radius: 3px;"> 
                     ${j.nombre}
                 </td>
                 <td><span style="color:var(--neon-green); text-shadow: 0 0 5px var(--neon-green); font-weight:bold;">NIVEL ${j.nivel}</span></td>
@@ -393,11 +401,8 @@ async function update() {
         
         sndOpen.currentTime = 0; sndOpen.volume = 0.4; sndOpen.play();
         
-        // CORRECCIÓN SISTEMA DE IMÁGENES EN MODAL
         const imgElement = document.getElementById('p-img');
-        const nameClean = nombre.replace(/ /g, '.').toLowerCase();
-        imgElement.src = `https://my-secondlife-com.s3.amazonaws.com/users/${nameClean}/sl_image.png`;
-        imgElement.onerror = function() { this.src = `https://secondlife.com/app/image/${uuid}/2`; };
+        imgElement.src = getSoldier(nombre);
         
         document.getElementById('p-name').innerText = p.nombre;
         document.getElementById('p-npc').innerText = p.npc;
