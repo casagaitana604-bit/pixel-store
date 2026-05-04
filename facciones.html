@@ -70,7 +70,7 @@
         
         .top-card { background: rgba(17,17,17,0.9); border: 1px solid var(--gold); padding: 15px; border-radius: 10px; box-shadow: 0 0 10px rgba(255, 215, 0, 0.1); backdrop-filter: blur(10px); }
         .top-card h3 { font-size: 0.9rem; margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 8px; }
-        .top-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #222; font-size: 0.75rem; }
+        .top-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #222; font-size: 0.75rem; align-items: center; }
 
         .fac-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
         .fac-card { background: var(--card); padding: 20px; border-radius: 10px; border: 1px solid #333; position: relative; backdrop-filter: blur(10px); margin-bottom: 20px; }
@@ -131,6 +131,36 @@
 <script>
     const API = "https://script.google.com/macros/s/AKfycbyUMYO4CpHyhdrOa3xO7cNEvrVzkfNbQZYPOJ99b8kLD8DIXKGPmuZ5Ey2cAiwNPS_u/exec";
 
+    // --- 📂 BASE DE DATOS DE FOTOS SINCRONIZADA ---
+    const FOTOS_MANUALES = {
+        "William Garzon C": "https://i.ibb.co/LzNf9Fv/soldado-ejemplo.jpg",
+        "creacionvirtual Resident": "https://img.freepik.com/psd-premium/nino-lindo-camuflaje-uniforme-combate-soldado-rifle-mano_1104289-67.jpg?w=740",
+        "Violetaa39 Resident": "https://static.vecteezy.com/system/resources/previews/039/657/374/non_2x/ai-generated-us-soldier-with-rifle-free-png.png",
+        "plaza Resident": "https://static.vecteezy.com/system/resources/previews/039/657/397/original/ai-generated-adorable-girl-soldier-cartoon-character-png.png",
+        "notfound80 Resident": "https://img.freepik.com/fotos-premium/fondo-blanco-soldado-dibujos-animados-accion-ejercito_41969-39108.jpg?w=2000",
+        "popeyeee Resident": "https://i.pinimg.com/originals/70/78/cb/7078cb46e9894fc2a046f6173c077063.jpg",
+        "eddy38k Resident": "https://www.gifss.com/profesiones/soldados/soldado-05.gif"
+    };
+
+    const SOLDADOS_POOL = {
+        M: [
+            "https://img.freepik.com/premium-vector/soldier-uniform-cartoon-character-vector_614983-3103.jpg?w=2000",
+            "https://img.freepik.com/fotos-premium/alegre-aventura-camuflaje-alegre-animado-joven-soldado-equipo-militar-gran-sonrisa-espiritu-animado_337384-58330.jpg?size=626&ext=jpg"
+        ],
+        F: [
+            "https://static.vecteezy.com/system/resources/previews/039/657/397/original/ai-generated-adorable-girl-soldier-cartoon-character-png.png",
+            "https://static.vecteezy.com/system/resources/previews/039/657/397/original/ai-generated-adorable-girl-soldier-cartoon-character-png.png"
+        ]
+    };
+
+    function getSoldier(name, uuid) {
+        if (FOTOS_MANUALES[name]) return FOTOS_MANUALES[name];
+        let n = name.toLowerCase();
+        let index = parseInt(uuid.substring(0, 1), 16) % 2; 
+        if (n.includes("ana") || n.includes("nora") || n.includes("lady") || n.endsWith("a")) return SOLDADOS_POOL.F[index];
+        return SOLDADOS_POOL.M[index];
+    }
+
     function calcularXPGlobal(n, xp) {
         let lvl = parseInt(n) || 1;
         let xpAcum = ((lvl - 1) * lvl / 2) * 500;
@@ -151,7 +181,6 @@
                     allPlayers = allPlayers.concat(f.lista_integrantes);
                 }
 
-                // FILTRO: Ocultar si es CIVILES o CUARTEL
                 let nombreFac = f.nombre.toUpperCase();
                 if (nombreFac === "CIVILES" || nombreFac === "CUARTEL" || nombreFac === "INDEPENDIENTES") return;
 
@@ -174,8 +203,7 @@
                     f.lista_integrantes.forEach(j => {
                         html += `
                             <div class="member-item">
-                                <img class="member-img" src="https://secondlife.com/app/image/${j.uuid}/2" 
-                                     onerror="this.src='https://secondlife.com/app/image/00000000-0000-0000-0000-000000000000/1'">
+                                <img class="member-img" src="${getSoldier(j.nombre, j.uuid)}">
                                 <div>
                                     <div style="font-size: 0.8rem; color: #fff;">${j.nombre || 'DESCONOCIDO'}</div>
                                     <div style="font-size: 0.65rem; color: var(--neon-green);">LVL ${j.nivel || 0}</div>
@@ -189,12 +217,12 @@
                 facList.innerHTML += html + `</div></div>`;
             });
 
-            // --- PROCESAMIENTO DE TOPS ---
+            // --- TOPS CON FOTOS ACTUALIZADAS ---
             document.getElementById('top-xp').innerHTML = [...allPlayers]
                 .sort((a,b) => calcularXPGlobal(b.nivel, b.xp) - calcularXPGlobal(a.nivel, a.xp))
                 .slice(0,5).map(j=>`
                 <div class="top-item">
-                    <span><img src="https://secondlife.com/app/image/${j.uuid}/2" style="width:20px; border-radius:3px; margin-right:5px;"> ${j.nombre}</span>
+                    <span><img src="${getSoldier(j.nombre, j.uuid)}" style="width:20px; height:20px; border-radius:3px; margin-right:5px; object-fit:cover;"> ${j.nombre}</span>
                     <span style="color:var(--gold)">${calcularXPGlobal(j.nivel, j.xp).toLocaleString()} XP</span>
                 </div>`).join('');
 
@@ -202,7 +230,7 @@
                 .sort((a,b) => parseInt(b.npc || 0) - parseInt(a.npc || 0))
                 .slice(0,5).map(j=>`
                 <div class="top-item">
-                    <span><img src="https://secondlife.com/app/image/${j.uuid}/2" style="width:20px; border-radius:3px; margin-right:5px;"> ${j.nombre}</span>
+                    <span><img src="${getSoldier(j.nombre, j.uuid)}" style="width:20px; height:20px; border-radius:3px; margin-right:5px; object-fit:cover;"> ${j.nombre}</span>
                     <span style="color:var(--neon-green)">${j.npc || 0} 💀</span>
                 </div>`).join('');
 
@@ -210,7 +238,7 @@
                 .sort((a,b) => parseInt(b.pvp || 0) - parseInt(a.pvp || 0))
                 .slice(0,5).map(j=>`
                 <div class="top-item">
-                    <span><img src="https://secondlife.com/app/image/${j.uuid}/2" style="width:20px; border-radius:3px; margin-right:5px;"> ${j.nombre}</span>
+                    <span><img src="${getSoldier(j.nombre, j.uuid)}" style="width:20px; height:20px; border-radius:3px; margin-right:5px; object-fit:cover;"> ${j.nombre}</span>
                     <span style="color:var(--primary)">${j.pvp || 0} ⚔️</span>
                 </div>`).join('');
 
