@@ -274,27 +274,39 @@
     const sndHover = document.getElementById('snd-hover');
     const sndOpen = document.getElementById('snd-open');
 
-    // --- COLECCIÓN DE IMÁGENES VARIADAS ---
-    const M_POOL = [
-        "https://images.pexels.com/photos/8101416/pexels-photo-8101416.jpeg?auto=compress&cs=tinysrgb&w=400",
-        "https://images.pexels.com/photos/8101389/pexels-photo-8101389.jpeg?auto=compress&cs=tinysrgb&w=400",
-        "https://images.pexels.com/photos/10313867/pexels-photo-10313867.jpeg?auto=compress&cs=tinysrgb&w=400"
-    ];
-    const F_POOL = [
-        "https://images.pexels.com/photos/17691886/pexels-photo-17691886.jpeg?auto=compress&cs=tinysrgb&w=400",
-        "https://images.pexels.com/photos/17691884/pexels-photo-17691884.jpeg?auto=compress&cs=tinysrgb&w=400",
-        "https://images.pexels.com/photos/17691883/pexels-photo-17691883.jpeg?auto=compress&cs=tinysrgb&w=400"
-    ];
+    // ==========================================================
+    // --- 📂 BASE DE DATOS MANUAL DE FOTOS ---
+    // Aquí puedes añadir los nombres y el enlace de la foto.
+    // Ejemplo: "Nombre Avatar": "https://enlace-de-la-foto.jpg",
+    // ==========================================================
+    const FOTOS_MANUALES = {
+        "William Garzon C": "https://i.ibb.co/LzNf9Fv/soldado-ejemplo.jpg",
+        "Nombre de Ejemplo": "https://i.ibb.co/link-de-foto.jpg"
+    };
+
+    // --- Imágenes de Soldados por defecto ---
+    const SOLDADOS_POOL = {
+        M: [
+            "https://images.pexels.com/photos/8101416/pexels-photo-8101416.jpeg?auto=compress&cs=tinysrgb&w=200",
+            "https://images.pexels.com/photos/8101389/pexels-photo-8101389.jpeg?auto=compress&cs=tinysrgb&w=200"
+        ],
+        F: [
+            "https://images.pexels.com/photos/17691886/pexels-photo-17691886.jpeg?auto=compress&cs=tinysrgb&w=200",
+            "https://images.pexels.com/photos/17691883/pexels-photo-17691883.jpeg?auto=compress&cs=tinysrgb&w=200"
+        ]
+    };
 
     function getSoldier(name, uuid) {
+        // 1. Prioridad: ¿Está en la lista manual?
+        if (FOTOS_MANUALES[name]) return FOTOS_MANUALES[name];
+
+        // 2. Si no, elegir soldado automático
         let n = name.toLowerCase();
-        // Usar el UUID para que la imagen siempre sea la misma para ese jugador
-        let index = parseInt(uuid.substring(0, 1), 16) % 3; 
-        
-        if (n.includes("ana") || n.includes("nora") || n.includes("lady") || n.includes("girl") || n.includes("miss") || n.endsWith("a")) {
-            return F_POOL[index];
+        let index = parseInt(uuid.substring(0, 1), 16) % 2; 
+        if (n.includes("ana") || n.includes("nora") || n.includes("lady") || n.endsWith("a")) {
+            return SOLDADOS_POOL.F[index];
         }
-        return M_POOL[index];
+        return SOLDADOS_POOL.M[index];
     }
 
     function calcularXPGlobal(n, xp) {
@@ -339,7 +351,6 @@ async function update() {
             const row = document.createElement('tr');
             row.addEventListener('mouseover', () => { sndHover.currentTime = 0; sndHover.volume = 0.15; sndHover.play(); });
             
-            // Asignar imagen variada según UUID y Nombre
             const avatarImg = getSoldier(j.nombre, j.uuid);
 
             row.innerHTML = `
