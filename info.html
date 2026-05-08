@@ -61,8 +61,8 @@
         li::before { content: '>'; position: absolute; left: 0; color: var(--neon-green); font-weight: bold; }
 
         .tabla-contenedor { overflow-x: auto; margin-top: 20px; }
-        .tabla-crafteo { width: 100%; border-collapse: collapse; background: rgba(0,0,0,0.4); border-radius: 4px; }
-        .tabla-crafteo th { background: #222; color: var(--neon-gold); padding: 10px; text-transform: uppercase; font-size: 0.7rem; border: 1px solid #333; }
+        .tabla-crafteo { width: 100%; border-collapse: collapse; background: rgba(0,0,0,0.6); }
+        .tabla-crafteo th { background: #222; color: var(--neon-gold); padding: 12px 5px; font-size: 0.7rem; border: 1px solid #333; }
         .tabla-crafteo td { padding: 10px; border: 1px solid #222; text-align: center; color: #fff; font-weight: bold; }
         .col-arma { text-align: left !important; color: var(--neon-cyan) !important; font-size: 0.9rem; }
         .icon-m { font-size: 1.1rem; vertical-align: middle; margin-right: 8px; }
@@ -93,59 +93,58 @@
 
 <div class="container">
     
-    <!-- SECCIÓN 01: NÚCLEO -->
     <section class="info-section">
         <h2>01. EL NÚCLEO DE SUPERVIVENCIA</h2>
+        <p>Bienvenido al sistema RPG más avanzado de Second Life. Tu identidad digital se sincroniza con nuestra <span class="highlight">Base de Datos Global</span>.</p>
+        
         <div class="grid-stats">
             <div>
                 <h3>Biometría y Estados</h3>
                 <ul>
                     <li><span class="highlight">STAMINA DINÁMICA:</span> Correr y saltar agota tu energía.</li>
                     <li><span class="highlight">HP ESCALABLE:</span> Tu vida máxima aumenta <span class="highlight">+2 HP</span> por nivel.</li>
-                    <li><span class="highlight">AUTOSAVE:</span> Sincronización en tiempo real.</li>
+                    <li><span class="highlight">AUTOSAVE:</span> Tu progreso se guarda automáticamente en la nube.</li>
                 </ul>
             </div>
             <div>
                 <h3>Rangos de Mando</h3>
                 <ul>
-                    <li><span class="highlight">RECLUTA:</span> Nvl 1-9 | <span class="highlight">SOLDADO:</span> Nvl 10-19</li>
-                    <li><span class="highlight">ELITE:</span> Nvl 20-39 | <span class="highlight">HEROE:</span> Nvl 90+</li>
+                    <li><span class="highlight">RECLUTA:</span> Nvl 1-9</li>
+                    <li><span class="highlight">SOLDADO:</span> Nvl 10-19</li>
+                    <li><span class="highlight">ELITE:</span> Nvl 20-39</li>
+                    <li><span class="highlight">HEROE:</span> Nvl 90+</li>
                 </ul>
             </div>
         </div>
     </section>
 
-    <!-- SECCIÓN 02: ARSENAL -->
     <section class="info-section" style="border-left-color: var(--neon-orange);">
         <h2>02. ARSENAL TÁCTICO <span class="badge-new">RAYCAST</span></h2>
-        <p>Precisión absoluta. Si está en tu mira, es historia.</p>
-        <div class="grid-stats">
-            <div>
-                <h3>Enchanting</h3>
-                <ul>
-                    <li>🥉 <span class="highlight">BRONCE:</span> 20% éxito.</li>
-                    <li>🔹 <span class="highlight">PLATA:</span> 50% éxito.</li>
-                    <li>🔸 <span class="highlight">ORO:</span> 100% éxito.</li>
-                </ul>
-            </div>
-            <div>
-                <h3>Sistemas</h3>
-                <ul>
-                    <li><span class="highlight-orange">Detección Táctica</span> de objetivos.</li>
-                    <li><span class="highlight-orange">XP Proporcional</span> por daño.</li>
-                </ul>
-            </div>
-        </div>
+        <p>Tecnología <span class="highlight-orange">Raycast de alta precisión</span>.</p>
+        
+        <h3>TECNOLOGÍA DE DISPARO</h3>
+        <ul>
+            <li><span class="highlight-orange">Detección Táctica:</span> Identifica Nombre y HP del objetivo.</li>
+            <li><span class="highlight-orange">XP Cooperativa:</span> XP repartida por daño infligido.</li>
+            <li><span class="highlight-orange">Drop Dinámico:</span> Loot real de enemigos eliminados.</li>
+        </ul>
+
+        <h3>SISTEMA DE ENCHANTING</h3>
+        <ul>
+            <li>🥉 <span class="highlight">BRONCE:</span> 20% éxito. | 🔹 <span class="highlight">PLATA:</span> 50% éxito. | 🔸 <span class="highlight">ORO:</span> 100% éxito.</li>
+        </ul>
     </section>
 
-    <!-- SECCIÓN 03: MAESTRO ARMERO (COSTOS ACTUALIZADOS) -->
+    <!-- SECCIÓN 03: MAESTRO ARMERO (COSTOS NUEVOS ACTUALIZADOS) -->
     <section class="info-section" style="border-left-color: var(--neon-gold);">
         <h2>03. MAESTRO ARMERO <span class="badge-new" style="background:var(--neon-gold);">CRAFTEO V3</span></h2>
+        <p>Visita al <span class="highlight" style="color:var(--neon-gold);">Maestro Armero</span> para procesar recursos y fabricar equipo táctico.</p>
+        
         <div class="tabla-contenedor">
             <table class="tabla-crafteo">
                 <thead>
                     <tr>
-                        <th style="text-align:left">MODELO</th>
+                        <th style="text-align:left">EQUIPAMIENTO TÁCTICO</th>
                         <th>🧪 POCIONES</th>
                         <th>⛏️ HIERRO</th>
                         <th>🪵 MADERA</th>
@@ -165,40 +164,40 @@
         </div>
     </section>
 
-    <!-- SECCIÓN 04: SURVIVAL SLOT (NUEVA) -->
+    <section class="info-section" style="border-left-color: var(--neon-cyan);">
+        <h2>04. DOMINACIÓN DE TERRITORIO</h2>
+        <ul>
+            <li><span class="highlight">XP POR PATRULLA:</span> XP pasiva dentro de tu Base.</li>
+            <li><span class="highlight">HITOS MILITARES:</span> Desbloquea bonos grupales.</li>
+            <li><span class="highlight">ALERTA PVP:</span> Señal de socorro integrada.</li>
+        </ul>
+    </section>
+
+    <!-- SECCIÓN 05: SURVIVAL SLOT (NUEVA) -->
     <section class="info-section" style="border-left-color: var(--neon-purple);">
-        <h2>04. ZONA DE OCIO: SURVIVAL SLOT <span class="badge-new" style="background:var(--neon-purple); box-shadow: 0 0 10px var(--neon-purple);">CASINO</span></h2>
-        <p>Prueba tu suerte en la **Survival Slot Ultra Pro**. ¡Gana Pociones o Linden Dollars al instante!</p>
-        
+        <h2>05. ZONA DE OCIO: SURVIVAL SLOT <span class="badge-new" style="background:var(--neon-purple);">CASINO</span></h2>
         <div class="grid-stats">
             <div class="slot-card">
                 <h3 style="color:var(--neon-purple); margin-top:0;">🎰 SLOT NORMAL</h3>
                 <div class="slot-icons">🧪 | 🧪 | 🧪</div>
-                <ul>
-                    <li><span class="highlight" style="color:var(--neon-purple);">3 IGUALES:</span> +1 Poción extra.</li>
-                    <li><span class="highlight" style="color:var(--neon-purple);">3 POCIONES (🧪):</span> +3 Pociones (Súper Botín).</li>
-                </ul>
+                <p>3 POCIONES (🧪) = <span class="highlight">+3 Pociones</span></p>
+                <p>3 IGUALES = <span class="highlight">+1 Poción</span></p>
             </div>
             <div class="slot-card" style="border-color: var(--neon-gold);">
-                <h3 style="color:var(--neon-gold); margin-top:0;">💎 SÚPER 4 (PRO)</h3>
+                <h3 style="color:var(--neon-gold); margin-top:0;">💎 SÚPER 4</h3>
                 <div class="slot-icons">💎 | 💎 | 💎 | 💎</div>
-                <ul>
-                    <li><span class="highlight" style="color:var(--neon-gold);">4 IGUALES:</span> Ganas <span style="color:#fff;">1 L$</span>.</li>
-                    <li><span class="highlight" style="color:var(--neon-gold);">4 DIAMANTES (💎):</span> Ganas <span style="color:#fff;">5 L$</span> (¡ÉPICO!).</li>
-                </ul>
+                <p>4 DIAMANTES (💎) = <span class="highlight">5 L$</span></p>
+                <p>4 IGUALES = <span class="highlight">1 L$</span></p>
             </div>
         </div>
-        <p style="text-align:center; margin-top:20px; font-size:0.9rem; color:#888;">
-            *Nota: Debes estar a menos de 6 metros de la máquina para operar. Los premios se pagan automáticamente vía <span class="highlight">Cloud System</span>.
-        </p>
     </section>
 
-    <!-- SECCIÓN 05: TERRITORIO -->
-    <section class="info-section" style="border-left-color: var(--neon-cyan);">
-        <h2>05. DOMINACIÓN DE TERRITORIO</h2>
+    <section class="info-section">
+        <h2>06. INTELIGENCIA DE DATOS</h2>
         <ul>
-            <li><span class="highlight">XP POR PATRULLA:</span> Gana XP pasiva dentro de tu Base.</li>
-            <li><span class="highlight">ALERTA PVP:</span> Sistema de socorro aliado integrado.</li>
+            <li><strong>GLOBAL RANKING:</strong> Compite en nuestra tabla de líderes.</li>
+            <li><strong>BUFFS DE REINO:</strong> Eventos de <span class="highlight">XP x2</span> activos.</li>
+            <li><strong>GESTIÓN DE ALIANZAS:</strong> Funda tu propia facción al llegar a Nivel 5.</li>
         </ul>
     </section>
 
