@@ -60,6 +60,7 @@
         li { margin-bottom: 12px; padding-left: 20px; position: relative; color: #bbb; }
         li::before { content: '>'; position: absolute; left: 0; color: var(--neon-green); font-weight: bold; }
 
+        /* Estilos Tabla Crafteo */
         .tabla-contenedor { overflow-x: auto; margin-top: 20px; }
         .tabla-crafteo { width: 100%; border-collapse: collapse; background: rgba(0,0,0,0.6); }
         .tabla-crafteo th { background: #222; color: var(--neon-gold); padding: 12px 5px; font-size: 0.7rem; border: 1px solid #333; }
@@ -67,6 +68,7 @@
         .col-arma { text-align: left !important; color: var(--neon-cyan) !important; font-size: 0.9rem; }
         .icon-m { font-size: 1.1rem; vertical-align: middle; margin-right: 8px; }
 
+        /* Estilos Slot */
         .slot-card { background: linear-gradient(145deg, #111, #222); border: 1px solid var(--neon-purple); padding: 20px; border-radius: 10px; text-align: center; }
         .slot-icons { font-size: 2rem; letter-spacing: 10px; margin: 15px 0; text-shadow: 0 0 10px var(--neon-purple); }
 
@@ -95,15 +97,15 @@
     
     <section class="info-section">
         <h2>01. EL NÚCLEO DE SUPERVIVENCIA</h2>
-        <p>Bienvenido al sistema RPG más avanzado de Second Life. Tu identidad digital se sincroniza con nuestra <span class="highlight">Base de Datos Global</span>.</p>
+        <p>Bienvenido al sistema RPG más avanzado de Second Life. No es solo un HUD; es tu identidad digital. Cada bala disparada y cada segundo patrullado se sincroniza con nuestra <span class="highlight">Base de Datos Global</span>.</p>
         
         <div class="grid-stats">
             <div>
                 <h3>Biometría y Estados</h3>
                 <ul>
-                    <li><span class="highlight">STAMINA DINÁMICA:</span> Correr y saltar agota tu energía.</li>
-                    <li><span class="highlight">HP ESCALABLE:</span> Tu vida máxima aumenta <span class="highlight">+2 HP</span> por nivel.</li>
-                    <li><span class="highlight">AUTOSAVE:</span> Tu progreso se guarda automáticamente en la nube.</li>
+                    <li><span class="highlight">STAMINA DINÁMICA:</span> Correr y saltar agota tu energía. Si llegas a cero, tu salud empezará a drenarse por fatiga.</li>
+                    <li><span class="highlight">HP ESCALABLE:</span> Tu vida máxima aumenta <span class="highlight">+2 HP</span> por cada nivel alcanzado. ¡Conviértete en un tanque!</li>
+                    <li><span class="highlight">AUTOSAVE:</span> Olvida las pérdidas de datos. Tu progreso se guarda en la nube cada vez que subes de nivel o usas un ítem.</li>
                 </ul>
             </div>
             <div>
@@ -112,33 +114,36 @@
                     <li><span class="highlight">RECLUTA:</span> Nvl 1-9</li>
                     <li><span class="highlight">SOLDADO:</span> Nvl 10-19</li>
                     <li><span class="highlight">ELITE:</span> Nvl 20-39</li>
-                    <li><span class="highlight">HEROE:</span> Nvl 90+</li>
+                    <li><span class="highlight">MAESTRO:</span> Nvl 40-69</li>
+                    <li><span class="highlight">LEGENDARIO:</span> Nvl 70-89</li>
+                    <li><span class="highlight">HEROE:</span> Nvl 90+ (Estatus Divino)</li>
                 </ul>
             </div>
         </div>
     </section>
 
     <section class="info-section" style="border-left-color: var(--neon-orange);">
-        <h2>02. ARSENAL TÁCTICO <span class="badge-new">RAYCAST</span></h2>
-        <p>Tecnología <span class="highlight-orange">Raycast de alta precisión</span>.</p>
+        <h2>02. ARSENAL TÁCTICO <span class="badge-new">NUEVO</span></h2>
+        <p>Nuestro sistema de armas utiliza tecnología <span class="highlight-orange">Raycast de alta precisión</span>. Si lo ves en tu mira, puedes destruirlo.</p>
         
         <h3>TECNOLOGÍA DE DISPARO</h3>
         <ul>
-            <li><span class="highlight-orange">Detección Táctica:</span> Identifica Nombre y HP del objetivo.</li>
-            <li><span class="highlight-orange">XP Cooperativa:</span> XP repartida por daño infligido.</li>
-            <li><span class="highlight-orange">Drop Dinámico:</span> Loot real de enemigos eliminados.</li>
+            <li><span class="highlight-orange">Detección Táctica:</span> Al apuntar en mouselook, el arma identifica al objetivo, mostrando su Nombre y HP restante en tu HUD.</li>
+            <li><span class="highlight-orange">XP Cooperativa:</span> ¡Se acabó el robo de muertes! El sistema reparte la XP proporcionalmente al daño infligido entre todos los atacantes.</li>
+            <li><span class="highlight-orange">Drop Dinámico:</span> Los enemigos eliminados pueden soltar munición, pociones o pergaminos raros de mejora.</li>
         </ul>
 
         <h3>SISTEMA DE ENCHANTING</h3>
+        <p>Visita al <span class="highlight-orange">Maestro Enchanter</span> para potenciar tu daño base (hasta +20). Tus pergaminos se guardan en un inventario virtual seguro.</p>
         <ul>
             <li>🥉 <span class="highlight">BRONCE:</span> 20% éxito. | 🔹 <span class="highlight">PLATA:</span> 50% éxito. | 🔸 <span class="highlight">ORO:</span> 100% éxito.</li>
         </ul>
     </section>
 
-    <!-- SECCIÓN 03: MAESTRO ARMERO (COSTOS NUEVOS ACTUALIZADOS) -->
+    <!-- NUEVA SECCIÓN: MAESTRO ARMERO (ACTUALIZADA) -->
     <section class="info-section" style="border-left-color: var(--neon-gold);">
         <h2>03. MAESTRO ARMERO <span class="badge-new" style="background:var(--neon-gold);">CRAFTEO V3</span></h2>
-        <p>Visita al <span class="highlight" style="color:var(--neon-gold);">Maestro Armero</span> para procesar recursos y fabricar equipo táctico.</p>
+        <p>Protocolo de fabricación activado. El <span class="highlight" style="color:var(--neon-gold);">Maestro Armero</span> procesará tus recursos para ensamblar equipo táctico de alto impacto.</p>
         
         <div class="tabla-contenedor">
             <table class="tabla-crafteo">
@@ -166,25 +171,28 @@
 
     <section class="info-section" style="border-left-color: var(--neon-cyan);">
         <h2>04. DOMINACIÓN DE TERRITORIO</h2>
+        <p>Funda un <span class="highlight">Cuartel General</span> y lidera a tu equipo hacia la gloria. El trabajo en equipo es recompensado masivamente.</p>
+        
         <ul>
-            <li><span class="highlight">XP POR PATRULLA:</span> XP pasiva dentro de tu Base.</li>
-            <li><span class="highlight">HITOS MILITARES:</span> Desbloquea bonos grupales.</li>
-            <li><span class="highlight">ALERTA PVP:</span> Señal de socorro integrada.</li>
+            <li><span class="highlight">XP POR PATRULLA:</span> Quédate en el radio de tu Base de Operaciones para recibir <span class="highlight">XP pasiva cada minuto</span>.</li>
+            <li><span class="highlight">HITOS MILITARES:</span> Acumula bajas en equipo para alcanzar rangos como "División" o "IMPERIO" y desbloquear bonos de XP para todos los miembros.</li>
+            <li><span class="highlight">ALERTA PVP:</span> Envía una señal de socorro a tus aliados con un solo clic si estás bajo ataque enemigo.</li>
         </ul>
     </section>
 
-    <!-- SECCIÓN 05: SURVIVAL SLOT (NUEVA) -->
+    <!-- NUEVA SECCIÓN: SURVIVAL SLOT -->
     <section class="info-section" style="border-left-color: var(--neon-purple);">
-        <h2>05. ZONA DE OCIO: SURVIVAL SLOT <span class="badge-new" style="background:var(--neon-purple);">CASINO</span></h2>
+        <h2>05. ZONA DE OCIO: SURVIVAL SLOT <span class="badge-new" style="background:var(--neon-purple);">🎰 CASINO</span></h2>
+        <p>Prueba tu suerte en la máquina oficial. ¡Gana recursos o Linden Dollars!</p>
         <div class="grid-stats">
             <div class="slot-card">
-                <h3 style="color:var(--neon-purple); margin-top:0;">🎰 SLOT NORMAL</h3>
+                <h3 style="color:var(--neon-purple); margin-top:0;">MODO NORMAL</h3>
                 <div class="slot-icons">🧪 | 🧪 | 🧪</div>
                 <p>3 POCIONES (🧪) = <span class="highlight">+3 Pociones</span></p>
                 <p>3 IGUALES = <span class="highlight">+1 Poción</span></p>
             </div>
             <div class="slot-card" style="border-color: var(--neon-gold);">
-                <h3 style="color:var(--neon-gold); margin-top:0;">💎 SÚPER 4</h3>
+                <h3 style="color:var(--neon-gold); margin-top:0;">SÚPER 4 (PRO)</h3>
                 <div class="slot-icons">💎 | 💎 | 💎 | 💎</div>
                 <p>4 DIAMANTES (💎) = <span class="highlight">5 L$</span></p>
                 <p>4 IGUALES = <span class="highlight">1 L$</span></p>
@@ -195,9 +203,9 @@
     <section class="info-section">
         <h2>06. INTELIGENCIA DE DATOS</h2>
         <ul>
-            <li><strong>GLOBAL RANKING:</strong> Compite en nuestra tabla de líderes.</li>
-            <li><strong>BUFFS DE REINO:</strong> Eventos de <span class="highlight">XP x2</span> activos.</li>
-            <li><strong>GESTIÓN DE ALIANZAS:</strong> Funda tu propia facción al llegar a Nivel 5.</li>
+            <li><strong>GLOBAL RANKING:</strong> Compite por ser el #1 en bajas NPC y PVP en nuestra tabla de líderes sincronizada.</li>
+            <li><strong>BUFFS DE REINO:</strong> Mantente atento a los eventos de <span class="highlight">XP x2</span> que se activan globalmente.</li>
+            <li><strong>GESTIÓN DE ALIANZAS:</strong> Funda tu propia facción al llegar a Nivel 5 y administra a tus soldados desde el panel de mando.</li>
         </ul>
     </section>
 
