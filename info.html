@@ -10,6 +10,7 @@
             --neon-orange: #FF5F1F; 
             --neon-cyan: #00F3FF;
             --neon-gold: #f39c12;
+            --neon-purple: #bc13fe;
             --bg-overlay: rgba(0, 0, 0, 0.92);
             --card: rgba(15, 15, 15, 0.98);
         }
@@ -59,12 +60,15 @@
         li { margin-bottom: 12px; padding-left: 20px; position: relative; color: #bbb; }
         li::before { content: '>'; position: absolute; left: 0; color: var(--neon-green); font-weight: bold; }
 
-        /* Estilos Tabla Crafteo */
         .tabla-contenedor { overflow-x: auto; margin-top: 20px; }
         .tabla-crafteo { width: 100%; border-collapse: collapse; background: rgba(0,0,0,0.4); border-radius: 4px; }
-        .tabla-crafteo th { background: var(--neon-gold); color: #000; padding: 10px; text-transform: uppercase; font-size: 0.8rem; }
-        .tabla-crafteo td { padding: 12px 10px; border-bottom: 1px solid #222; text-align: center; font-family: monospace; font-size: 1rem; }
-        .col-arma { text-align: left !important; font-family: 'Segoe UI' !important; color: var(--neon-gold); font-weight: bold; }
+        .tabla-crafteo th { background: #222; color: var(--neon-gold); padding: 10px; text-transform: uppercase; font-size: 0.7rem; border: 1px solid #333; }
+        .tabla-crafteo td { padding: 10px; border: 1px solid #222; text-align: center; color: #fff; font-weight: bold; }
+        .col-arma { text-align: left !important; color: var(--neon-cyan) !important; font-size: 0.9rem; }
+        .icon-m { font-size: 1.1rem; vertical-align: middle; margin-right: 8px; }
+
+        .slot-card { background: linear-gradient(145deg, #111, #222); border: 1px solid var(--neon-purple); padding: 20px; border-radius: 10px; text-align: center; }
+        .slot-icons { font-size: 2rem; letter-spacing: 10px; margin: 15px 0; text-shadow: 0 0 10px var(--neon-purple); }
 
         .footer-cta { text-align: center; background: var(--neon-green); color: #000; padding: 20px; font-weight: 900; letter-spacing: 2px; border-radius: 5px; margin-top: 50px; cursor: default; }
     </style>
@@ -89,104 +93,111 @@
 
 <div class="container">
     
+    <!-- SECCIÓN 01: NÚCLEO -->
     <section class="info-section">
         <h2>01. EL NÚCLEO DE SUPERVIVENCIA</h2>
-        <p>Bienvenido al sistema RPG más avanzado de Second Life. No es solo un HUD; es tu identidad digital. Cada bala disparada y cada segundo patrullado se sincroniza con nuestra <span class="highlight">Base de Datos Global</span>.</p>
-        
         <div class="grid-stats">
             <div>
                 <h3>Biometría y Estados</h3>
                 <ul>
                     <li><span class="highlight">STAMINA DINÁMICA:</span> Correr y saltar agota tu energía.</li>
                     <li><span class="highlight">HP ESCALABLE:</span> Tu vida máxima aumenta <span class="highlight">+2 HP</span> por nivel.</li>
-                    <li><span class="highlight">AUTOSAVE:</span> Tu progreso se guarda en la nube automáticamente.</li>
+                    <li><span class="highlight">AUTOSAVE:</span> Sincronización en tiempo real.</li>
                 </ul>
             </div>
             <div>
                 <h3>Rangos de Mando</h3>
                 <ul>
                     <li><span class="highlight">RECLUTA:</span> Nvl 1-9 | <span class="highlight">SOLDADO:</span> Nvl 10-19</li>
-                    <li><span class="highlight">ELITE:</span> Nvl 20-39 | <span class="highlight">MAESTRO:</span> Nvl 40-69</li>
-                    <li><span class="highlight">LEGENDARIO:</span> Nvl 70-89 | <span class="highlight">HEROE:</span> Nvl 90+</li>
+                    <li><span class="highlight">ELITE:</span> Nvl 20-39 | <span class="highlight">HEROE:</span> Nvl 90+</li>
                 </ul>
             </div>
         </div>
     </section>
 
+    <!-- SECCIÓN 02: ARSENAL -->
     <section class="info-section" style="border-left-color: var(--neon-orange);">
-        <h2>02. ARSENAL TÁCTICO <span class="badge-new">Raycast</span></h2>
-        <p>Nuestro sistema de armas utiliza tecnología <span class="highlight-orange">Raycast de alta precisión</span>. Si lo ves en tu mira, puedes destruirlo.</p>
-        
+        <h2>02. ARSENAL TÁCTICO <span class="badge-new">RAYCAST</span></h2>
+        <p>Precisión absoluta. Si está en tu mira, es historia.</p>
         <div class="grid-stats">
-            <div>
-                <h3>Tecnología de Disparo</h3>
-                <ul>
-                    <li><span class="highlight-orange">Detección Táctica:</span> Identifica Nombre y HP del objetivo.</li>
-                    <li><span class="highlight-orange">XP Cooperativa:</span> XP repartida según daño infligido.</li>
-                    <li><span class="highlight-orange">Drop Dinámico:</span> Loot real al eliminar enemigos.</li>
-                </ul>
-            </div>
             <div>
                 <h3>Enchanting</h3>
-                <p>Potencia tu daño base (Máx +15)armas gratuita (Max +20) armas Crafteada (Max 25) armas de vendor usando pergaminos:</p>
                 <ul>
-                    <li>🥉 <span class="highlight">BRONCE:</span> 20% | 🔹 <span class="highlight">PLATA:</span> 50% | 🔸 <span class="highlight">ORO:</span> 100%</li>
+                    <li>🥉 <span class="highlight">BRONCE:</span> 20% éxito.</li>
+                    <li>🔹 <span class="highlight">PLATA:</span> 50% éxito.</li>
+                    <li>🔸 <span class="highlight">ORO:</span> 100% éxito.</li>
+                </ul>
+            </div>
+            <div>
+                <h3>Sistemas</h3>
+                <ul>
+                    <li><span class="highlight-orange">Detección Táctica</span> de objetivos.</li>
+                    <li><span class="highlight-orange">XP Proporcional</span> por daño.</li>
                 </ul>
             </div>
         </div>
     </section>
 
-<!-- SECCIÓN 03: MAESTRO ARMERO (COSTOS ACTUALIZADOS V3) -->
+    <!-- SECCIÓN 03: MAESTRO ARMERO (COSTOS ACTUALIZADOS) -->
     <section class="info-section" style="border-left-color: var(--neon-gold);">
-        <h2>03. MAESTRO ARMERO <span class="badge-new" style="background:var(--neon-gold); box-shadow: 0 0 10px var(--neon-gold);">CRAFTEO V3</span></h2>
-        <p>Protocolo de fabricación activado. El <span class="highlight" style="color:var(--neon-gold);">Maestro Armero</span> procesará tus recursos para ensamblar equipo táctico de alto impacto.</p>
+        <h2>03. MAESTRO ARMERO <span class="badge-new" style="background:var(--neon-gold);">CRAFTEO V3</span></h2>
+        <div class="tabla-contenedor">
+            <table class="tabla-crafteo">
+                <thead>
+                    <tr>
+                        <th style="text-align:left">MODELO</th>
+                        <th>🧪 POCIONES</th>
+                        <th>⛏️ HIERRO</th>
+                        <th>🪵 MADERA</th>
+                        <th>🪨 CARBÓN</th>
+                        <th>⚔️ ACERO</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td class="col-arma"><span class="icon-m">🔫</span> Pistola Simple</td><td>20</td><td>10</td><td>8</td><td>2</td><td>1</td></tr>
+                    <tr><td class="col-arma"><span class="icon-m">🔫</span> Metralleta</td><td>40</td><td>25</td><td>20</td><td>10</td><td>5</td></tr>
+                    <tr><td class="col-arma"><span class="icon-m">💥</span> Fusil de Combate</td><td>25</td><td>12</td><td>10</td><td>10</td><td>5</td></tr>
+                    <tr><td class="col-arma"><span class="icon-m">🔥</span> Rifle Asalto</td><td>25</td><td>15</td><td>10</td><td>10</td><td>5</td></tr>
+                    <tr><td class="col-arma"><span class="icon-m">🎯</span> Franco Tirador</td><td>35</td><td>18</td><td>6</td><td>8</td><td>8</td></tr>
+                    <tr><td class="col-arma"><span class="icon-m">🛡️</span> Escopeta Pesada</td><td>30</td><td>20</td><td>12</td><td>4</td><td>8</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- SECCIÓN 04: SURVIVAL SLOT (NUEVA) -->
+    <section class="info-section" style="border-left-color: var(--neon-purple);">
+        <h2>04. ZONA DE OCIO: SURVIVAL SLOT <span class="badge-new" style="background:var(--neon-purple); box-shadow: 0 0 10px var(--neon-purple);">CASINO</span></h2>
+        <p>Prueba tu suerte en la **Survival Slot Ultra Pro**. ¡Gana Pociones o Linden Dollars al instante!</p>
         
         <div class="grid-stats">
-            <div>
-                <h3>Gestión de Suministros</h3>
+            <div class="slot-card">
+                <h3 style="color:var(--neon-purple); margin-top:0;">🎰 SLOT NORMAL</h3>
+                <div class="slot-icons">🧪 | 🧪 | 🧪</div>
                 <ul>
-                    <li><span class="highlight">EXTRACCIÓN:</span> Materias primas obtenidas en zonas de combate.</li>
-                    <li><span class="highlight">DEPÓSITO:</span> Almacenamiento seguro en el inventario del NPC.</li>
-                    <li><span class="highlight">ENSAMBLAJE:</span> Requiere carga energética de <span class="highlight">Pociones</span>.</li>
+                    <li><span class="highlight" style="color:var(--neon-purple);">3 IGUALES:</span> +1 Poción extra.</li>
+                    <li><span class="highlight" style="color:var(--neon-purple);">3 POCIONES (🧪):</span> +3 Pociones (Súper Botín).</li>
                 </ul>
             </div>
-            <div class="tabla-contenedor">
-                <style>
-                    .tabla-crafteo { width: 100%; border-collapse: collapse; background: rgba(0,0,0,0.6); }
-                    .tabla-crafteo th { background: #222; color: var(--neon-gold); padding: 12px 5px; font-size: 0.7rem; border: 1px solid #333; }
-                    .tabla-crafteo td { padding: 10px; border: 1px solid #222; text-align: center; color: #fff; font-weight: bold; }
-                    .col-arma { text-align: left !important; color: var(--neon-cyan) !important; font-size: 0.9rem; }
-                    .icon-m { font-size: 1.1rem; vertical-align: middle; margin-right: 8px; }
-                </style>
-                <table class="tabla-crafteo">
-                    <thead>
-                        <tr>
-                            <th style="text-align:left">EQUIPAMIENTO TÁCTICO</th>
-                            <th>🧪 POCIONES</th>
-                            <th>⛏️ HIERRO</th>
-                            <th>🪵 MADERA</th>
-                            <th>🪨 CARBÓN</th>
-                            <th>⚔️ ACERO</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr><td class="col-arma"><span class="icon-m">🔫</span> Pistola Simple</td><td>20</td><td>10</td><td>8</td><td>2</td><td>1</td></tr>
-                        <tr><td class="col-arma"><span class="icon-m">🔫</span> Metralleta</td><td>40</td><td>25</td><td>20</td><td>10</td><td>5</td></tr>
-                        <tr><td class="col-arma"><span class="icon-m">💥</span> Fusil de Combate</td><td>25</td><td>12</td><td>10</td><td>10</td><td>5</td></tr>
-                        <tr><td class="col-arma"><span class="icon-m">🔥</span> Rifle Asalto</td><td>25</td><td>15</td><td>10</td><td>10</td><td>5</td></tr>
-                        <tr><td class="col-arma"><span class="icon-m">🎯</span> Franco Tirador</td><td>35</td><td>18</td><td>6</td><td>8</td><td>8</td></tr>
-                        <tr><td class="col-arma"><span class="icon-m">🛡️</span> Escopeta Pesada</td><td>30</td><td>20</td><td>12</td><td>4</td><td>8</td></tr>
-                    </tbody>
-                </table>
+            <div class="slot-card" style="border-color: var(--neon-gold);">
+                <h3 style="color:var(--neon-gold); margin-top:0;">💎 SÚPER 4 (PRO)</h3>
+                <div class="slot-icons">💎 | 💎 | 💎 | 💎</div>
+                <ul>
+                    <li><span class="highlight" style="color:var(--neon-gold);">4 IGUALES:</span> Ganas <span style="color:#fff;">1 L$</span>.</li>
+                    <li><span class="highlight" style="color:var(--neon-gold);">4 DIAMANTES (💎):</span> Ganas <span style="color:#fff;">5 L$</span> (¡ÉPICO!).</li>
+                </ul>
             </div>
         </div>
+        <p style="text-align:center; margin-top:20px; font-size:0.9rem; color:#888;">
+            *Nota: Debes estar a menos de 6 metros de la máquina para operar. Los premios se pagan automáticamente vía <span class="highlight">Cloud System</span>.
+        </p>
     </section>
 
+    <!-- SECCIÓN 05: TERRITORIO -->
     <section class="info-section" style="border-left-color: var(--neon-cyan);">
-        <h2>04. DOMINACIÓN DE TERRITORIO</h2>
+        <h2>05. DOMINACIÓN DE TERRITORIO</h2>
         <ul>
             <li><span class="highlight">XP POR PATRULLA:</span> Gana XP pasiva dentro de tu Base.</li>
-            <li><span class="highlight">HITOS MILITARES:</span> Desbloquea bonos grupales para tu facción.</li>
             <li><span class="highlight">ALERTA PVP:</span> Sistema de socorro aliado integrado.</li>
         </ul>
     </section>
