@@ -136,39 +136,46 @@
         </div>
     </section>
 
-    <!-- SECCIÓN 03: MAESTRO ARMERO (ACTUALIZADA) -->
+<!-- SECCIÓN 03: MAESTRO ARMERO (COSTOS ACTUALIZADOS V3) -->
     <section class="info-section" style="border-left-color: var(--neon-gold);">
         <h2>03. MAESTRO ARMERO <span class="badge-new" style="background:var(--neon-gold); box-shadow: 0 0 10px var(--neon-gold);">CRAFTEO V3</span></h2>
-        <p>Visita al <span class="highlight" style="color:var(--neon-gold);">Maestro Armero</span> en el sector de suministros. Recolecta materiales de los Zombies y forja armamento de grado militar.</p>
+        <p>Protocolo de fabricación activado. El <span class="highlight" style="color:var(--neon-gold);">Maestro Armero</span> procesará tus recursos para ensamblar equipo táctico de alto impacto.</p>
         
         <div class="grid-stats">
             <div>
-                <h3>Protocolo de Forja</h3>
+                <h3>Gestión de Suministros</h3>
                 <ul>
-                    <li><span class="highlight">EXTRACCIÓN:</span> Elimina zombies para obtener recursos.</li>
-                    <li><span class="highlight">DEPÓSITO:</span> Toca al NPC para guardar materiales en tu banco.</li>
-                    <li><span class="highlight">REQUISITO:</span> Debes tener <span class="highlight">Pociones</span> en tu HUD para iniciar.</li>
+                    <li><span class="highlight">EXTRACCIÓN:</span> Materias primas obtenidas en zonas de combate.</li>
+                    <li><span class="highlight">DEPÓSITO:</span> Almacenamiento seguro en el inventario del NPC.</li>
+                    <li><span class="highlight">ENSAMBLAJE:</span> Requiere carga energética de <span class="highlight">Pociones</span>.</li>
                 </ul>
             </div>
             <div class="tabla-contenedor">
+                <style>
+                    .tabla-crafteo { width: 100%; border-collapse: collapse; background: rgba(0,0,0,0.6); }
+                    .tabla-crafteo th { background: #222; color: var(--neon-gold); padding: 12px 5px; font-size: 0.7rem; border: 1px solid #333; }
+                    .tabla-crafteo td { padding: 10px; border: 1px solid #222; text-align: center; color: #fff; font-weight: bold; }
+                    .col-arma { text-align: left !important; color: var(--neon-cyan) !important; font-size: 0.9rem; }
+                    .icon-m { font-size: 1.1rem; vertical-align: middle; margin-right: 8px; }
+                </style>
                 <table class="tabla-crafteo">
                     <thead>
                         <tr>
-                            <th style="text-align:left">MODELO</th>
-                            <th>🧪</th>
-                            <th>⛏️</th>
-                            <th>🪵</th>
-                            <th>🪨</th>
-                            <th>⚔️</th>
+                            <th style="text-align:left">EQUIPAMIENTO TÁCTICO</th>
+                            <th>🧪 POCIONES</th>
+                            <th>⛏️ HIERRO</th>
+                            <th>🪵 MADERA</th>
+                            <th>🪨 CARBÓN</th>
+                            <th>⚔️ ACERO</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td class="col-arma">🔫 Pistola</td><td>10</td><td>5</td><td>8</td><td>0</td><td>0</td></tr>
-                        <tr><td class="col-arma">📟 Metralleta</td><td>18</td><td>10</td><td>5</td><td>4</td><td>0</td></tr>
-                        <tr><td class="col-arma">🔫 Fusil</td><td>25</td><td>12</td><td>10</td><td>6</td><td>2</td></tr>
-                        <tr><td class="col-arma">🧨 Rifle Asalto</td><td>25</td><td>15</td><td>0</td><td>10</td><td>5</td></tr>
-                        <tr><td class="col-arma">🔭 Franco</td><td>35</td><td>18</td><td>6</td><td>8</td><td>8</td></tr>
-                        <tr><td class="col-arma">💥 Escopeta</td><td>40</td><td>20</td><td>12</td><td>0</td><td>8</td></tr>
+                        <tr><td class="col-arma"><span class="icon-m">🔫</span> Pistola Simple</td><td>20</td><td>10</td><td>8</td><td>2</td><td>1</td></tr>
+                        <tr><td class="col-arma"><span class="icon-m">🔫</span> Metralleta</td><td>40</td><td>25</td><td>20</td><td>10</td><td>5</td></tr>
+                        <tr><td class="col-arma"><span class="icon-m">💥</span> Fusil de Combate</td><td>25</td><td>12</td><td>10</td><td>10</td><td>5</td></tr>
+                        <tr><td class="col-arma"><span class="icon-m">🔥</span> Rifle Asalto</td><td>25</td><td>15</td><td>10</td><td>10</td><td>5</td></tr>
+                        <tr><td class="col-arma"><span class="icon-m">🎯</span> Franco Tirador</td><td>35</td><td>18</td><td>6</td><td>8</td><td>8</td></tr>
+                        <tr><td class="col-arma"><span class="icon-m">🛡️</span> Escopeta Pesada</td><td>30</td><td>20</td><td>12</td><td>4</td><td>8</td></tr>
                     </tbody>
                 </table>
             </div>
