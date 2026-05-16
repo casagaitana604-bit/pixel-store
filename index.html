@@ -133,7 +133,6 @@
         .stat-label { color: var(--neon-green); font-size: 0.8rem; letter-spacing: 2px; display: block; margin-bottom: 8px; font-weight: bold; }
         .stat-box h2 { font-size: 2.8rem; margin: 5px 0; color: #fff; text-shadow: 0 0 10px #fff; }
         
-        /* NUEVO ESTILO: Subtexto de registros totales dentro del mismo box */
         .stat-sublabel { font-size: 0.75rem; color: #888; font-weight: bold; letter-spacing: 1px; display: block; margin-top: 5px; }
 
         .search-container { margin-bottom: 25px; }
@@ -228,7 +227,6 @@
 <div class="container">
     <div class="main-content">
         <div class="stats-grid">
-            <!-- SECCIÓN ACTUALIZADA: Box integrado que muestra los Online y los Registrados Totales abajo -->
             <div id="box-online" class="stat-box">
                 <span class="stat-label">RED_AVATARES</span>
                 <h2 id="count-online">0</h2>
@@ -335,7 +333,6 @@
         return xpAcumulada + parseInt(xp);
     }
 
-    // Evalúa si la fecha entra en rango Online (10 minutos)
     function verificarOnline(fechaData) {
         if (!fechaData) return false;
         let ahora = new Date().getTime();
@@ -343,9 +340,8 @@
         return (ahora - ultimaConexion) < 600000;
     }
 
-    // Formatea las fechas del registro en formato HH:MM:SS
     function formatearHora(fechaData) {
-        let d = new Date(fechaData);
+        let d = fechaData ? new Date(fechaData) : new Date();
         let h = String(d.getHours()).padStart(2, '0');
         let m = String(d.getMinutes()).padStart(2, '0');
         let s = String(d.getSeconds()).padStart(2, '0');
@@ -373,13 +369,13 @@ async function update() {
             });
         }
         
+        // MODIFICACIÓN DE SEGURIDAD: Procesa el registro enviando la lista directamente
         renderActividadLog(list);
 
         list.sort((a, b) => b.nivel - a.nivel);
         cachePlayers = list;
         renderPlayers(list);
         
-        // MODIFICACIÓN: Renderiza el número de personas conectadas con etiqueta e integra el total abajo
         document.getElementById('count-online').innerText = on_total + " ONLINE";
         document.getElementById('sub-registrados').innerText = `REGISTRADOS: ${list.length}`;
         
@@ -399,18 +395,26 @@ async function update() {
     } catch (e) { console.error("Error:", e); }
 }
 
+    // CORRECCIÓN TOTAL DE SEGURIDAD: Eliminado el bloqueo por falta de fecha, ordenamiento seguro
     function renderActividadLog(players) {
         const logContainer = document.getElementById('log-content');
         if (!logContainer) return;
         
-        let logList = players.filter(p => p.fecha).sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
         logContainer.innerHTML = '';
         
-        if (logList.length === 0) {
+        if (players.length === 0) {
             logContainer.innerHTML = '<div class="event-item">ESPERANDO TRANSMISIONES DE RED...</div>';
             return;
         }
 
+        // Ordenamos los jugadores por fecha. Si no tienen, van al final de la cola
+        let logList = [...players].sort((a, b) => {
+            let timeA = a.fecha ? new Date(a.fecha).getTime() : 0;
+            let timeB = b.fecha ? new Date(b.fecha).getTime() : 0;
+            return timeB - timeA;
+        });
+
+        // Mostramos un máximo de 15 líneas dinámicas en el monitor cyberpunk
         let maxEventos = logList.length > 15 ? 15 : logList.length;
         
         for (let i = 0; i < maxEventos; i++) {
