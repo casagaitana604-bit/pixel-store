@@ -147,7 +147,6 @@
         .survival-table td { background: var(--card); padding: 18px; border-top: 1px solid #222; border-bottom: 1px solid #222; transition: 0.3s; backdrop-filter: blur(8px); }
         .survival-table tr:hover td { border-color: var(--neon-green); color: var(--neon-green); box-shadow: 0 0 15px rgba(57, 255, 20, 0.3); transform: scale(1.01); }
 
-        /* NUEVOS ESTILOS: INDICADORES ONLINE DE RED */
         .status-tag { font-weight: bold; font-family: monospace; font-size: 0.85rem; padding: 3px 8px; border-radius: 3px; display: inline-block; margin-left: 10px; }
         .status-online { color: #000; background: var(--neon-green); box-shadow: 0 0 10px var(--neon-green); animation: statusPulse 1.5s infinite; }
         .status-offline { color: #666; background: #222; border: 1px solid #333; }
@@ -159,7 +158,12 @@
             box-shadow: 0 0 15px rgba(57, 255, 20, 0.15); overflow: hidden;
         }
         .event-log h3 { color: var(--neon-green); font-size: 1.2rem; text-shadow: 0 0 8px var(--neon-green); margin-top: 0; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; }
-        #log-content { display: flex; flex-direction: column; }
+        
+        /* CAMBIO: Contenedor con scroll para que el registro de actividad mantenga un tamaño limpio */
+        #log-content { display: flex; flex-direction: column; max-height: 600px; overflow-y: auto; padding-right: 5px; }
+        #log-content::-webkit-scrollbar { width: 4px; }
+        #log-content::-webkit-scrollbar-thumb { background: var(--neon-green); border-radius: 2px; }
+        
         .event-item { font-size: 0.85rem; padding: 14px 0; border-bottom: 1px solid #222; animation: slideIn 0.4s ease-out; }
         .event-item .event-time { color: var(--neon-orange); font-weight: bold; margin-right: 10px; font-family: monospace; }
 
@@ -222,7 +226,6 @@
 <div class="container">
     <div class="main-content">
         <div class="stats-grid">
-            <!-- SECCIÓN ACTUALIZADA: REASIGNADO EL PRIMER BOX PARA MOSTRAR JUGADORES ONLINE -->
             <div id="box-online" class="stat-box"><span class="stat-label">AVATARES_ONLINE</span><h2 id="count-online">0</h2></div>
             <div class="stat-box"><span class="stat-label">VIRUS_NEUTRALIZADO</span><h2 id="count-npc">0</h2></div>
             <div class="stat-box"><span class="stat-label">ASIGNACIONES_PVP</span><h2 id="count-pvp">0</h2></div>
@@ -277,7 +280,7 @@
 </div>
 
 <script>
-    const API = "https://script.google.com/macros/s/AKfycbwfQPgNLgQ8gF32kGRIXA1QetxUv_3VwSQ34j-jMm8stNCiSKpsqvb6oDX4TQ-KsjYK/exec"; 
+    const API = "https://script.google.com/macros/s/AKfycbyUMYO4CpHyhdrOa3xO7cNEvrVzkfNbQZYPOJ99b8kLD8DIXKGPmuZ5Ey2cAiwNPS_u/exec"; 
     let cachePlayers = [];
     const sndHover = document.getElementById('snd-hover');
     const sndOpen = document.getElementById('snd-open');
@@ -325,13 +328,20 @@
         return xpAcumulada + parseInt(xp);
     }
 
-    // NUEVA FUNCIÓN INTERNA: Evalúa si la fecha del JSON entra en rango Online (10 minutos)
     function verificarOnline(fechaData) {
         if (!fechaData) return false;
         let ahora = new Date().getTime();
         let ultimaConexion = new Date(fechaData).getTime();
-        // 10 minutos en milisegundos = 10 * 60 * 1000 = 600000
         return (ahora - ultimaConexion) < 600000;
+    }
+
+    // NUEVA FUNCIÓN: Formatea las fechas del registro en formato HH:MM:SS de forma limpia
+    function formatearHora(fechaData) {
+        let d = new Date(fechaData);
+        let h = String(d.getHours()).padStart(2, '0');
+        let m = String(d.getMinutes()).padStart(2, '0');
+        let s = String(d.getSeconds()).padStart(2, '0');
+        return `${h}:${m}:${s}`;
     }
 
 async function update() {
@@ -348,18 +358,20 @@ async function update() {
                     n_total += parseInt(j.npc || 0);
                     p_total += parseInt(j.pvp || 0);
                     
-                    // MODIFICACIÓN: Contador dinámico de red online
                     if (verificarOnline(j.fecha || f.fecha)) {
                         on_total++;
                     }
                 });
             });
         }
+        
+        // MODIFICACIÓN: Procesamos el Registro de Actividad tomando a los jugadores con fechas reales
+        renderActividadLog(list);
+
         list.sort((a, b) => b.nivel - a.nivel);
         cachePlayers = list;
         renderPlayers(list);
         
-        // MODIFICACIÓN: Renderiza el número de personas conectadas y cambia estilos del box
         document.getElementById('count-online').innerText = on_total;
         if (on_total > 0) {
             document.getElementById('box-online').classList.add('online-active');
@@ -377,6 +389,45 @@ async function update() {
     } catch (e) { console.error("Error:", e); }
 }
 
+    // NUEVA FUNCIÓN COMPLETA: Genera dinámicamente las líneas del historial del sistema
+    function renderActividadLog(players) {
+        const logContainer = document.getElementById('log-content');
+        if (!logContainer) return;
+        
+        // Filtramos solo los avatares que tengan un registro de fecha válido y los ordenamos (más nuevos primero)
+        let logList = players.filter(p => p.fecha).sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
+        
+        logContainer.innerHTML = '';
+        
+        if (logList.length === 0) {
+            logContainer.innerHTML = '<div class="event-item">ESPERANDO TRANSMISIONES DE RED...</div>';
+            return;
+        }
+
+        // Tomamos los últimos 15 eventos interesantes para mantener la sección fluida
+        let maxEventos = logList.length > 15 ? 15 : logList.length;
+        
+        for (let i = 0; i < maxEventos; i++) {
+            let p = logList[i];
+            let hora = formatearHora(p.fecha);
+            let div = document.createElement('div');
+            div.className = 'event-item';
+            
+            // Variamos los textos del log según los datos estadísticos del jugador para hacerlo inmersivo
+            let detalle = `SE HA ENLAZADO A LA RED GLOBAL DE SUPERVIVENCIA.`;
+            if (parseInt(p.pvp) > 0 && i % 3 === 0) {
+                detalle = `HA SIDO UBICADO EN EL SECTOR PVP CON ${p.pvp} BAJAS DE AVATARES CONFIRMADAS.`;
+            } else if (parseInt(p.npc) > 100 && i % 2 === 0) {
+                detalle = `REGISTRA ALTA ACTIVIDAD TÁCTICA. NEUTRALIZADOS: ${p.npc} INFECTADOS.`;
+            } else if (parseInt(p.nivel) > 1) {
+                detalle = `SINCRONIZANDO ESTADO DE COMBATE: NIVEL ${p.nivel} ACTUALIZADO EN LA NUBE.`;
+            }
+
+            div.innerHTML = `<span class="event-time">[${hora}]</span> 📡 SYS_NET: APÓSITO DETECTADO DE <span style="color:var(--neon-green); font-weight:bold;">${p.nombre}</span>. ${detalle}`;
+            logContainer.appendChild(div);
+        }
+    }
+
     function renderPlayers(players) {
         const body = document.getElementById('table-players');
         body.innerHTML = '';
@@ -386,7 +437,6 @@ async function update() {
             
             const avatarImg = getSoldier(j.nombre, j.uuid);
             
-            // MODIFICACIÓN: Determina visualmente si añade la etiqueta ONLINE u OFFLINE al renderizar la fila
             let estaOnline = verificarOnline(j.fecha);
             let statusTag = estaOnline ? `<span class="status-tag status-online">[ONLINE]</span>` : `<span class="status-tag status-offline">[OFFLINE]</span>`;
 
