@@ -132,6 +132,9 @@
         .stat-box.online-active { border-color: var(--neon-green); box-shadow: 0 0 15px rgba(57, 255, 20, 0.2); }
         .stat-label { color: var(--neon-green); font-size: 0.8rem; letter-spacing: 2px; display: block; margin-bottom: 8px; font-weight: bold; }
         .stat-box h2 { font-size: 2.8rem; margin: 5px 0; color: #fff; text-shadow: 0 0 10px #fff; }
+        
+        /* NUEVO ESTILO: Subtexto de registros totales dentro del mismo box */
+        .stat-sublabel { font-size: 0.75rem; color: #888; font-weight: bold; letter-spacing: 1px; display: block; margin-top: 5px; }
 
         .search-container { margin-bottom: 25px; }
         #avatarSearch {
@@ -159,7 +162,6 @@
         }
         .event-log h3 { color: var(--neon-green); font-size: 1.2rem; text-shadow: 0 0 8px var(--neon-green); margin-top: 0; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; }
         
-        /* CAMBIO: Contenedor con scroll para que el registro de actividad mantenga un tamaño limpio */
         #log-content { display: flex; flex-direction: column; max-height: 600px; overflow-y: auto; padding-right: 5px; }
         #log-content::-webkit-scrollbar { width: 4px; }
         #log-content::-webkit-scrollbar-thumb { background: var(--neon-green); border-radius: 2px; }
@@ -226,7 +228,12 @@
 <div class="container">
     <div class="main-content">
         <div class="stats-grid">
-            <div id="box-online" class="stat-box"><span class="stat-label">AVATARES_ONLINE</span><h2 id="count-online">0</h2></div>
+            <!-- SECCIÓN ACTUALIZADA: Box integrado que muestra los Online y los Registrados Totales abajo -->
+            <div id="box-online" class="stat-box">
+                <span class="stat-label">RED_AVATARES</span>
+                <h2 id="count-online">0</h2>
+                <span id="sub-registrados" class="stat-sublabel">REGISTRADOS: 0</span>
+            </div>
             <div class="stat-box"><span class="stat-label">VIRUS_NEUTRALIZADO</span><h2 id="count-npc">0</h2></div>
             <div class="stat-box"><span class="stat-label">ASIGNACIONES_PVP</span><h2 id="count-pvp">0</h2></div>
         </div>
@@ -280,7 +287,7 @@
 </div>
 
 <script>
-    const API = "https://script.google.com/macros/s/AKfycbwfQPgNLgQ8gF32kGRIXA1QetxUv_3VwSQ34j-jMm8stNCiSKpsqvb6oDX4TQ-KsjYK/exec"; 
+    const API = "https://script.google.com/macros/s/AKfycbyUMYO4CpHyhdrOa3xO7cNEvrVzkfNbQZYPOJ99b8kLD8DIXKGPmuZ5Ey2cAiwNPS_u/exec"; 
     let cachePlayers = [];
     const sndHover = document.getElementById('snd-hover');
     const sndOpen = document.getElementById('snd-open');
@@ -328,6 +335,7 @@
         return xpAcumulada + parseInt(xp);
     }
 
+    // Evalúa si la fecha entra en rango Online (10 minutos)
     function verificarOnline(fechaData) {
         if (!fechaData) return false;
         let ahora = new Date().getTime();
@@ -335,7 +343,7 @@
         return (ahora - ultimaConexion) < 600000;
     }
 
-    // NUEVA FUNCIÓN: Formatea las fechas del registro en formato HH:MM:SS de forma limpia
+    // Formatea las fechas del registro en formato HH:MM:SS
     function formatearHora(fechaData) {
         let d = new Date(fechaData);
         let h = String(d.getHours()).padStart(2, '0');
@@ -365,14 +373,16 @@ async function update() {
             });
         }
         
-        // MODIFICACIÓN: Procesamos el Registro de Actividad tomando a los jugadores con fechas reales
         renderActividadLog(list);
 
         list.sort((a, b) => b.nivel - a.nivel);
         cachePlayers = list;
         renderPlayers(list);
         
-        document.getElementById('count-online').innerText = on_total;
+        // MODIFICACIÓN: Renderiza el número de personas conectadas con etiqueta e integra el total abajo
+        document.getElementById('count-online').innerText = on_total + " ONLINE";
+        document.getElementById('sub-registrados').innerText = `REGISTRADOS: ${list.length}`;
+        
         if (on_total > 0) {
             document.getElementById('box-online').classList.add('online-active');
         } else {
@@ -389,14 +399,11 @@ async function update() {
     } catch (e) { console.error("Error:", e); }
 }
 
-    // NUEVA FUNCIÓN COMPLETA: Genera dinámicamente las líneas del historial del sistema
     function renderActividadLog(players) {
         const logContainer = document.getElementById('log-content');
         if (!logContainer) return;
         
-        // Filtramos solo los avatares que tengan un registro de fecha válido y los ordenamos (más nuevos primero)
         let logList = players.filter(p => p.fecha).sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
-        
         logContainer.innerHTML = '';
         
         if (logList.length === 0) {
@@ -404,7 +411,6 @@ async function update() {
             return;
         }
 
-        // Tomamos los últimos 15 eventos interesantes para mantener la sección fluida
         let maxEventos = logList.length > 15 ? 15 : logList.length;
         
         for (let i = 0; i < maxEventos; i++) {
@@ -413,7 +419,6 @@ async function update() {
             let div = document.createElement('div');
             div.className = 'event-item';
             
-            // Variamos los textos del log según los datos estadísticos del jugador para hacerlo inmersivo
             let detalle = `SE HA ENLAZADO A LA RED GLOBAL DE SUPERVIVENCIA.`;
             if (parseInt(p.pvp) > 0 && i % 3 === 0) {
                 detalle = `HA SIDO UBICADO EN EL SECTOR PVP CON ${p.pvp} BAJAS DE AVATARES CONFIRMADAS.`;
