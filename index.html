@@ -129,6 +129,7 @@
 
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 40px; }
         .stat-box { background: var(--card); padding: 25px; border-radius: 5px; text-align: center; border: 1px solid #222; backdrop-filter: blur(10px); }
+        .stat-box.online-active { border-color: var(--neon-green); box-shadow: 0 0 15px rgba(57, 255, 20, 0.2); }
         .stat-label { color: var(--neon-green); font-size: 0.8rem; letter-spacing: 2px; display: block; margin-bottom: 8px; font-weight: bold; }
         .stat-box h2 { font-size: 2.8rem; margin: 5px 0; color: #fff; text-shadow: 0 0 10px #fff; }
 
@@ -145,6 +146,12 @@
         .survival-table th { color: var(--neon-orange); padding: 15px; text-align: left; font-size: 0.9rem; border-bottom: 2px solid var(--neon-orange); }
         .survival-table td { background: var(--card); padding: 18px; border-top: 1px solid #222; border-bottom: 1px solid #222; transition: 0.3s; backdrop-filter: blur(8px); }
         .survival-table tr:hover td { border-color: var(--neon-green); color: var(--neon-green); box-shadow: 0 0 15px rgba(57, 255, 20, 0.3); transform: scale(1.01); }
+
+        /* NUEVOS ESTILOS: INDICADORES ONLINE DE RED */
+        .status-tag { font-weight: bold; font-family: monospace; font-size: 0.85rem; padding: 3px 8px; border-radius: 3px; display: inline-block; margin-left: 10px; }
+        .status-online { color: #000; background: var(--neon-green); box-shadow: 0 0 10px var(--neon-green); animation: statusPulse 1.5s infinite; }
+        .status-offline { color: #666; background: #222; border: 1px solid #333; }
+        @keyframes statusPulse { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.3); } }
 
         .event-log { 
             background: var(--card); padding: 25px; border-radius: 5px; border: 1px solid var(--neon-green); 
@@ -215,7 +222,8 @@
 <div class="container">
     <div class="main-content">
         <div class="stats-grid">
-            <div class="stat-box"><span class="stat-label">OPERATIVOS_SISTEMA</span><h2 id="count-jug">0</h2></div>
+            <!-- SECCIÓN ACTUALIZADA: REASIGNADO EL PRIMER BOX PARA MOSTRAR JUGADORES ONLINE -->
+            <div id="box-online" class="stat-box"><span class="stat-label">AVATARES_ONLINE</span><h2 id="count-online">0</h2></div>
             <div class="stat-box"><span class="stat-label">VIRUS_NEUTRALIZADO</span><h2 id="count-npc">0</h2></div>
             <div class="stat-box"><span class="stat-label">ASIGNACIONES_PVP</span><h2 id="count-pvp">0</h2></div>
         </div>
@@ -274,14 +282,9 @@
     const sndHover = document.getElementById('snd-hover');
     const sndOpen = document.getElementById('snd-open');
 
-    // ==========================================================
-    // --- 📂 BASE DE DATOS MANUAL DE FOTOS ---
-    // Aquí puedes añadir los nombres y el enlace de la foto.
-    // Ejemplo: "Nombre Avatar": "https://enlace-de-la-foto.jpg",
-    // ==========================================================
     const FOTOS_MANUALES = {
         "William Garzon C": "https://i.ibb.co/LzNf9Fv/soldado-ejemplo.jpg",
-        "creacionvirtual Resident": "https://img.freepik.com/psd-premium/nino-lindo-camuflaje-uniforme-combate-soldado-rifle-mano_1104289-67.jpg?w=740",
+        "creacionvirtual Resident": "https://img.freepik.com/psd-premium/nino-linde-camuflaje-uniforme-combate-soldado-rifle-mano_1104289-67.jpg?w=740",
         "Violetaa39 Resident": "https://static.vecteezy.com/system/resources/previews/039/657/374/non_2x/ai-generated-us-soldier-with-rifle-free-png.png",
         "plaza Resident": "https://static.vecteezy.com/system/resources/previews/039/657/397/original/ai-generated-adorable-girl-soldier-cartoon-character-png.png",
         "notfound80 Resident": "https://img.freepik.com/fotos-premium/fondo-blanco-soldado-dibujos-animados-accion-ejercito_41969-39108.jpg?w=2000",
@@ -290,7 +293,7 @@
         "lucasbauza Resident": "https://png.pngtree.com/png-vector/20240325/ourmid/pngtree-saluting-soldier-cartoon-png-image_12201752.png",
         "xc3po Resident": "https://www.pngmart.com/files/22/Counter-Strike-PNG-Transparent.png"
     };
-    // --- Imágenes de Soldados por defecto ---
+
     const SOLDADOS_POOL = {
         M: [
             "https://img.freepik.com/premium-vector/soldier-uniform-cartoon-character-vector_614983-3103.jpg?w=2000",
@@ -307,10 +310,7 @@
     };
 
     function getSoldier(name, uuid) {
-        // 1. Prioridad: ¿Está en la lista manual?
         if (FOTOS_MANUALES[name]) return FOTOS_MANUALES[name];
-
-        // 2. Si no, elegir soldado automático
         let n = name.toLowerCase();
         let index = parseInt(uuid.substring(0, 1), 16) % 2; 
         if (n.includes("ana") || n.includes("nora") || n.includes("lady") || n.endsWith("a")) {
@@ -325,25 +325,48 @@
         return xpAcumulada + parseInt(xp);
     }
 
+    // NUEVA FUNCIÓN INTERNA: Evalúa si la fecha del JSON entra en rango Online (10 minutos)
+    function verificarOnline(fechaData) {
+        if (!fechaData) return false;
+        let ahora = new Date().getTime();
+        let ultimaConexion = new Date(fechaData).getTime();
+        // 10 minutos en milisegundos = 10 * 60 * 1000 = 600000
+        return (ahora - ultimaConexion) < 600000;
+    }
+
 async function update() {
     try {
         const res = await fetch(API);
         const data = await res.json();
         let list = [];
-        let n_total = 0; let p_total = 0;
+        let n_total = 0; let p_total = 0; let on_total = 0;
+        
         if (data.facciones) {
             data.facciones.forEach(f => {
                 f.lista_integrantes.forEach(j => {
                     list.push(j);
                     n_total += parseInt(j.npc || 0);
                     p_total += parseInt(j.pvp || 0);
+                    
+                    // MODIFICACIÓN: Contador dinámico de red online
+                    if (verificarOnline(j.fecha || f.fecha)) {
+                        on_total++;
+                    }
                 });
             });
         }
         list.sort((a, b) => b.nivel - a.nivel);
         cachePlayers = list;
         renderPlayers(list);
-        document.getElementById('count-jug').innerText = list.length;
+        
+        // MODIFICACIÓN: Renderiza el número de personas conectadas y cambia estilos del box
+        document.getElementById('count-online').innerText = on_total;
+        if (on_total > 0) {
+            document.getElementById('box-online').classList.add('online-active');
+        } else {
+            document.getElementById('box-online').classList.remove('online-active');
+        }
+        
         document.getElementById('count-npc').innerText = n_total;
         document.getElementById('count-pvp').innerText = p_total;
         if(data.evento) {
@@ -362,13 +385,17 @@ async function update() {
             row.addEventListener('mouseover', () => { sndHover.currentTime = 0; sndHover.volume = 0.15; sndHover.play(); });
             
             const avatarImg = getSoldier(j.nombre, j.uuid);
+            
+            // MODIFICACIÓN: Determina visualmente si añade la etiqueta ONLINE u OFFLINE al renderizar la fila
+            let estaOnline = verificarOnline(j.fecha);
+            let statusTag = estaOnline ? `<span class="status-tag status-online">[ONLINE]</span>` : `<span class="status-tag status-offline">[OFFLINE]</span>`;
 
             row.innerHTML = `
                 <td style="color:var(--neon-blue); font-weight:bold; font-size:1.1rem; text-align:center;">#${index + 1}</td>
                 <td>
                     <img src="${avatarImg}" 
                          style="width:35px; height:35px; border:1px solid var(--neon-green); vertical-align:middle; margin-right:15px; box-shadow: 0 0 8px var(--neon-green); object-fit: cover; border-radius: 3px;"> 
-                    ${j.nombre}
+                    ${j.nombre} ${statusTag}
                 </td>
                 <td><span style="color:var(--neon-green); text-shadow: 0 0 5px var(--neon-green); font-weight:bold;">NIVEL ${j.nivel}</span></td>
                 <td style="color:#aaa; font-size:0.85rem">💀 NPC: ${j.npc}  |  ⚔️ PVP: ${j.pvp}</td>
