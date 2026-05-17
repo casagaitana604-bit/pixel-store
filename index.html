@@ -155,7 +155,7 @@
         .status-offline { color: #666; background: #222; border: 1px solid #333; }
         @keyframes statusPulse { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.3); } }
 
-        /* ===== NUEVOS ESTILOS PARA RAID BOSS MONITOR ===== */
+        /* ===== MONITOREO DE JEFES ===== */
         .side-panels-wrapper { display: flex; flex-direction: column; gap: 30px; }
         .boss-panel {
             background: var(--card); padding: 25px; border-radius: 5px; border: 1px solid var(--neon-orange);
@@ -184,9 +184,8 @@
         }
         .event-log h3 { color: var(--neon-green); font-size: 1.2rem; text-shadow: 0 0 8px var(--neon-green); margin-top: 0; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; }
         
-        /* Drop Modal Estilos */
         .drop-list { text-align: left; background: #111; padding: 15px; border-radius: 4px; border: 1px solid #333; margin-top: 15px; }
-        .drop-item { display: flex; justify-content: space-between; font-size: 0.85rem; padding: 5px 0; border-bottom: 1px solid #222; }
+        .drop-item { display: flex; justify-content: space-between; font-size: 0.85rem; padding: 5px 0; border-bottom: 1px solid #222; text-transform: uppercase; }
         .drop-chance { color: var(--neon-blue); font-weight: bold; }
 
         #log-content { display: flex; flex-direction: column; max-height: 320px; overflow-y: auto; padding-right: 5px; }
@@ -281,10 +280,7 @@
         </table>
     </div>
 
-    <!-- WRAPPER PARA LOS PANELES LATERALES -->
     <div class="side-panels-wrapper">
-        
-        <!-- SECCIÓN NUEVA: RAID BOSS MONITOR -->
         <div class="boss-panel">
             <h3>☠️ MONITOREO_RAID_BOSSES</h3>
             <div id="boss-list-container" class="boss-list">
@@ -292,7 +288,6 @@
             </div>
         </div>
 
-        <!-- TU REGISTRO DE ACTIVIDAD ORIGINAL -->
         <div class="event-log">
             <h3>📂 REGISTRO_ACTIVIDAD_SISTEMA</h3>
             <div id="log-content">
@@ -306,24 +301,23 @@
     <div class="modal-content">
         <span onclick="closeModal()" style="position:absolute; top:20px; right:25px; cursor:pointer; color:var(--neon-orange); font-weight:bold; font-size:1.5rem;">[X]</span>
         <img id="p-img" src="" class="profile-img">
-        <h2 id="p-name" style="margin:5px 0; color:var(--neon-green); letter-spacing:3px; text-shadow: 0 0 15px var(--neon-green);">NOMBRE</h2>
-        <p id="p-rango" style="font-weight:bold; color:var(--neon-orange); font-size:0.9rem; text-shadow: 0 0 8px var(--neon-orange); margin-bottom: 20px;">RANGO_ANALYSIS</p>
+        <h2 id="p-name" style="margin:5px 0; letter-spacing:3px;">NOMBRE</h2>
+        <p id="p-rango" style="font-weight:bold; font-size:0.9rem; margin-bottom: 20px;">RANGO_ANALYSIS</p>
         
         <div class="xp-bar-container"><div id="p-xp-fill" class="xp-bar-fill"></div></div>
         <p id="p-xp-text" style="font-size:0.8rem; letter-spacing:1px; margin-top: 10px;">DATOS XP: 0 / 0</p>
         
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-top:30px;">
             <div style="background:rgba(10,10,10,0.9); border: 1px solid #333; padding:15px; box-shadow: inset 0 0 10px var(--neon-green);">
-                <small style="color:var(--neon-green); display:block; margin-bottom:5px;">NPC_ELIMINATED</small>
+                <small id="lbl-left-stat" style="color:var(--neon-green); display:block; margin-bottom:5px;">NPC_ELIMINATED</small>
                 <strong id="p-npc" style="font-size:1.5rem;">0</strong>
             </div>
             <div style="background:rgba(10,10,10,0.9); border: 1px solid #333; padding:15px; box-shadow: inset 0 0 10px var(--neon-orange);">
-                <small style="color:var(--neon-orange); display:block; margin-bottom:5px;">PVP_CONFIRMED</small>
+                <small id="lbl-right-stat" style="color:var(--neon-orange); display:block; margin-bottom:5px;">PVP_CONFIRMED</small>
                 <strong id="p-pvp" style="font-size:1.5rem;">0</strong>
             </div>
         </div>
         
-        <!-- ESPACIO PARA DROPS CUANDO ES UN NPC -->
         <div id="boss-drops-section" style="display:none; margin-top:20px;">
             <h4 style="color:var(--neon-blue); margin-bottom:5px;">📋 TABLA DE DROPS</h4>
             <div id="boss-drops-list" class="drop-list"></div>
@@ -332,9 +326,10 @@
 </div>
 
 <script>
+    // CORRECCIÓN GLOBAL: La constante API declarada arriba del todo para evitar errores de inicialización
     const API = "https://script.google.com/macros/s/AKfycbxvUHYdKOeSoH0xeVjkaY4civLREXroSblfMbZCPzvrIFxsw1wxAIffhHPkvUxmMS_H/exec"; 
     let cachePlayers = [];
-    let cacheBosses = []; // Cache dedicado para los Bosses
+    let cacheBosses = []; 
     const sndHover = document.getElementById('snd-hover');
     const sndOpen = document.getElementById('snd-open');
 
@@ -396,64 +391,62 @@
         return `${h}:${m}:${s}`;
     }
 
-async function update() {
-    try {
-        const res = await fetch(API);
-        const data = await res.json();
-        let list = [];
-        let n_total = 0; let p_total = 0; let on_total = 0;
-        
-        if (data.facciones) {
-            data.facciones.forEach(f => {
-                f.lista_integrantes.forEach(j => {
-                    list.push(j);
-                    n_total += parseInt(j.npc || 0);
-                    p_total += parseInt(j.pvp || 0);
-                    
-                    if (verificarOnline(j.fecha || f.fecha)) {
-                        on_total++;
-                    }
+    async function update() {
+        try {
+            const res = await fetch(API);
+            const data = await res.json();
+            let list = [];
+            let n_total = 0; let p_total = 0; let on_total = 0;
+            
+            if (data.facciones) {
+                data.facciones.forEach(f => {
+                    f.lista_integrantes.forEach(j => {
+                        list.push(j);
+                        n_total += parseInt(j.npc || 0);
+                        p_total += parseInt(j.pvp || 0);
+                        
+                        if (verificarOnline(j.fecha || f.fecha)) {
+                            on_total++;
+                        }
+                    });
                 });
-            });
-        }
-        
-        renderActividadLog(list);
+            }
+            
+            renderActividadLog(list);
 
-        list.sort((a, b) => b.nivel - a.nivel);
-        cachePlayers = list;
-        renderPlayers(list);
-        
-        // MANEJO DE LOS RAID BOSSES DESDE LA API
-        if (data.bosses) {
-            cacheBosses = data.bosses;
-            renderBosses();
-        } else {
-            // Datos de prueba/fallback por si el script de Google no los ha cargado aún
-            cacheBosses = [
-                { id: "boss_freddy", nombre: "FREDDY [RAID BOSS]", vivo: false, tiempo_restante: 9240, respawn_total: 10800, avatar: "https://i.imgur.com/vHdfY9Y.png", drops: { "Munición": "85%", "Poción": "40%", "Pergamino Bronce": "20%", "Acero": "10%", "Caja Sorpresa": "1%" } },
-                { id: "boss_nemesis", nombre: "NEMESIS CYBER", vivo: true, tiempo_restante: 0, respawn_total: 7200, avatar: "https://i.imgur.com/M6X771I.png", drops: { "Munición Pesada": "90%", "Pergamino Oro": "3%", "Hierro": "30%", "Madera": "40%" } }
-            ];
-            renderBosses();
-        }
-        
-        document.getElementById('count-online').innerText = on_total + " ONLINE";
-        document.getElementById('sub-registrados').innerText = `REGISTRADOS: ${list.length}`;
-        
-        if (on_total > 0) {
-            document.getElementById('box-online').classList.add('online-active');
-        } else {
-            document.getElementById('box-online').classList.remove('online-active');
-        }
-        
-        document.getElementById('count-npc').innerText = n_total;
-        document.getElementById('count-pvp').innerText = p_total;
-        if(data.evento) {
-            let pct = (n_total / data.evento.meta) * 100;
-            document.getElementById('event-bar-fill').style.width = Math.min(pct, 100) + "%";
-            document.getElementById('event-text').innerText = `PROGRESO: ${n_total.toLocaleString()} / ${data.evento.meta.toLocaleString()} VIRUS ELIMINADOS (${Math.round(pct)}%)`;
-        }
-    } catch (e) { console.error("Error:", e); }
-}
+            list.sort((a, b) => b.nivel - a.nivel);
+            cachePlayers = list;
+            renderPlayers(list);
+            
+            if (data.bosses && data.bosses.length > 0) {
+                cacheBosses = data.bosses;
+                renderBosses();
+            } else {
+                cacheBosses = [
+                    { id: "boss_freddy", nombre: "FREDDY [RAID BOSS]", vivo: false, tiempo_restante: 9240, respawn_total: 10800, avatar: "https://i.imgur.com/vHdfY9Y.png", drops: { "Munición": "85%", "Poción": "40%", "Pergamino Bronce": "20%", "Acero": "10%", "Caja Sorpresa": "1%" } },
+                    { id: "boss_nemesis", nombre: "NEMESIS CYBER", vivo: true, tiempo_restante: 0, respawn_total: 7200, avatar: "https://i.imgur.com/M6X771I.png", drops: { "Munición Pesada": "90%", "Pergamino Oro": "3%", "Hierro": "30%", "Madera": "40%" } }
+                ];
+                renderBosses();
+            }
+            
+            document.getElementById('count-online').innerText = on_total + " ONLINE";
+            document.getElementById('sub-registrados').innerText = `REGISTRADOS: ${list.length}`;
+            
+            if (on_total > 0) {
+                document.getElementById('box-online').classList.add('online-active');
+            } else {
+                document.getElementById('box-online').classList.remove('online-active');
+            }
+            
+            document.getElementById('count-npc').innerText = n_total;
+            document.getElementById('count-pvp').innerText = p_total;
+            if(data.evento) {
+                let pct = (n_total / data.evento.meta) * 100;
+                document.getElementById('event-bar-fill').style.width = Math.min(pct, 100) + "%";
+                document.getElementById('event-text').innerText = `PROGRESO: ${n_total.toLocaleString()} / ${data.evento.meta.toLocaleString()} VIRUS ELIMINADOS (${Math.round(pct)}%)`;
+            }
+        } catch (e) { console.error("Error de Red de Sincronización:", e); }
+    }
 
     function renderActividadLog(players) {
         const logContainer = document.getElementById('log-content');
@@ -474,7 +467,7 @@ async function update() {
 
         let maxEventos = logList.length > 15 ? 15 : logList.length;
         
-        for (let i = 0; i < maxEventos; i++) {
+        for (let i = 0; i < maxEventEventos = i < maxEventos; i++) {
             let p = logList[i];
             let hora = formatearHora(p.fecha);
             let div = document.createElement('div');
@@ -521,7 +514,6 @@ async function update() {
         });
     }
 
-    /* ===== NUEVA FUNCIÓN: RENDERIZAR PANEL DE BOSSES ===== */
     function renderBosses() {
         const container = document.getElementById('boss-list-container');
         if(!container) return;
@@ -537,13 +529,11 @@ async function update() {
             let classStr = b.vivo ? "boss-live" : "boss-dead";
             let fillClass = b.vivo ? "live" : "dead";
             
-            // Cálculo del porcentaje de la barra de tiempo
             let pct = 100;
             let tiempoTexto = "SISTEMA OPERATIVO";
             if (!b.vivo && b.tiempo_restante > 0) {
                 pct = ((b.respawn_total - b.tiempo_restante) / b.respawn_total) * 100;
                 
-                // Formatear segundos a HH:MM:SS
                 let hrs = Math.floor(b.tiempo_restante / 3600);
                 let mins = Math.floor((b.tiempo_restante % 3600) / 60);
                 let secs = b.tiempo_restante % 60;
@@ -565,13 +555,10 @@ async function update() {
         });
     }
 
-    /* ===== NUEVA FUNCIÓN: CONTADOR SEGUNDO A SEGUNDO PARA LOS BOSSES ===== */
     setInterval(() => {
-        let huboCambio = false;
         cacheBosses.forEach(b => {
             if (!b.vivo && b.tiempo_restante > 0) {
                 b.tiempo_restante--;
-                huboCambio = true;
                 
                 const timerLabel = document.getElementById(`timer-${b.id}`);
                 if(timerLabel) {
@@ -584,7 +571,6 @@ async function update() {
         });
     }, 1000);
 
-    /* ===== NUEVA FUNCIÓN: MODAL CON DETALLES DEL BOSS Y SUS DROPS ===== */
     function openBossProfile(id) {
         const b = cacheBosses.find(x => x.id === id);
         if(!b) return;
@@ -599,16 +585,16 @@ async function update() {
         document.getElementById('p-rango').innerText = b.vivo ? ">> AMENAZA TÁCTICA: CRÍTICA / ONLINE" : ">> AMENAZA TÁCTICA: NEUTRALIZADO";
         document.getElementById('p-rango').style.color = b.vivo ? "var(--neon-green)" : "var(--neon-orange)";
         
-        // Simular XP Requerida y Barra usando datos de su respawn
         document.getElementById('p-xp-fill').style.width = b.vivo ? "100%" : "0%";
         document.getElementById('p-xp-fill').style.background = b.vivo ? "var(--neon-green)" : "var(--neon-red)";
         document.getElementById('p-xp-text').innerText = b.vivo ? "ESTADO: EL BOSS ESTÁ SEMBRANDO EL CAOS EN EL MAPA" : "REGENERANDO ESTRUCTURA CELULAR EN LA NUBE...";
 
-        // Campos estadísticos del Boss
-        document.getElementById('p-npc').innerText = b.vivo ? "HP: 5K" : "0 HP";
+        // Ajustamos las etiquetas internas estocásticas para el Boss
+        document.getElementById('lbl-left-stat').innerText = "VITALIDAD_HP";
+        document.getElementById('lbl-right-stat').innerText = "TIEMPO_RESPAWN";
+        document.getElementById('p-npc').innerText = b.vivo ? "5,000 HP" : "0 HP";
         document.getElementById('p-pvp').innerText = b.respawn_total >= 3600 ? Math.round(b.respawn_total / 3600) + " HRS" : Math.round(b.respawn_total / 60) + " MINS";
         
-        // Renderizar la lista de Drops
         const dropsSection = document.getElementById('boss-drops-section');
         const dropsList = document.getElementById('boss-drops-list');
         dropsList.innerHTML = '';
@@ -638,8 +624,11 @@ async function update() {
         const p = cachePlayers.find(x => x.uuid === uuid);
         if(!p) return;
         
-        // Ocultar la sección de drops de Bosses cuando abrimos un perfil común de Avatar
         document.getElementById('boss-drops-section').style.display = 'none';
+        
+        // Devolvemos el texto de estadísticas normal para avatares sobrevivientes
+        document.getElementById('lbl-left-stat').innerText = "NPC_ELIMINATED";
+        document.getElementById('lbl-right-stat').innerText = "PVP_CONFIRMED";
         
         sndOpen.currentTime = 0; sndOpen.volume = 0.4; sndOpen.play();
         const imgElement = document.getElementById('p-img');
@@ -674,6 +663,8 @@ async function update() {
     }
 
     function closeModal() { document.getElementById('playerModal').style.display = 'none'; }
+    
+    // Ejecución inicial limpia
     update();
     setInterval(update, 30000);
 </script>
