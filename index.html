@@ -9,7 +9,7 @@
             --neon-green: #39FF14; 
             --neon-orange: #FF5F1F; 
             --neon-blue: #00ffff;
-            --neon-red: #ff0055;
+            --neon-red: #ff0055; /* Añadido para estado de Bosses */
             --bg-overlay: rgba(0, 0, 0, 0.85);
             --card: rgba(13, 13, 13, 0.9);
             --text: #ffffff; 
@@ -125,7 +125,7 @@
 
         .container { 
             max-width: 1400px; margin: 20px auto; padding: 0 25px; 
-            display: grid; grid-template-columns: 1fr 400px; gap: 30px; 
+            display: grid; grid-template-columns: 1fr 380px; gap: 30px; 
         }
 
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 40px; }
@@ -155,15 +155,9 @@
         .status-offline { color: #666; background: #222; border: 1px solid #333; }
         @keyframes statusPulse { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.3); } }
 
-        /* ===== MONITOREO DE JEFES ===== */
-        .side-panels-wrapper { display: flex; flex-direction: column; gap: 30px; }
-        .boss-panel {
-            background: var(--card); padding: 25px; border-radius: 5px; border: 1px solid var(--neon-orange);
-            backdrop-filter: blur(12px); box-shadow: 0 0 15px rgba(255, 95, 31, 0.15);
-        }
-        .boss-panel h3 { color: var(--neon-orange); font-size: 1.2rem; text-shadow: 0 0 8px var(--neon-orange); margin-top: 0; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; }
-        .boss-list { display: flex; flex-direction: column; gap: 15px; }
-        .boss-card { background: rgba(5,5,5,0.8); border: 1px solid #222; padding: 12px; border-radius: 4px; position: relative; cursor: pointer; transition: 0.3s; }
+        /* Estilos esenciales para los Bosses integrados en el menú lateral */
+        .boss-panel-inside { margin-top: 25px; background: rgba(5,5,5,0.4); padding: 15px; border-top: 1px solid #333; }
+        .boss-card { background: rgba(0,0,0,0.8); border: 1px solid #222; padding: 12px; border-radius: 4px; margin-top: 12px; cursor: pointer; transition: 0.3s; text-align: left; }
         .boss-card:hover { border-color: var(--neon-blue); box-shadow: 0 0 10px rgba(0, 255, 255, 0.2); }
         .boss-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
         .boss-name { font-weight: 900; letter-spacing: 1px; font-size: 0.95rem; }
@@ -176,19 +170,18 @@
         .boss-timer-fill.dead { background: var(--neon-red); }
         .boss-countdown { font-size: 0.75rem; color: #888; text-align: right; display: block; margin-top: 4px; font-family: monospace; font-weight: bold; }
         .drop-hint { font-size: 0.65rem; color: var(--neon-blue); display: inline-block; margin-top: 2px; }
+        .drop-list { text-align: left; background: #111; padding: 15px; border-radius: 4px; border: 1px solid #333; margin-top: 15px; }
+        .drop-item { display: flex; justify-content: space-between; font-size: 0.85rem; padding: 5px 0; border-bottom: 1px solid #222; }
+        .drop-chance { color: var(--neon-blue); font-weight: bold; }
 
         .event-log { 
             background: var(--card); padding: 25px; border-radius: 5px; border: 1px solid var(--neon-green); 
-            height: fit-content; max-height: 450px; backdrop-filter: blur(12px);
+            height: fit-content; max-height: 750px; backdrop-filter: blur(12px);
             box-shadow: 0 0 15px rgba(57, 255, 20, 0.15); overflow: hidden;
         }
         .event-log h3 { color: var(--neon-green); font-size: 1.2rem; text-shadow: 0 0 8px var(--neon-green); margin-top: 0; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; }
         
-        .drop-list { text-align: left; background: #111; padding: 15px; border-radius: 4px; border: 1px solid #333; margin-top: 15px; }
-        .drop-item { display: flex; justify-content: space-between; font-size: 0.85rem; padding: 5px 0; border-bottom: 1px solid #222; text-transform: uppercase; }
-        .drop-chance { color: var(--neon-blue); font-weight: bold; }
-
-        #log-content { display: flex; flex-direction: column; max-height: 320px; overflow-y: auto; padding-right: 5px; }
+        #log-content { display: flex; flex-direction: column; max-height: 400px; overflow-y: auto; padding-right: 5px; }
         #log-content::-webkit-scrollbar { width: 4px; }
         #log-content::-webkit-scrollbar-thumb { background: var(--neon-green); border-radius: 2px; }
         
@@ -280,19 +273,16 @@
         </table>
     </div>
 
-    <div class="side-panels-wrapper">
-        <div class="boss-panel">
-            <h3>☠️ MONITOREO_RAID_BOSSES</h3>
-            <div id="boss-list-container" class="boss-list">
-                <div class="event-item" style="color:var(--neon-orange)">Sincronizando satélite de rastreo...</div>
-            </div>
+    <div class="event-log">
+        <h3>📂 REGISTRO_ACTIVIDAD_SISTEMA</h3>
+        <div id="log-content">
+            <div class="event-item">CARGANDO MÓDULOS DE RED...</div>
         </div>
-
-        <div class="event-log">
-            <h3>📂 REGISTRO_ACTIVIDAD_SISTEMA</h3>
-            <div id="log-content">
-                <div class="event-item">CARGANDO MÓDULOS DE RED...</div>
-            </div>
+        
+        <!-- SECCIÓN DE BOSSES ACTUALIZADA E INTEGRADA SIN ALTERAR TU MENÚ LATERAL ORIGINAL -->
+        <div class="boss-panel-inside">
+            <h3 style="color: var(--neon-orange); border-bottom: 1px solid #222; padding-bottom: 5px; font-size: 1rem;">☠️ RAID_BOSSES_STATUS</h3>
+            <div id="boss-list-container"></div>
         </div>
     </div>
 </div>
@@ -301,8 +291,8 @@
     <div class="modal-content">
         <span onclick="closeModal()" style="position:absolute; top:20px; right:25px; cursor:pointer; color:var(--neon-orange); font-weight:bold; font-size:1.5rem;">[X]</span>
         <img id="p-img" src="" class="profile-img">
-        <h2 id="p-name" style="margin:5px 0; letter-spacing:3px;">NOMBRE</h2>
-        <p id="p-rango" style="font-weight:bold; font-size:0.9rem; margin-bottom: 20px;">RANGO_ANALYSIS</p>
+        <h2 id="p-name" style="margin:5px 0; color:var(--neon-green); letter-spacing:3px; text-shadow: 0 0 15px var(--neon-green);">NOMBRE</h2>
+        <p id="p-rango" style="font-weight:bold; color:var(--neon-orange); font-size:0.9rem; text-shadow: 0 0 8px var(--neon-orange); margin-bottom: 20px;">RANGO_ANALYSIS</p>
         
         <div class="xp-bar-container"><div id="p-xp-fill" class="xp-bar-fill"></div></div>
         <p id="p-xp-text" style="font-size:0.8rem; letter-spacing:1px; margin-top: 10px;">DATOS XP: 0 / 0</p>
@@ -317,16 +307,16 @@
                 <strong id="p-pvp" style="font-size:1.5rem;">0</strong>
             </div>
         </div>
-        
+
         <div id="boss-drops-section" style="display:none; margin-top:20px;">
-            <h4 style="color:var(--neon-blue); margin-bottom:5px;">📋 TABLA DE DROPS</h4>
+            <h4 style="color:var(--neon-blue); margin-bottom:5px; font-size: 0.9rem;">📋 TABLA DE DROPS</h4>
             <div id="boss-drops-list" class="drop-list"></div>
         </div>
     </div>
 </div>
 
 <script>
-    const API = "https://script.google.com/macros/s/AKfycbxvUHYdKOeSoH0xeVjkaY4civLREXroSblfMbZCPzvrIFxsw1wxAIffhHPkvUxmMS_H/exec"; 
+    const API = "https://script.google.com/macros/s/AKfycbyW_7S_jVilLa67OT65b8tVPge6UuvE5foUycTnWkMHp6Ws4zcL9LRXVWahvQMyChpv/exec"; 
     let cachePlayers = [];
     let cacheBosses = []; 
     const sndHover = document.getElementById('snd-hover');
@@ -416,7 +406,8 @@
             list.sort((a, b) => b.nivel - a.nivel);
             cachePlayers = list;
             renderPlayers(list);
-            
+
+            // Sincronización inofensiva y segura para los Bosses
             if (data.bosses && data.bosses.length > 0) {
                 cacheBosses = data.bosses;
                 renderBosses();
@@ -444,7 +435,7 @@
                 document.getElementById('event-bar-fill').style.width = Math.min(pct, 100) + "%";
                 document.getElementById('event-text').innerText = `PROGRESO: ${n_total.toLocaleString()} / ${data.evento.meta.toLocaleString()} VIRUS ELIMINADOS (${Math.round(pct)}%)`;
             }
-        } catch (e) { console.error("Error de Red de Sincronización:", e); }
+        } catch (e) { console.error("Error:", e); }
     }
 
     function renderActividadLog(players) {
@@ -466,7 +457,6 @@
 
         let maxEventos = logList.length > 15 ? 15 : logList.length;
         
-        // CORRECCIÓN DE BUCLE CRÍTICO AQUÍ: Eliminada la expresión rota 'maxEventEventos = i < maxEventos'
         for (let i = 0; i < maxEventos; i++) {
             let p = logList[i];
             let hora = formatearHora(p.fecha);
@@ -660,7 +650,6 @@
     }
 
     function closeModal() { document.getElementById('playerModal').style.display = 'none'; }
-    
     update();
     setInterval(update, 30000);
 </script>
