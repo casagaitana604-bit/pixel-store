@@ -563,9 +563,12 @@
                 tiempoTexto = `RESPAWN EN: ${String(hrs).padStart(2,'0')}:${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
             }
 
+            // SEPARADOR DE SEGURIDAD PARA MOSTRAR EL NOMBRE LIMPIO EN EL MENÚ DERECHO SI TRAE HP INCORPORADO
+            let nombreLimpio = b.nombre.split("|")[0];
+
             card.innerHTML = `
                 <div class="boss-info">
-                    <span class="boss-name" style="color:${b.vivo ? 'var(--neon-green)': 'var(--neon-red)'}">${b.nombre}</span>
+                    <span class="boss-name" style="color:${b.vivo ? 'var(--neon-green)': 'var(--neon-red)'}">${nombreLimpio}</span>
                     <span class="boss-status ${classStr}">${statusStr}</span>
                 </div>
                 <div class="boss-timer-bg">
@@ -600,8 +603,20 @@
 
         sndOpen.currentTime = 0; sndOpen.volume = 0.4; sndOpen.play();
         
+        // === PROCESAMIENTO DINÁMICO DEL HP ENVIADO EN EL NOMBRE ===
+        let nombreLimpio = b.nombre;
+        let hpDinamico = "5,000 HP"; // Valor por defecto si son los fijos viejos
+        
+        if (b.nombre.indexOf("|") !== -1) {
+            let partesNombre = b.nombre.split("|");
+            nombreLimpio = partesNombre[0];
+            hpDinamico = partesNombre[1] + " HP"; // Carga los 200 HP reales enviados por el NPC
+        } else if (b.nombre.toUpperCase().includes("ZOMBIE MUTANTE")) {
+            hpDinamico = "200 HP"; // Respaldo estático por si la hoja tiene texto viejo acumulado
+        }
+
         document.getElementById('p-img').src = b.avatar || "https://img.freepik.com/fotos-premium/fondo-blanco-soldado-dibujos-animados-accion-ejercito_41969-39108.jpg?w=2000";
-        document.getElementById('p-name').innerText = b.nombre;
+        document.getElementById('p-name').innerText = nombreLimpio;
         document.getElementById('p-name').style.color = b.vivo ? "var(--neon-green)" : "var(--neon-red)";
         document.getElementById('p-name').style.textShadow = b.vivo ? "0 0 15px var(--neon-green)" : "0 0 15px var(--neon-red)";
         
@@ -615,14 +630,7 @@
         document.getElementById('lbl-left-stat').innerText = "VITALIDAD_HP";
         document.getElementById('lbl-right-stat').innerText = "TIEMPO_RESPAWN";
         
-        // === CORRECCIÓN QUIRÚRGICA: ASIGNACIÓN DE VIDA DETECTADA DINÁMICAMENTE ===
-        // Si el boss es tu Zombie Mutante, asigna los 1,500 HP configurados. Para Freddy/Nemesis asigna 5,000 HP.
-        let hpVerdadero = "5,000 HP";
-        if (b.nombre.toUpperCase().includes("ZOMBIE MUTANTE")) {
-            hpVerdadero = "1,500 HP";
-        }
-        
-        document.getElementById('p-npc').innerText = b.vivo ? hpVerdadero : "0 HP";
+        document.getElementById('p-npc').innerText = b.vivo ? hpDinamico : "0 HP";
         document.getElementById('p-pvp').innerText = b.respawn_total >= 3600 ? Math.round(b.respawn_total / 3600) + " HRS" : Math.round(b.respawn_total / 60) + " MINS";
         
         const dropsSection = document.getElementById('boss-drops-section');
