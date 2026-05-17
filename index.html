@@ -326,7 +326,6 @@
 </div>
 
 <script>
-    // CORRECCIÓN GLOBAL: La constante API declarada arriba del todo para evitar errores de inicialización
     const API = "https://script.google.com/macros/s/AKfycbxvUHYdKOeSoH0xeVjkaY4civLREXroSblfMbZCPzvrIFxsw1wxAIffhHPkvUxmMS_H/exec"; 
     let cachePlayers = [];
     let cacheBosses = []; 
@@ -467,7 +466,8 @@
 
         let maxEventos = logList.length > 15 ? 15 : logList.length;
         
-        for (let i = 0; i < maxEventEventos = i < maxEventos; i++) {
+        // CORRECCIÓN DE BUCLE CRÍTICO AQUÍ: Eliminada la expresión rota 'maxEventEventos = i < maxEventos'
+        for (let i = 0; i < maxEventos; i++) {
             let p = logList[i];
             let hora = formatearHora(p.fecha);
             let div = document.createElement('div');
@@ -589,7 +589,6 @@
         document.getElementById('p-xp-fill').style.background = b.vivo ? "var(--neon-green)" : "var(--neon-red)";
         document.getElementById('p-xp-text').innerText = b.vivo ? "ESTADO: EL BOSS ESTÁ SEMBRANDO EL CAOS EN EL MAPA" : "REGENERANDO ESTRUCTURA CELULAR EN LA NUBE...";
 
-        // Ajustamos las etiquetas internas estocásticas para el Boss
         document.getElementById('lbl-left-stat').innerText = "VITALIDAD_HP";
         document.getElementById('lbl-right-stat').innerText = "TIEMPO_RESPAWN";
         document.getElementById('p-npc').innerText = b.vivo ? "5,000 HP" : "0 HP";
@@ -625,8 +624,6 @@
         if(!p) return;
         
         document.getElementById('boss-drops-section').style.display = 'none';
-        
-        // Devolvemos el texto de estadísticas normal para avatares sobrevivientes
         document.getElementById('lbl-left-stat').innerText = "NPC_ELIMINATED";
         document.getElementById('lbl-right-stat').innerText = "PVP_CONFIRMED";
         
@@ -664,7 +661,6 @@
 
     function closeModal() { document.getElementById('playerModal').style.display = 'none'; }
     
-    // Ejecución inicial limpia
     update();
     setInterval(update, 30000);
 </script>
