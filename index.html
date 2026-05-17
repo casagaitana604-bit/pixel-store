@@ -171,7 +171,7 @@
         .boss-countdown { font-size: 0.75rem; color: #888; text-align: right; display: block; margin-top: 4px; font-family: monospace; font-weight: bold; }
         .drop-hint { font-size: 0.65rem; color: var(--neon-blue); display: inline-block; margin-top: 2px; }
         
-        /* === AJUSTE DE CAJA CON SCROLL INTERNO PARA DROPS LARGOS === */
+        /* Caja con scroll interno para drops largos */
         .drop-list { 
             text-align: left; 
             background: #111; 
@@ -184,7 +184,6 @@
             padding-right: 10px;
         }
         
-        /* Diseño Cyberpunk para la barra de desplazamiento interna */
         .drop-list::-webkit-scrollbar { width: 5px; }
         .drop-list::-webkit-scrollbar-thumb { background: var(--neon-blue); border-radius: 3px; box-shadow: 0 0 8px var(--neon-blue); }
         .drop-list::-webkit-scrollbar-track { background: #070707; }
@@ -208,7 +207,7 @@
 
         @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
 
-        /* === RESPALDO PARA PANTALLAS CHICAS EN MODAL === */
+        /* Respaldo para pantallas chicas */
         .modal { 
             display: none; 
             position: fixed; 
@@ -615,7 +614,15 @@
 
         document.getElementById('lbl-left-stat').innerText = "VITALIDAD_HP";
         document.getElementById('lbl-right-stat').innerText = "TIEMPO_RESPAWN";
-        document.getElementById('p-npc').innerText = b.vivo ? "5,000 HP" : "0 HP";
+        
+        // === CORRECCIÓN QUIRÚRGICA: ASIGNACIÓN DE VIDA DETECTADA DINÁMICAMENTE ===
+        // Si el boss es tu Zombie Mutante, asigna los 1,500 HP configurados. Para Freddy/Nemesis asigna 5,000 HP.
+        let hpVerdadero = "5,000 HP";
+        if (b.nombre.toUpperCase().includes("ZOMBIE MUTANTE")) {
+            hpVerdadero = "1,500 HP";
+        }
+        
+        document.getElementById('p-npc').innerText = b.vivo ? hpVerdadero : "0 HP";
         document.getElementById('p-pvp').innerText = b.respawn_total >= 3600 ? Math.round(b.respawn_total / 3600) + " HRS" : Math.round(b.respawn_total / 60) + " MINS";
         
         const dropsSection = document.getElementById('boss-drops-section');
