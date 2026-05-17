@@ -9,6 +9,7 @@
             --neon-green: #39FF14; 
             --neon-orange: #FF5F1F; 
             --neon-blue: #00ffff;
+            --neon-red: #ff0055;
             --bg-overlay: rgba(0, 0, 0, 0.85);
             --card: rgba(13, 13, 13, 0.9);
             --text: #ffffff; 
@@ -124,7 +125,7 @@
 
         .container { 
             max-width: 1400px; margin: 20px auto; padding: 0 25px; 
-            display: grid; grid-template-columns: 1fr 380px; gap: 30px; 
+            display: grid; grid-template-columns: 1fr 400px; gap: 30px; 
         }
 
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 40px; }
@@ -154,14 +155,41 @@
         .status-offline { color: #666; background: #222; border: 1px solid #333; }
         @keyframes statusPulse { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.3); } }
 
+        /* ===== NUEVOS ESTILOS PARA RAID BOSS MONITOR ===== */
+        .side-panels-wrapper { display: flex; flex-direction: column; gap: 30px; }
+        .boss-panel {
+            background: var(--card); padding: 25px; border-radius: 5px; border: 1px solid var(--neon-orange);
+            backdrop-filter: blur(12px); box-shadow: 0 0 15px rgba(255, 95, 31, 0.15);
+        }
+        .boss-panel h3 { color: var(--neon-orange); font-size: 1.2rem; text-shadow: 0 0 8px var(--neon-orange); margin-top: 0; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .boss-list { display: flex; flex-direction: column; gap: 15px; }
+        .boss-card { background: rgba(5,5,5,0.8); border: 1px solid #222; padding: 12px; border-radius: 4px; position: relative; cursor: pointer; transition: 0.3s; }
+        .boss-card:hover { border-color: var(--neon-blue); box-shadow: 0 0 10px rgba(0, 255, 255, 0.2); }
+        .boss-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+        .boss-name { font-weight: 900; letter-spacing: 1px; font-size: 0.95rem; }
+        .boss-status { font-family: monospace; font-size: 0.8rem; font-weight: bold; padding: 2px 6px; border-radius: 3px; }
+        .boss-live { background: var(--neon-green); color: #000; box-shadow: 0 0 8px var(--neon-green); }
+        .boss-dead { background: var(--neon-red); color: #fff; box-shadow: 0 0 8px var(--neon-red); }
+        .boss-timer-bg { background: #111; height: 8px; border: 1px solid #222; border-radius: 4px; overflow: hidden; }
+        .boss-timer-fill { height: 100%; width: 100%; transition: width 1s linear; }
+        .boss-timer-fill.live { background: var(--neon-green); }
+        .boss-timer-fill.dead { background: var(--neon-red); }
+        .boss-countdown { font-size: 0.75rem; color: #888; text-align: right; display: block; margin-top: 4px; font-family: monospace; font-weight: bold; }
+        .drop-hint { font-size: 0.65rem; color: var(--neon-blue); display: inline-block; margin-top: 2px; }
+
         .event-log { 
             background: var(--card); padding: 25px; border-radius: 5px; border: 1px solid var(--neon-green); 
-            height: fit-content; max-height: 750px; backdrop-filter: blur(12px);
+            height: fit-content; max-height: 450px; backdrop-filter: blur(12px);
             box-shadow: 0 0 15px rgba(57, 255, 20, 0.15); overflow: hidden;
         }
         .event-log h3 { color: var(--neon-green); font-size: 1.2rem; text-shadow: 0 0 8px var(--neon-green); margin-top: 0; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; }
         
-        #log-content { display: flex; flex-direction: column; max-height: 600px; overflow-y: auto; padding-right: 5px; }
+        /* Drop Modal Estilos */
+        .drop-list { text-align: left; background: #111; padding: 15px; border-radius: 4px; border: 1px solid #333; margin-top: 15px; }
+        .drop-item { display: flex; justify-content: space-between; font-size: 0.85rem; padding: 5px 0; border-bottom: 1px solid #222; }
+        .drop-chance { color: var(--neon-blue); font-weight: bold; }
+
+        #log-content { display: flex; flex-direction: column; max-height: 320px; overflow-y: auto; padding-right: 5px; }
         #log-content::-webkit-scrollbar { width: 4px; }
         #log-content::-webkit-scrollbar-thumb { background: var(--neon-green); border-radius: 2px; }
         
@@ -253,10 +281,23 @@
         </table>
     </div>
 
-    <div class="event-log">
-        <h3>📂 REGISTRO_ACTIVIDAD_SISTEMA</h3>
-        <div id="log-content">
-            <div class="event-item">CARGANDO MÓDULOS DE RED...</div>
+    <!-- WRAPPER PARA LOS PANELES LATERALES -->
+    <div class="side-panels-wrapper">
+        
+        <!-- SECCIÓN NUEVA: RAID BOSS MONITOR -->
+        <div class="boss-panel">
+            <h3>☠️ MONITOREO_RAID_BOSSES</h3>
+            <div id="boss-list-container" class="boss-list">
+                <div class="event-item" style="color:var(--neon-orange)">Sincronizando satélite de rastreo...</div>
+            </div>
+        </div>
+
+        <!-- TU REGISTRO DE ACTIVIDAD ORIGINAL -->
+        <div class="event-log">
+            <h3>📂 REGISTRO_ACTIVIDAD_SISTEMA</h3>
+            <div id="log-content">
+                <div class="event-item">CARGANDO MÓDULOS DE RED...</div>
+            </div>
         </div>
     </div>
 </div>
@@ -281,12 +322,19 @@
                 <strong id="p-pvp" style="font-size:1.5rem;">0</strong>
             </div>
         </div>
+        
+        <!-- ESPACIO PARA DROPS CUANDO ES UN NPC -->
+        <div id="boss-drops-section" style="display:none; margin-top:20px;">
+            <h4 style="color:var(--neon-blue); margin-bottom:5px;">📋 TABLA DE DROPS</h4>
+            <div id="boss-drops-list" class="drop-list"></div>
+        </div>
     </div>
 </div>
 
 <script>
     const API = "https://script.google.com/macros/s/AKfycbyW_7S_jVilLa67OT65b8tVPge6UuvE5foUycTnWkMHp6Ws4zcL9LRXVWahvQMyChpv/exec"; 
     let cachePlayers = [];
+    let cacheBosses = []; // Cache dedicado para los Bosses
     const sndHover = document.getElementById('snd-hover');
     const sndOpen = document.getElementById('snd-open');
 
@@ -369,12 +417,24 @@ async function update() {
             });
         }
         
-        // MODIFICACIÓN DE SEGURIDAD: Procesa el registro enviando la lista directamente
         renderActividadLog(list);
 
         list.sort((a, b) => b.nivel - a.nivel);
         cachePlayers = list;
         renderPlayers(list);
+        
+        // MANEJO DE LOS RAID BOSSES DESDE LA API
+        if (data.bosses) {
+            cacheBosses = data.bosses;
+            renderBosses();
+        } else {
+            // Datos de prueba/fallback por si el script de Google no los ha cargado aún
+            cacheBosses = [
+                { id: "boss_freddy", nombre: "FREDDY [RAID BOSS]", vivo: false, tiempo_restante: 9240, respawn_total: 10800, avatar: "https://i.imgur.com/vHdfY9Y.png", drops: { "Munición": "85%", "Poción": "40%", "Pergamino Bronce": "20%", "Acero": "10%", "Caja Sorpresa": "1%" } },
+                { id: "boss_nemesis", nombre: "NEMESIS CYBER", vivo: true, tiempo_restante: 0, respawn_total: 7200, avatar: "https://i.imgur.com/M6X771I.png", drops: { "Munición Pesada": "90%", "Pergamino Oro": "3%", "Hierro": "30%", "Madera": "40%" } }
+            ];
+            renderBosses();
+        }
         
         document.getElementById('count-online').innerText = on_total + " ONLINE";
         document.getElementById('sub-registrados').innerText = `REGISTRADOS: ${list.length}`;
@@ -395,7 +455,6 @@ async function update() {
     } catch (e) { console.error("Error:", e); }
 }
 
-    // CORRECCIÓN TOTAL DE SEGURIDAD: Eliminado el bloqueo por falta de fecha, ordenamiento seguro
     function renderActividadLog(players) {
         const logContainer = document.getElementById('log-content');
         if (!logContainer) return;
@@ -407,14 +466,12 @@ async function update() {
             return;
         }
 
-        // Ordenamos los jugadores por fecha. Si no tienen, van al final de la cola
         let logList = [...players].sort((a, b) => {
             let timeA = a.fecha ? new Date(a.fecha).getTime() : 0;
             let timeB = b.fecha ? new Date(b.fecha).getTime() : 0;
             return timeB - timeA;
         });
 
-        // Mostramos un máximo de 15 líneas dinámicas en el monitor cyberpunk
         let maxEventos = logList.length > 15 ? 15 : logList.length;
         
         for (let i = 0; i < maxEventos; i++) {
@@ -464,6 +521,113 @@ async function update() {
         });
     }
 
+    /* ===== NUEVA FUNCIÓN: RENDERIZAR PANEL DE BOSSES ===== */
+    function renderBosses() {
+        const container = document.getElementById('boss-list-container');
+        if(!container) return;
+        container.innerHTML = '';
+
+        cacheBosses.forEach(b => {
+            const card = document.createElement('div');
+            card.className = 'boss-card';
+            card.setAttribute('onclick', `openBossProfile('${b.id}')`);
+            card.addEventListener('mouseover', () => { sndHover.currentTime = 0; sndHover.volume = 0.15; sndHover.play(); });
+
+            let statusStr = b.vivo ? "ALERTA_VIVO" : "ELIMINADO";
+            let classStr = b.vivo ? "boss-live" : "boss-dead";
+            let fillClass = b.vivo ? "live" : "dead";
+            
+            // Cálculo del porcentaje de la barra de tiempo
+            let pct = 100;
+            let tiempoTexto = "SISTEMA OPERATIVO";
+            if (!b.vivo && b.tiempo_restante > 0) {
+                pct = ((b.respawn_total - b.tiempo_restante) / b.respawn_total) * 100;
+                
+                // Formatear segundos a HH:MM:SS
+                let hrs = Math.floor(b.tiempo_restante / 3600);
+                let mins = Math.floor((b.tiempo_restante % 3600) / 60);
+                let secs = b.tiempo_restante % 60;
+                tiempoTexto = `RESPAWN EN: ${String(hrs).padStart(2,'0')}:${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+            }
+
+            card.innerHTML = `
+                <div class="boss-info">
+                    <span class="boss-name" style="color:${b.vivo ? 'var(--neon-green)': 'var(--neon-red)'}">${b.nombre}</span>
+                    <span class="boss-status ${classStr}">${statusStr}</span>
+                </div>
+                <div class="boss-timer-bg">
+                    <div class="boss-timer-fill ${fillClass}" style="width: ${pct}%"></div>
+                </div>
+                <span class="boss-countdown" id="timer-${b.id}">${tiempoTexto}</span>
+                <span class="drop-hint">👁️ VER TABLA DE DROPS</span>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    /* ===== NUEVA FUNCIÓN: CONTADOR SEGUNDO A SEGUNDO PARA LOS BOSSES ===== */
+    setInterval(() => {
+        let huboCambio = false;
+        cacheBosses.forEach(b => {
+            if (!b.vivo && b.tiempo_restante > 0) {
+                b.tiempo_restante--;
+                huboCambio = true;
+                
+                const timerLabel = document.getElementById(`timer-${b.id}`);
+                if(timerLabel) {
+                    let hrs = Math.floor(b.tiempo_restante / 3600);
+                    let mins = Math.floor((b.tiempo_restante % 3600) / 60);
+                    let secs = b.tiempo_restante % 60;
+                    timerLabel.innerText = `RESPAWN EN: ${String(hrs).padStart(2,'0')}:${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+                }
+            }
+        });
+    }, 1000);
+
+    /* ===== NUEVA FUNCIÓN: MODAL CON DETALLES DEL BOSS Y SUS DROPS ===== */
+    function openBossProfile(id) {
+        const b = cacheBosses.find(x => x.id === id);
+        if(!b) return;
+
+        sndOpen.currentTime = 0; sndOpen.volume = 0.4; sndOpen.play();
+        
+        document.getElementById('p-img').src = b.avatar || "https://img.freepik.com/fotos-premium/fondo-blanco-soldado-dibujos-animados-accion-ejercito_41969-39108.jpg?w=2000";
+        document.getElementById('p-name').innerText = b.nombre;
+        document.getElementById('p-name').style.color = b.vivo ? "var(--neon-green)" : "var(--neon-red)";
+        document.getElementById('p-name').style.textShadow = b.vivo ? "0 0 15px var(--neon-green)" : "0 0 15px var(--neon-red)";
+        
+        document.getElementById('p-rango').innerText = b.vivo ? ">> AMENAZA TÁCTICA: CRÍTICA / ONLINE" : ">> AMENAZA TÁCTICA: NEUTRALIZADO";
+        document.getElementById('p-rango').style.color = b.vivo ? "var(--neon-green)" : "var(--neon-orange)";
+        
+        // Simular XP Requerida y Barra usando datos de su respawn
+        document.getElementById('p-xp-fill').style.width = b.vivo ? "100%" : "0%";
+        document.getElementById('p-xp-fill').style.background = b.vivo ? "var(--neon-green)" : "var(--neon-red)";
+        document.getElementById('p-xp-text').innerText = b.vivo ? "ESTADO: EL BOSS ESTÁ SEMBRANDO EL CAOS EN EL MAPA" : "REGENERANDO ESTRUCTURA CELULAR EN LA NUBE...";
+
+        // Campos estadísticos del Boss
+        document.getElementById('p-npc').innerText = b.vivo ? "HP: 5K" : "0 HP";
+        document.getElementById('p-pvp').innerText = b.respawn_total >= 3600 ? Math.round(b.respawn_total / 3600) + " HRS" : Math.round(b.respawn_total / 60) + " MINS";
+        
+        // Renderizar la lista de Drops
+        const dropsSection = document.getElementById('boss-drops-section');
+        const dropsList = document.getElementById('boss-drops-list');
+        dropsList.innerHTML = '';
+        
+        if (b.drops) {
+            for (let item in b.drops) {
+                let dDiv = document.createElement('div');
+                dDiv.className = 'drop-item';
+                dDiv.innerHTML = `<span>⚙️ ${item}</span> <span class="drop-chance">${b.drops[item]}</span>`;
+                dropsList.appendChild(dDiv);
+            }
+            dropsSection.style.display = 'block';
+        } else {
+            dropsSection.style.display = 'none';
+        }
+
+        document.getElementById('playerModal').style.display = 'flex';
+    }
+
     function filterPlayers() {
         const text = document.getElementById('avatarSearch').value.toLowerCase();
         const filtered = cachePlayers.filter(p => p.nombre.toLowerCase().includes(text));
@@ -473,17 +637,26 @@ async function update() {
     function openProfile(uuid, nombre) {
         const p = cachePlayers.find(x => x.uuid === uuid);
         if(!p) return;
+        
+        // Ocultar la sección de drops de Bosses cuando abrimos un perfil común de Avatar
+        document.getElementById('boss-drops-section').style.display = 'none';
+        
         sndOpen.currentTime = 0; sndOpen.volume = 0.4; sndOpen.play();
         const imgElement = document.getElementById('p-img');
         
         imgElement.src = getSoldier(nombre, uuid);
         
         document.getElementById('p-name').innerText = p.nombre;
+        document.getElementById('p-name').style.color = "var(--neon-green)";
+        document.getElementById('p-name').style.textShadow = "0 0 15px var(--neon-green)";
         document.getElementById('p-npc').innerText = p.npc;
         document.getElementById('p-pvp').innerText = p.pvp;
+        
         const req = parseInt(p.nivel) * 500;
         const pct = (parseInt(p.xp) / req) * 100;
         document.getElementById('p-xp-fill').style.width = pct + "%";
+        document.getElementById('p-xp-fill').style.background = "var(--neon-green)";
+        
         let xpGlobal = calcularXPGlobal(p.nivel, p.xp);
         document.getElementById('p-xp-text').innerText = `PROGRESO NIVEL: ${p.xp} / ${req} | XP GLOBAL: ${xpGlobal.toLocaleString()}`;
         
@@ -495,6 +668,8 @@ async function update() {
         else if (n >= 20) rango = "ELITE";
         else if (n >= 10) rango = "SOLDADO";
         document.getElementById('p-rango').innerText = ">> CLASIFICACIÓN: " + rango;
+        document.getElementById('p-rango').style.color = "var(--neon-orange)";
+        
         document.getElementById('playerModal').style.display = 'flex';
     }
 
