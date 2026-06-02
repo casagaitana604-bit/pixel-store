@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PIXEL RPG - Facciones</title>
+    <title>PIXEL RPG - Tops</title>
     <style>
         :root { 
             --primary: #ff4500; 
@@ -72,21 +72,6 @@
         .top-card h3 { font-size: 0.9rem; margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 8px; }
         .top-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #222; font-size: 0.75rem; align-items: center; }
 
-        .fac-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
-        .fac-card { background: var(--card); padding: 20px; border-radius: 10px; border: 1px solid #333; position: relative; backdrop-filter: blur(10px); margin-bottom: 20px; }
-        .fac-card h2 { color: var(--neon-green); margin: 0 0 5px 0; font-size: 1.4rem; text-shadow: 0 0 5px var(--neon-green); }
-        .status-tag { background: var(--primary); color: white; padding: 2px 8px; font-size: 0.7rem; border-radius: 3px; float: right; font-weight: bold; }
-
-        .member-item { display: flex; align-items: center; background: rgba(0,0,0,0.5); padding: 8px; margin: 8px 0; border-radius: 5px; border-left: 3px solid var(--primary); }
-        .member-img { width: 35px; height: 35px; border-radius: 5px; border: 1px solid #444; margin-right: 10px; object-fit: cover; }
-        
-        .xp-bar-container { background: #000; height: 8px; border: 1px solid #333; margin: 10px 0; overflow: hidden; }
-        .xp-bar-fill { background: var(--gold); height: 100%; transition: 1s; box-shadow: 0 0 5px var(--gold); }
-
-        .gen-btn { cursor: pointer; border: none; padding: 4px 8px; border-radius: 4px; font-weight: bold; margin-left: auto; font-size: 0.7rem; }
-        .male { background: #0055ff; color: white; }
-        .female { background: #ff0077; color: white; }
-
         @keyframes titlePulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } }
         @media (max-width: 1000px) { 
             .top-grid { grid-template-columns: 1fr; }
@@ -100,38 +85,36 @@
     <div class="nav-logo">PIXEL RPG <span>SURVIVAL</span></div>
     <div class="nav-links">
         <a href="index.html">INICIO</a>
-        <a href="facciones.html" class="nav-active">FACCIONES / TOPS</a>
+        <a href="facciones.html" class="nav-active">TOPS</a>
         <a href="info.html">INFORMACIÓN</a>
     </div>
 </nav>
 
 <header class="hero-header">
-    <h1 class="main-title">PIXEL: FACCIONES</h1>
-    <div class="subtitle-bar">COMANDO CENTRAL DE ALIANZAS</div>
+    <h1 class="main-title">RANKINGS</h1>
+    <div class="subtitle-bar">LOS 10 MEJORES GUERREROS</div>
 </header>
 
 <div class="container">
     <div class="top-grid">
         <div class="top-card" style="border-color: var(--gold);">
-            <h3 style="color: var(--gold);">🏆 TOP 5 EXPERIENCIA</h3>
+            <h3 style="color: var(--gold);">🏆 TOP 10 EXPERIENCIA</h3>
             <div id="top-xp"></div>
         </div>
         <div class="top-card" style="border-color: var(--neon-green);">
-            <h3 style="color: var(--neon-green);">💀 TOP 5 HUNTERS (NPC)</h3>
+            <h3 style="color: var(--neon-green);">💀 TOP 10 HUNTERS (NPC)</h3>
             <div id="top-kills"></div>
         </div>
         <div class="top-card" style="border-color: var(--primary);">
-            <h3 style="color: var(--primary);">⚔️ TOP 5 PVP (PK)</h3>
+            <h3 style="color: var(--primary);">⚔️ TOP 10 PVP (PK)</h3>
             <div id="top-pvp"></div>
         </div>
     </div>
-    <div id="facciones-list" class="fac-grid"></div>
 </div>
 
 <script>
     const API = "https://script.google.com/macros/s/AKfycbyUMYO4CpHyhdrOa3xO7cNEvrVzkfNbQZYPOJ99b8kLD8DIXKGPmuZ5Ey2cAiwNPS_u/exec";
 
-    // --- 📂 BASE DE DATOS DE FOTOS SINCRONIZADA ---
     const FOTOS_MANUALES = {
         "William Garzon C": "https://i.ibb.co/LzNf9Fv/soldado-ejemplo.jpg",
         "creacionvirtual Resident": "https://img.freepik.com/psd-premium/nino-lindo-camuflaje-uniforme-combate-soldado-rifle-mano_1104289-67.jpg?w=740",
@@ -142,23 +125,9 @@
         "eddy38k Resident": "https://www.gifss.com/profesiones/soldados/soldado-05.gif"
     };
 
-    const SOLDADOS_POOL = {
-        M: [
-            "https://img.freepik.com/premium-vector/soldier-uniform-cartoon-character-vector_614983-3103.jpg?w=2000",
-            "https://img.freepik.com/fotos-premium/alegre-aventura-camuflaje-alegre-animado-joven-soldado-equipo-militar-gran-sonrisa-espiritu-animado_337384-58330.jpg?size=626&ext=jpg"
-        ],
-        F: [
-            "https://static.vecteezy.com/system/resources/previews/039/657/397/original/ai-generated-adorable-girl-soldier-cartoon-character-png.png",
-            "https://static.vecteezy.com/system/resources/previews/039/657/397/original/ai-generated-adorable-girl-soldier-cartoon-character-png.png"
-        ]
-    };
-
     function getSoldier(name, uuid) {
         if (FOTOS_MANUALES[name]) return FOTOS_MANUALES[name];
-        let n = name.toLowerCase();
-        let index = parseInt(uuid.substring(0, 1), 16) % 2; 
-        if (n.includes("ana") || n.includes("nora") || n.includes("lady") || n.endsWith("a")) return SOLDADOS_POOL.F[index];
-        return SOLDADOS_POOL.M[index];
+        return "https://img.freepik.com/premium-vector/soldier-uniform-cartoon-character-vector_614983-3103.jpg?w=2000";
     }
 
     function calcularXPGlobal(n, xp) {
@@ -172,55 +141,17 @@
             const res = await fetch(API);
             const data = await res.json();
             const facciones = data.facciones || [];
-            const facList = document.getElementById('facciones-list');
-            facList.innerHTML = '';
             let allPlayers = [];
 
             facciones.forEach(f => {
                 if(f.lista_integrantes) {
                     allPlayers = allPlayers.concat(f.lista_integrantes);
                 }
-
-                let nombreFac = f.nombre.toUpperCase();
-                if (nombreFac === "CIVILES" || nombreFac === "CUARTEL" || nombreFac === "INDEPENDIENTES") return;
-
-                let costoLvl = 5 * Math.pow(2, (parseInt(f.nivel) || 1) - 1);
-                let pctSuministros = Math.min(100, (parseInt(f.suministros || 0) / costoLvl) * 100);
-
-                let html = `
-                    <div class="fac-card">
-                        <span class="status-tag">${f.status || 'ACTIVA'}</span>
-                        <h2>${f.nombre}</h2>
-                        <small>CMDT: ${f.comandante || 'SIN ASIGNAR'}</small>
-                        <div style="margin-top: 15px; font-size: 0.7rem; color:var(--gold)">SUMINISTROS_NIVEL_${(parseInt(f.nivel) || 0) + 1}: ${f.suministros || 0} / ${costoLvl}</div>
-                        <div class="xp-bar-container"><div class="xp-bar-fill" style="width: ${pctSuministros}%"></div></div>
-                        <div style="margin-bottom: 10px;"><small>GUERRA: ${f.puntos || 0} BAJAS</small></div>
-                        <hr style="border: 0; border-top: 1px solid #333;">
-                        <div class="members-list">
-                `;
-
-                if(f.lista_integrantes) {
-                    f.lista_integrantes.forEach(j => {
-                        html += `
-                            <div class="member-item">
-                                <img class="member-img" src="${getSoldier(j.nombre, j.uuid)}">
-                                <div>
-                                    <div style="font-size: 0.8rem; color: #fff;">${j.nombre || 'DESCONOCIDO'}</div>
-                                    <div style="font-size: 0.65rem; color: var(--neon-green);">LVL ${j.nivel || 0}</div>
-                                </div>
-                                <button class="gen-btn ${j.genero == 'f' ? 'female' : 'male'}" onclick="changeG('${j.uuid}','${j.genero}')">
-                                    ${j.genero == 'f' ? '♀' : '♂'}
-                                </button>
-                            </div>`;
-                    });
-                }
-                facList.innerHTML += html + `</div></div>`;
             });
 
-            // --- TOPS CON FOTOS ACTUALIZADAS ---
             document.getElementById('top-xp').innerHTML = [...allPlayers]
                 .sort((a,b) => calcularXPGlobal(b.nivel, b.xp) - calcularXPGlobal(a.nivel, a.xp))
-                .slice(0,5).map(j=>`
+                .slice(0,10).map(j=>`
                 <div class="top-item">
                     <span><img src="${getSoldier(j.nombre, j.uuid)}" style="width:20px; height:20px; border-radius:3px; margin-right:5px; object-fit:cover;"> ${j.nombre}</span>
                     <span style="color:var(--gold)">${calcularXPGlobal(j.nivel, j.xp).toLocaleString()} XP</span>
@@ -228,7 +159,7 @@
 
             document.getElementById('top-kills').innerHTML = [...allPlayers]
                 .sort((a,b) => parseInt(b.npc || 0) - parseInt(a.npc || 0))
-                .slice(0,5).map(j=>`
+                .slice(0,10).map(j=>`
                 <div class="top-item">
                     <span><img src="${getSoldier(j.nombre, j.uuid)}" style="width:20px; height:20px; border-radius:3px; margin-right:5px; object-fit:cover;"> ${j.nombre}</span>
                     <span style="color:var(--neon-green)">${j.npc || 0} 💀</span>
@@ -236,35 +167,14 @@
 
             document.getElementById('top-pvp').innerHTML = [...allPlayers]
                 .sort((a,b) => parseInt(b.pvp || 0) - parseInt(a.pvp || 0))
-                .slice(0,5).map(j=>`
+                .slice(0,10).map(j=>`
                 <div class="top-item">
                     <span><img src="${getSoldier(j.nombre, j.uuid)}" style="width:20px; height:20px; border-radius:3px; margin-right:5px; object-fit:cover;"> ${j.nombre}</span>
                     <span style="color:var(--primary)">${j.pvp || 0} ⚔️</span>
                 </div>`).join('');
 
         } catch (error) { 
-            console.error("Error cargando facciones:", error); 
-        }
-    }
-
-    async function changeG(id, g) {
-        let ng = g == 'm' ? 'f' : 'm';
-        if(!confirm("¿Actualizar identidad digital a " + (ng == 'm' ? 'MASCULINO' : 'FEMENINO') + "?")) return;
-        
-        let formData = new URLSearchParams();
-        formData.append('action', 'setGender');
-        formData.append('id', id);
-        formData.append('genero', ng);
-
-        try {
-            await fetch(API, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: formData
-            });
-            setTimeout(load, 1000);
-        } catch (e) {
-            console.error("Error al cambiar género:", e);
+            console.error("Error cargando datos:", error); 
         }
     }
 
