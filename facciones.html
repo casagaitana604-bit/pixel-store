@@ -67,16 +67,25 @@
         .container { max-width: 1300px; margin: 20px auto; padding: 0 20px; }
         
         .top-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 40px; }
-        
         .top-card { background: rgba(17,17,17,0.9); border: 1px solid var(--gold); padding: 15px; border-radius: 10px; box-shadow: 0 0 10px rgba(255, 215, 0, 0.1); backdrop-filter: blur(10px); }
         .top-card h3 { font-size: 0.9rem; margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 8px; }
         .top-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #222; font-size: 0.75rem; align-items: center; }
         .rank-num { font-weight: bold; color: var(--primary); margin-right: 8px; width: 20px; display: inline-block; }
 
+        /* Estilos de Video */
+        .video-section { margin-top: 50px; padding-bottom: 50px; }
+        .video-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; }
+        .video-container { 
+            position: relative; width: 100%; padding-bottom: 56.25%; height: 0; 
+            border: 2px solid var(--primary); border-radius: 10px; overflow: hidden;
+        }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
         @keyframes titlePulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } }
         @media (max-width: 1000px) { 
             .top-grid { grid-template-columns: 1fr; }
             .main-title { font-size: 3rem; }
+            .video-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -111,11 +120,30 @@
             <div id="top-pvp"></div>
         </div>
     </div>
+
+    <!-- SECCION VIDEOS -->
+    <section class="video-section">
+        <h2 style="text-align: center; margin-bottom: 20px;">MEDIA / GAMEPLAY</h2>
+        <div class="video-grid">
+            <!-- Bloque de video 1 -->
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/hHv4GfdxRsE" allowfullscreen></iframe>
+            </div>
+            
+            <!-- COPIA EL BLOQUE DE ABAJO PARA AGREGAR MAS VIDEOS -->
+            <!-- 
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/ID_DE_TU_VIDEO" allowfullscreen></iframe>
+            </div> 
+            -->
+        </div>
+    </section>
 </div>
 
 <script>
     const API = "https://script.google.com/macros/s/AKfycbyUMYO4CpHyhdrOa3xO7cNEvrVzkfNbQZYPOJ99b8kLD8DIXKGPmuZ5Ey2cAiwNPS_u/exec";
 
+    // ... (El resto de tu JS se mantiene igual)
     const FOTOS_MANUALES = {
         "William Garzon C": "https://i.ibb.co/LzNf9Fv/soldado-ejemplo.jpg",
         "creacionvirtual Resident": "https://img.freepik.com/psd-premium/nino-lindo-camuflaje-uniforme-combate-soldado-rifle-mano_1104289-67.jpg?w=740",
@@ -143,12 +171,7 @@
             const data = await res.json();
             const facciones = data.facciones || [];
             let allPlayers = [];
-
-            facciones.forEach(f => {
-                if(f.lista_integrantes) {
-                    allPlayers = allPlayers.concat(f.lista_integrantes);
-                }
-            });
+            facciones.forEach(f => { if(f.lista_integrantes) allPlayers = allPlayers.concat(f.lista_integrantes); });
 
             document.getElementById('top-xp').innerHTML = [...allPlayers]
                 .sort((a,b) => calcularXPGlobal(b.nivel, b.xp) - calcularXPGlobal(a.nivel, a.xp))
@@ -173,12 +196,8 @@
                     <span><span class="rank-num">${i + 1}</span><img src="${getSoldier(j.nombre, j.uuid)}" style="width:20px; height:20px; border-radius:3px; margin-right:5px; object-fit:cover;"> ${j.nombre}</span>
                     <span style="color:var(--primary)">${j.pvp || 0} ⚔️</span>
                 </div>`).join('');
-
-        } catch (error) { 
-            console.error("Error cargando datos:", error); 
-        }
+        } catch (error) { console.error("Error cargando datos:", error); }
     }
-
     load();
     setInterval(load, 60000);
 </script>
