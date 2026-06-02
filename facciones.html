@@ -71,6 +71,7 @@
         .top-card { background: rgba(17,17,17,0.9); border: 1px solid var(--gold); padding: 15px; border-radius: 10px; box-shadow: 0 0 10px rgba(255, 215, 0, 0.1); backdrop-filter: blur(10px); }
         .top-card h3 { font-size: 0.9rem; margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 8px; }
         .top-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #222; font-size: 0.75rem; align-items: center; }
+        .rank-num { font-weight: bold; color: var(--primary); margin-right: 8px; width: 20px; display: inline-block; }
 
         @keyframes titlePulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } }
         @media (max-width: 1000px) { 
@@ -151,25 +152,25 @@
 
             document.getElementById('top-xp').innerHTML = [...allPlayers]
                 .sort((a,b) => calcularXPGlobal(b.nivel, b.xp) - calcularXPGlobal(a.nivel, a.xp))
-                .slice(0,10).map(j=>`
+                .slice(0,10).map((j, i) => `
                 <div class="top-item">
-                    <span><img src="${getSoldier(j.nombre, j.uuid)}" style="width:20px; height:20px; border-radius:3px; margin-right:5px; object-fit:cover;"> ${j.nombre}</span>
+                    <span><span class="rank-num">${i + 1}</span><img src="${getSoldier(j.nombre, j.uuid)}" style="width:20px; height:20px; border-radius:3px; margin-right:5px; object-fit:cover;"> ${j.nombre}</span>
                     <span style="color:var(--gold)">${calcularXPGlobal(j.nivel, j.xp).toLocaleString()} XP</span>
                 </div>`).join('');
 
             document.getElementById('top-kills').innerHTML = [...allPlayers]
                 .sort((a,b) => parseInt(b.npc || 0) - parseInt(a.npc || 0))
-                .slice(0,10).map(j=>`
+                .slice(0,10).map((j, i) => `
                 <div class="top-item">
-                    <span><img src="${getSoldier(j.nombre, j.uuid)}" style="width:20px; height:20px; border-radius:3px; margin-right:5px; object-fit:cover;"> ${j.nombre}</span>
+                    <span><span class="rank-num">${i + 1}</span><img src="${getSoldier(j.nombre, j.uuid)}" style="width:20px; height:20px; border-radius:3px; margin-right:5px; object-fit:cover;"> ${j.nombre}</span>
                     <span style="color:var(--neon-green)">${j.npc || 0} 💀</span>
                 </div>`).join('');
 
             document.getElementById('top-pvp').innerHTML = [...allPlayers]
                 .sort((a,b) => parseInt(b.pvp || 0) - parseInt(a.pvp || 0))
-                .slice(0,10).map(j=>`
+                .slice(0,10).map((j, i) => `
                 <div class="top-item">
-                    <span><img src="${getSoldier(j.nombre, j.uuid)}" style="width:20px; height:20px; border-radius:3px; margin-right:5px; object-fit:cover;"> ${j.nombre}</span>
+                    <span><span class="rank-num">${i + 1}</span><img src="${getSoldier(j.nombre, j.uuid)}" style="width:20px; height:20px; border-radius:3px; margin-right:5px; object-fit:cover;"> ${j.nombre}</span>
                     <span style="color:var(--primary)">${j.pvp || 0} ⚔️</span>
                 </div>`).join('');
 
