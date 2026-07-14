@@ -11,6 +11,7 @@
             --neon-cyan: #00F3FF;
             --neon-gold: #f39c12;
             --neon-purple: #bc13fe;
+            --neon-red: #ff003c; /* NUEVO COLOR PARA VAMPIROS */
             --bg-overlay: rgba(0, 0, 0, 0.92);
             --card: rgba(15, 15, 15, 0.98);
         }
@@ -128,19 +129,18 @@
         
         <h3>TECNOLOGÍA DE DISPARO</h3>
         <ul>
-            <li><span class="highlight-orange">Detección Táctica:</span> Al apuntar en mouselook, el arma identifica al objetivo, mostrando su Nombre and HP restante en tu HUD.</li>
+            <li><span class="highlight-orange">Detección Táctica:</span> Al apuntar en mouselook, el arma identifica al objetivo, mostrando su Nombre y HP restante en tu HUD.</li>
             <li><span class="highlight-orange">XP Cooperativa:</span> ¡Se acabó el robo de muertes! El sistema reparte la XP proporcionalmente al daño infligido entre todos los atacantes.</li>
-            <li><span class="highlight-orange">Drop Dinámico:</span> Los enemigos eliminados pueden soltar munición, pociones o pergaminos raros de mejora.y nuevo drop de hierro,madera,carbon y acero matando NPC Zombie</li>
+            <li><span class="highlight-orange">Drop Dinámico:</span> Los enemigos eliminados pueden soltar munición, pociones o pergaminos raros de mejora y nuevo drop de hierro, madera, carbon y acero matando NPC Zombie.</li>
         </ul>
 
         <h3>SISTEMA DE ENCHANTING</h3>
-        <p>Visita al <span class="highlight-orange">Maestro Enchanter</span> para potenciar tu daño base (hasta +15)armas regalo (hasta +20) armas crafteada (hasta +25)armas de vendor. Tus pergaminos se guardan en un inventario virtual seguro.</p>
+        <p>Visita al <span class="highlight-orange">Maestro Enchanter</span> para potenciar tu daño base (hasta +15 en armas regalo, hasta +20 en armas crafteadas y hasta +25 en armas de vendor). Tus pergaminos se guardan en un inventario virtual seguro.</p>
         <ul>
             <li>Construcción 🥉 <span class="highlight">BRONCE:</span> 20% éxito. | 🔹 <span class="highlight">PLATA:</span> 50% éxito. | 🔸 <span class="highlight">ORO:</span> 100% éxito.</li>
         </ul>
     </section>
 
-    <!-- SECCIÓN 03 ACTUALIZADA: MAESTRO ARMERO Y BANCO -->
     <section class="info-section" style="border-left-color: var(--neon-gold);">
         <h2>03. MAESTRO ARMERO Y BANCO <span class="badge-new" style="background:var(--neon-gold);">CRAFTEO & EXCHANGE</span></h2>
         <p>Protocolo de fabricación y finanzas activado. El <span class="highlight" style="color:var(--neon-gold);">Maestro Armero</span> ahora no solo ensambla equipo, sino que actúa como cajero oficial para tus <span class="highlight">Monedas Linde</span>.</p>
@@ -271,7 +271,6 @@
         </div>
     </section>
 
-    <!-- === NUEVA SECCIÓN: TERMINAL DE MISIONES === -->
     <section class="info-section" style="border-left-color: var(--neon-green);">
         <h2>09. TERMINAL DE MISIONES <span class="badge-new" style="background:var(--neon-green); color:#000;">NUEVO</span></h2>
         <p>El progreso en los niveles élite requiere más que solo sobrevivir. Ahora, el Alto Mando te exigirá demostrar tu valía enfrentándote a retos específicos para desbloquear tu verdadero potencial de experiencia.</p>
@@ -302,10 +301,9 @@
         </div>
 
         <h3 style="color:var(--neon-green);">RECOMPENSAS DE MISIÓN</h3>
-        <p>Cumplir con las órdenes del Alto Mando no solo desbloqueará tu medidor de experiencia, sino que el Jefe abatido soltará equipo exclusivo de grado militar directo a tu inventario (Ej. Visores Nocturnos,Arma especial hasta +25, Armaduras Élite). ¡La Terminal es la única forma de acceder a este equipamiento!</p>
+        <p>Cumplir con las órdenes del Alto Mando no solo desbloqueará tu medidor de experiencia, sino que el Jefe abatido soltará equipo exclusivo de grado militar directo a tu inventario (Ej. Visores Nocturnos, Arma especial hasta +25, Armaduras Élite). ¡La Terminal es la única forma de acceder a este equipamiento!</p>
     </section>
 
-    <!-- === NUEVA SECCIÓN 09: INTEGRACIÓN SUNTUOSA DEL SASTRE Y REGLAS DE ENCHANT DE ROPA === -->
     <section class="info-section" style="border-left-color: var(--neon-purple);">
         <h2>10. MAESTRO SASTRE: MEJORA DE BLINDAJE <span class="badge-new" style="background:var(--neon-purple);">ROPA ENCHANT V3.2</span></h2>
         <p>El taller de sastrería militar está oficialmente conectado al servidor global. Ahora puedes imbuir tus textiles y placas tácticas utilizando pergaminos de probabilidad variable obtenidos en incursiones de Raid Bosses.</p>
@@ -324,13 +322,12 @@
                 <ul>
                     <li><span class="highlight">ZONA SEGURA (MÁX 5 PIEZAS):</span> El HUD computará la suma de un máximo de <strong>5 prendas equipadas</strong> de forma simultánea para evitar abusos de ranuras invisibles.</li>
                     <li><span class="highlight" style="color:var(--neon-orange);">TOPE MATEMÁTICO (50% DEF):</span> Ningún usuario podrá superar el <strong>50% de mitigación total</strong>. Cualquier porcentaje excedente será ignorado por el cortafuegos del HUD.</li>
-                    <li><span class="highlight" style="color:#e74c3c;">RIESGO DE ROTURA DE PRENDA:</span> Intentar forzar mejoras en piezas que acerquen tu contador global al umbral crítico del 50% de defensa conlleva el riesgo latente de **destruir por completo la prenda**Apartir de +8 solo tienes con cualquier pergamino el 75 % de entrar o romperse en caso de fallo. ¡Planea tu estrategia con cuidado!</li>
+                    <li><span class="highlight" style="color:#e74c3c;">RIESGO DE ROTURA DE PRENDA:</span> Intentar forzar mejoras en piezas que acerquen tu contador global al umbral crítico del 50% de defensa conlleva el riesgo latente de destruir por completo la prenda. A partir de +8 solo tienes con cualquier pergamino el 75 % de entrar o romperse en caso de fallo. ¡Planea tu estrategia con cuidado!</li>
                 </ul>
             </div>
         </div>
     </section>
 
-    <!-- === NUEVA SECCIÓN 11: MESA DE PESCA === -->
     <section class="info-section" style="border-left-color: var(--neon-cyan);">
         <h2>11. MESA DE PESCA Y PROCESAMIENTO <span class="badge-new" style="background:var(--neon-cyan); color:#000;">NUEVO UPDATE</span></h2>
         <p>¡Prepárate para dominar los ríos! Gestiona tu inventario acuático, recupera estadísticas vitales y genera ingresos desde la nueva estación interactiva.</p>
@@ -360,7 +357,8 @@
             </div>
         </div>
     </section>
-<section class="info-section" style="border-left-color: var(--neon-green);">
+
+    <section class="info-section" style="border-left-color: var(--neon-green);">
         <h2>12. SISTEMA DE RECOLECCIÓN (MINIJUEGOS) <span class="badge-new" style="background:var(--neon-green); color:#000;">UPDATE V3</span></h2>
         <p>¡La supervivencia exige trabajo duro! Hemos implementado un nuevo sistema interactivo de farmeo. Al interactuar con los recursos del entorno (Agua, Árboles, Rocas o Tierra), se equipará automáticamente la herramienta adecuada y comenzará un minijuego de extracción.</p>
         
@@ -421,6 +419,7 @@
             </div>
         </div>
     </section>
+
     <section class="info-section" style="border-left-color: var(--neon-cyan); text-align: center; padding-bottom: 20px;">
         <h2 style="text-align: left;">SISTEMA EN ACCIÓN <span class="badge-new" style="background:var(--neon-cyan); color:#000;">GAMEPLAY</span></h2>
         <p style="text-align: left; margin-bottom: 30px;">Observa cómo los veteranos aseguran sus recursos en las zonas seguras del mapa. No te quedes atrás y empieza a farmear tu propio equipamiento.</p>
@@ -438,13 +437,12 @@
             <span><span style="color:var(--neon-cyan);">✓</span> Cero lag</span>
         </div>
     </section>
-    <!-- === NUEVA SECCIÓN 13: ACTUALIZACIÓN MEGA V3.4 === -->
+
     <section class="info-section" style="border-left-color: var(--neon-gold);">
         <h2>13. EXPANSIÓN ÉLITE Y ESPECIALIZACIONES <span class="badge-new" style="background:var(--neon-gold); color:#000;">MEGA UPDATE V3.4</span></h2>
         <p>El sistema ha sido reescrito desde cero para optimizar la memoria (Cero "Stack-Heap Collisions") moviendo la carga de procesamiento pesada directamente a los servidores en la nube. ¡Más rápido, más seguro y con nuevas formas de jugar!</p>
         
         <div class="grid-stats">
-            <!-- Bloque de Clases -->
             <div style="background: rgba(243, 156, 18, 0.05); padding: 15px; border-radius: 8px; border: 1px dashed var(--neon-gold);">
                 <h3 style="color:var(--neon-gold); margin-top:0;">SISTEMA DE CLASES (NVL 50+)</h3>
                 <p style="font-size: 0.9rem; margin-top:-10px; color:#aaa;">Desbloquea habilidades únicas y pasivas al llegar al Nivel 50.</p>
@@ -455,13 +453,40 @@
                 </ul>
             </div>
 
-            <!-- Bloque de Nube y Misiones -->
             <div style="background: rgba(188, 19, 254, 0.05); padding: 15px; border-radius: 8px; border-left: 3px solid var(--neon-purple);">
                 <h3 style="color:var(--neon-purple); margin-top:0;">NUEVO LÍMITE: NIVEL 200</h3>
                 <ul style="font-size: 0.9rem;">
                     <li><span class="highlight" style="color:var(--neon-purple);">MISIONES DE ASCENSO:</span> Nuevos bloqueos tácticos en el <strong>Nivel 100</strong> (Derrotar al Titán Supremo) y <strong>Nivel 150</strong> (Derrotar al Jefe Apocalíptico).</li>
                     <li><span class="highlight" style="color:var(--neon-purple);">CRAFTEO CLOUD-NATIVE:</span> Las mesas de trabajo (como el Caldero) ahora procesan los materiales directamente en la base de datos global. El HUD ya no gasta memoria calculando recetas.</li>
                     <li><span class="highlight" style="color:var(--neon-purple);">SEGURIDAD PING:</span> Las estaciones verifican tu clase y permisos de forma invisible para evitar trampas o accesos no autorizados.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- === NUEVA SECCIÓN 14: SISTEMA VAMPIRO === -->
+    <section class="info-section" style="border-left-color: var(--neon-red); box-shadow: 0 10px 30px rgba(255, 0, 60, 0.1);">
+        <h2 style="color: var(--neon-red);">14. CAZADOR NOCTURNO: SISTEMA VAMPIRO <span class="badge-new" style="background:var(--neon-red); color:#fff;">NUEVO ROL</span></h2>
+        <p>Una nueva forma de dominar el servidor ha despertado. El Módulo Vampírico es un sistema de combate avanzado que funciona como un anexo independiente del HUD, diseñado con mecánicas de sigilo, rastreo y ejecución brutal.</p>
+        
+        <div class="grid-stats">
+            <div style="background: rgba(255, 0, 60, 0.05); padding: 15px; border-radius: 8px; border: 1px dashed var(--neon-red);">
+                <h3 style="color:var(--neon-red); margin-top:0;">🩸 HABILIDADES DE CAZA</h3>
+                <ul style="font-size: 0.9rem;">
+                    <li><span class="highlight" style="color:var(--neon-red);">SENTIDO VAMPÍRICO:</span> Mantén el botón presionado 1.5s para usar tu radar. Detectarás a la presa más cercana en un radio inmenso de <strong>96 metros</strong>.</li>
+                    <li><span class="highlight" style="color:var(--neon-red);">ENGANCHE (TARGET LOCK):</span> Acércate a menos de 3m para fijar a tu presa. Podrás ver su <strong>Barra de Vida, Nivel y Rango</strong> en tu pantalla en tiempo real. No podrá escapar a menos que logre huir a más de 10 metros.</li>
+                    <li><span class="highlight" style="color:var(--neon-red);">DESANGRADO:</span> Tus colmillos dejan heridas letales. Cada mordida inyecta un efecto que drena <strong>3 HP por segundo</strong> a la víctima durante 5 segundos.</li>
+                    <li><span class="highlight" style="color:var(--neon-red);">INFLUENCIA SOLAR:</span> El sistema detecta el sol del sim. <strong>De Noche</strong> te curas con facilidad y atacas velozmente. <strong>De Día</strong>, la luz te debilita, reduciendo tu daño y aumentando tus tiempos de espera.</li>
+                </ul>
+            </div>
+            
+            <div style="background: rgba(255, 0, 60, 0.05); padding: 15px; border-radius: 8px; border-left: 3px solid var(--neon-red);">
+                <h3 style="color:var(--neon-red); margin-top:0;">💀 COMBATE Y EVOLUCIÓN</h3>
+                <ul style="font-size: 0.9rem;">
+                    <li><span class="highlight" style="color:var(--neon-red);">EJECUCIÓN BRUTAL:</span> Si atacas a un jugador cuando su vida baja a 20 HP o menos, activarás un <strong>Instakill</strong>. Te curarás masivamente y el servidor anunciará la ejecución a todos (+1000 XP).</li>
+                    <li><span class="highlight" style="color:var(--neon-red);">FURIA SANGRIENTA:</span> Cada mordida exitosa acumula una gota de sangre en tu medidor (Máx 5). Al llenarse, tu próximo ataque asestará el <strong>doble de daño</strong> y te curará la vida entera.</li>
+                    <li><span class="highlight" style="color:var(--neon-red);">NIEBLA DE EVASIÓN:</span> ¿Te han acorralado? Haz <strong>doble clic rápido</strong> para consumir tus gotas de sangre, curarte, envolverte en humo oscuro y soltar a tu presa para escapar a salvo.</li>
+                    <li><span class="highlight" style="color:var(--neon-red);">RANGOS DE SANGRE:</span> Acumula bajas sin morir para evolucionar de <em>Neófito</em> a <em>Acechador</em> y finalmente <em>Señor de la Noche</em>, aumentando tu poder base hasta 50 de daño por mordida. Si un cazador te elimina, perderás tu poder acumulado.</li>
                 </ul>
             </div>
         </div>
