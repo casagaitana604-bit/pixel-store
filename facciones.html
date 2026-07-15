@@ -3,203 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PIXEL RPG - Tops</title>
+    <title>Salón de la Sangre - Ranking de Clanes</title>
     <style>
-        :root { 
-            --primary: #ff4500; 
-            --gold: #ffd700; 
-            --bg: #0a0a0a; 
-            --card: #1a1a1a; 
-            --neon-green: #39FF14;
-            --neon-blue: #00ffff;
-            --bg-overlay: rgba(0, 0, 0, 0.85);
-        }
-
-        body { 
-            font-family: 'Segoe UI', sans-serif; 
-            background-image: linear-gradient(var(--bg-overlay), var(--bg-overlay)), url('https://w0.peakpx.com/wallpaper/538/103/HD-wallpaper-cs-go-cyberpunk-overpass-counter-strike-global-offensive.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            color: #ccc; 
-            margin: 0; 
-            text-transform: uppercase; 
-        }
-        
-        .main-nav { 
-            background: rgba(0, 0, 0, 0.9); display: flex; justify-content: space-between; align-items: center; padding: 15px 50px; 
-            border-bottom: 2px solid var(--primary); box-shadow: 0 0 15px var(--primary);
-            position: sticky; top: 0; z-index: 1000; 
-        }
-        .nav-logo { color: #fff; font-weight: bold; font-size: 1.4rem; letter-spacing: 2px; }
-        .nav-logo span { color: var(--primary); }
-        .nav-links a { color: #ccc; text-decoration: none; margin-left: 25px; font-weight: bold; font-size: 0.9rem; transition: 0.3s; }
-        .nav-links a:hover { color: var(--primary); text-shadow: 0 0 5px var(--primary); }
-        .nav-active { color: var(--primary) !important; border-bottom: 2px solid var(--primary); padding-bottom: 5px; }
-
-        .hero-header {
+        body {
+            background-color: #0b0b0b;
+            color: #dcdcdc;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             text-align: center;
-            padding: 60px 20px 20px 20px;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
-        }
-        .main-title {
-            font-size: 5rem;
-            font-weight: 900;
             margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #ff3333;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px #ff000080;
+        }
+        .ranking-container {
+            max-width: 900px;
+            margin: 30px auto;
+            background: #151515;
+            border: 1px solid #330000;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.15);
+            overflow: hidden;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th {
+            background-color: #500000;
             color: #fff;
-            letter-spacing: -2px;
-            text-shadow: 0 0 20px var(--primary), 0 0 40px var(--primary);
-            line-height: 1;
-            animation: titlePulse 4s infinite;
+            padding: 15px;
+            font-size: 1.1em;
+            text-transform: uppercase;
         }
-        .subtitle-bar {
-            background: var(--primary);
-            color: #000;
-            display: inline-block;
-            padding: 5px 25px;
-            font-weight: 900;
-            letter-spacing: 5px;
-            margin-top: 15px;
-            font-size: 1rem;
-            box-shadow: 0 0 20px var(--primary);
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #2a2a2a;
         }
-
-        .container { max-width: 1300px; margin: 20px auto; padding: 0 20px; }
-        
-        .top-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 40px; }
-        .top-card { background: rgba(17,17,17,0.9); border: 1px solid var(--gold); padding: 15px; border-radius: 10px; box-shadow: 0 0 10px rgba(255, 215, 0, 0.1); backdrop-filter: blur(10px); }
-        .top-card h3 { font-size: 0.9rem; margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 8px; }
-        .top-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #222; font-size: 0.75rem; align-items: center; }
-        .rank-num { font-weight: bold; color: var(--primary); margin-right: 8px; width: 20px; display: inline-block; }
-
-        /* Estilos de Video */
-        .video-section { margin-top: 50px; padding-bottom: 50px; }
-        .video-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; }
-        .video-container { 
-            position: relative; width: 100%; padding-bottom: 56.25%; height: 0; 
-            border: 2px solid var(--primary); border-radius: 10px; overflow: hidden;
+        tr:hover {
+            background-color: #220000;
+            transition: 0.3s;
         }
-        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-
-        @keyframes titlePulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } }
-        @media (max-width: 1000px) { 
-            .top-grid { grid-template-columns: 1fr; }
-            .main-title { font-size: 3rem; }
-            .video-grid { grid-template-columns: 1fr; }
+        .top-1 {
+            color: #ffcc00;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        .top-2 { color: #c0c0c0; font-weight: bold; }
+        .top-3 { color: #cd7f32; font-weight: bold; }
+        .loading {
+            padding: 30px;
+            color: #ff3333;
+            font-style: italic;
         }
     </style>
 </head>
 <body>
 
-<nav class="main-nav">
-    <div class="nav-logo">PIXEL RPG <span>SURVIVAL</span></div>
-    <div class="nav-links">
-        <a href="index.html">INICIO</a>
-        <a href="facciones.html" class="nav-active">TOPS/VIDEOS</a>
-        <a href="info.html">INFORMACIÓN</a>
-    </div>
-</nav>
+    <h1>🦇 Salón de la Sangre 🦇</h1>
+    <p>Ranking Oficial de Clanes Vampiros de Pixel Store</p>
 
-<header class="hero-header">
-    <h1 class="main-title">RANKINGS</h1>
-    <div class="subtitle-bar">LOS 10 MEJORES GUERREROS</div>
-</header>
-
-<div class="container">
-    <div class="top-grid">
-        <div class="top-card" style="border-color: var(--gold);">
-            <h3 style="color: var(--gold);">🏆 TOP 10 EXPERIENCIA</h3>
-            <div id="top-xp"></div>
-        </div>
-        <div class="top-card" style="border-color: var(--neon-green);">
-            <h3 style="color: var(--neon-green);">💀 TOP 10 HUNTERS (NPC)</h3>
-            <div id="top-kills"></div>
-        </div>
-        <div class="top-card" style="border-color: var(--primary);">
-            <h3 style="color: var(--primary);">⚔️ TOP 10 PVP (PK)</h3>
-            <div id="top-pvp"></div>
-        </div>
+    <div class="ranking-container">
+        <table>
+            <thead>
+                <tr>
+                    <th># Rango</th>
+                    <th>Nombre de la Casa</th>
+                    <th>Líder Fundador</th>
+                    <th>Nivel</th>
+                    <th>XP Acumulada</th>
+                    <th>Guerreros</th>
+                </tr>
+            </thead>
+            <tbody id="tabla-clanes">
+                <tr><td colspan="6" class="loading">Consultando archivos antiguos (Cargando datos)...</td></tr>
+            </tbody>
+        </table>
     </div>
 
-    <!-- SECCION VIDEOS -->
-    <section class="video-section">
-        <h2 style="text-align: center; margin-bottom: 20px;">MEDIA / GAMEPLAY</h2>
-        <div class="video-grid">
-            <!-- Bloque de video 1 -->
-            <div class="video-container">
-                <iframe src="https://www.youtube.com/embed/hHv4GfdxRsE" allowfullscreen></iframe>
-            </div>
-            
-            <!-- COPIA EL BLOQUE DE ABAJO PARA AGREGAR MAS VIDEOS -->
-            <!-- 
-            <div class="video-container">
-                <iframe src="https://www.youtube.com/embed/ID_DE_TU_VIDEO" allowfullscreen></iframe>
-            </div> 
-            -->
-        </div>
-    </section>
-</div>
+    <script>
+        // PON AQUÍ TU URL DE GOOGLE APPS SCRIPT
+        const API_URL = "AQUI_TU_URL_DE_GOOGLE_SCRIPT";
 
-<script>
-    const API = "https://script.google.com/macros/s/AKfycbyUMYO4CpHyhdrOa3xO7cNEvrVzkfNbQZYPOJ99b8kLD8DIXKGPmuZ5Ey2cAiwNPS_u/exec";
+        async function cargarRanking() {
+            try {
+                const respuesta = await fetch(API_URL);
+                const datos = await respuesta.json();
+                
+                const tabla = document.getElementById("tabla-clanes");
+                tabla.innerHTML = ""; // Limpiamos el mensaje de carga
 
-    // ... (El resto de tu JS se mantiene igual)
-    const FOTOS_MANUALES = {
-        "William Garzon C": "https://i.ibb.co/LzNf9Fv/soldado-ejemplo.jpg",
-        "creacionvirtual Resident": "https://img.freepik.com/psd-premium/nino-lindo-camuflaje-uniforme-combate-soldado-rifle-mano_1104289-67.jpg?w=740",
-        "Violetaa39 Resident": "https://static.vecteezy.com/system/resources/previews/039/657/374/non_2x/ai-generated-us-soldier-with-rifle-free-png.png",
-        "plaza Resident": "https://static.vecteezy.com/system/resources/previews/039/657/397/original/ai-generated-adorable-girl-soldier-cartoon-character-png.png",
-        "notfound80 Resident": "https://img.freepik.com/fotos-premium/fondo-blanco-soldado-dibujos-animados-accion-ejercito_41969-39108.jpg?w=2000",
-        "popeyeee Resident": "https://i.pinimg.com/originals/70/78/cb/7078cb46e9894fc2a046f6173c077063.jpg",
-        "eddy38k Resident": "https://www.gifss.com/profesiones/soldados/soldado-05.gif"
-    };
+                if (!datos.clanes || datos.clanes.length === 0) {
+                    tabla.innerHTML = "<tr><td colspan='6'>Aún no hay clanes registrados en el mundo.</td></tr>";
+                    return;
+                }
 
-    function getSoldier(name, uuid) {
-        if (FOTOS_MANUALES[name]) return FOTOS_MANUALES[name];
-        return "https://img.freepik.com/premium-vector/soldier-uniform-cartoon-character-vector_614983-3103.jpg?w=2000";
-    }
+                // Generar las filas de la tabla
+                datos.clanes.forEach((clan, index) => {
+                    let posicion = index + 1;
+                    let clasePosicion = "";
+                    
+                    if (posicion === 1) clasePosicion = "top-1";
+                    else if (posicion === 2) clasePosicion = "top-2";
+                    else if (posicion === 3) clasePosicion = "top-3";
 
-    function calcularXPGlobal(n, xp) {
-        let lvl = parseInt(n) || 1;
-        let xpAcum = ((lvl - 1) * lvl / 2) * 500;
-        return xpAcum + (parseInt(xp) || 0);
-    }
+                    let fila = `
+                        <tr>
+                            <td class="${clasePosicion}">#${posicion}</td>
+                            <td style="font-weight: bold; color: #fff;">${clan.nombre}</td>
+                            <td>${clan.lider}</td>
+                            <td><span style="color: #ff3333; font-weight: bold;">Nvl ${clan.nivel}</span></td>
+                            <td>${clan.xp.toLocaleString()} / 50.000</td>
+                            <td>${clan.total_miembros} / 25</td>
+                        </tr>
+                    `;
+                    tabla.innerHTML += fila;
+                });
+            } catch (error) {
+                console.error("Error cargando los clanes:", error);
+                document.getElementById("tabla-clanes").innerHTML = "<tr><td colspan='6' style='color:red;'>Error de conexión con los ancestros.</td></tr>";
+            }
+        }
 
-    async function load() {
-        try {
-            const res = await fetch(API);
-            const data = await res.json();
-            const facciones = data.facciones || [];
-            let allPlayers = [];
-            facciones.forEach(f => { if(f.lista_integrantes) allPlayers = allPlayers.concat(f.lista_integrantes); });
+        // Ejecutar al abrir la página
+        cargarRanking();
+        
+        // Refrescar automáticamente cada 60 segundos
+        setInterval(cargarRanking, 60000); 
+    </script>
 
-            document.getElementById('top-xp').innerHTML = [...allPlayers]
-                .sort((a,b) => calcularXPGlobal(b.nivel, b.xp) - calcularXPGlobal(a.nivel, a.xp))
-                .slice(0,10).map((j, i) => `
-                <div class="top-item">
-                    <span><span class="rank-num">${i + 1}</span><img src="${getSoldier(j.nombre, j.uuid)}" style="width:20px; height:20px; border-radius:3px; margin-right:5px; object-fit:cover;"> ${j.nombre}</span>
-                    <span style="color:var(--gold)">${calcularXPGlobal(j.nivel, j.xp).toLocaleString()} XP</span>
-                </div>`).join('');
-
-            document.getElementById('top-kills').innerHTML = [...allPlayers]
-                .sort((a,b) => parseInt(b.npc || 0) - parseInt(a.npc || 0))
-                .slice(0,10).map((j, i) => `
-                <div class="top-item">
-                    <span><span class="rank-num">${i + 1}</span><img src="${getSoldier(j.nombre, j.uuid)}" style="width:20px; height:20px; border-radius:3px; margin-right:5px; object-fit:cover;"> ${j.nombre}</span>
-                    <span style="color:var(--neon-green)">${j.npc || 0} 💀</span>
-                </div>`).join('');
-
-            document.getElementById('top-pvp').innerHTML = [...allPlayers]
-                .sort((a,b) => parseInt(b.pvp || 0) - parseInt(a.pvp || 0))
-                .slice(0,10).map((j, i) => `
-                <div class="top-item">
-                    <span><span class="rank-num">${i + 1}</span><img src="${getSoldier(j.nombre, j.uuid)}" style="width:20px; height:20px; border-radius:3px; margin-right:5px; object-fit:cover;"> ${j.nombre}</span>
-                    <span style="color:var(--primary)">${j.pvp || 0} ⚔️</span>
-                </div>`).join('');
-        } catch (error) { console.error("Error cargando datos:", error); }
-    }
-    load();
-    setInterval(load, 60000);
-</script>
 </body>
 </html>
