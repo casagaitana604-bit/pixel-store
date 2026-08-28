@@ -131,11 +131,12 @@
         .boss-timer-fill.dead { background: var(--neon-red); }
         .boss-countdown { font-size: 0.75rem; color: #888; text-align: right; display: block; margin-top: 4px; font-family: monospace; font-weight: bold; }
 
-        /* Estilo para el Panel de Territorios Conquistados */
-        .territory-card { background: rgba(0,0,0,0.8); border: 1px solid var(--neon-orange); padding: 10px 14px; border-radius: 4px; margin-top: 8px; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; }
-        .territory-card:hover { border-color: var(--neon-green); box-shadow: 0 0 10px rgba(255,0,51,0.3); }
-        .territory-sim { font-weight: bold; color: #fff; font-size: 0.85rem; }
-        .territory-clan { font-size: 0.75rem; color: var(--neon-green); font-family: monospace; text-shadow: 0 0 5px rgba(255,0,51,0.5); }
+        /* Estilo Minimizado para el Ranking de Clanes y sus Sims */
+        .clan-territory-btn { background: rgba(0,0,0,0.8); border: 1px solid var(--neon-orange); padding: 10px 14px; border-radius: 4px; margin-top: 8px; cursor: pointer; transition: 0.3s; }
+        .clan-territory-btn:hover { border-color: var(--neon-green); box-shadow: 0 0 10px rgba(255,0,51,0.3); }
+        .clan-header-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; font-weight: bold; color: #fff; }
+        .sims-dropdown { display: none; margin-top: 8px; padding-top: 8px; border-top: 1px dashed #333; font-size: 0.8rem; }
+        .sim-item { color: #aaa; padding: 3px 0; display: flex; align-items: center; gap: 6px; font-family: monospace; }
 
         /* Modal Optimizado */
         .modal { 
@@ -215,13 +216,13 @@
         </table>
     </div>
 
-    <!-- PANEL LATERAL: BOSSES Y TERRITORIOS CONQUISTADOS -->
+    <!-- PANEL LATERAL: BOSSES Y TERRITORIOS MINIMIZADOS -->
     <div class="event-log">
         <div class="boss-panel-inside">
             <h3 style="color: var(--neon-orange); border-bottom: 1px solid #222; padding-bottom: 5px; font-size: 1rem; position: sticky; top: 0; background: #0c0c0c; z-index: 10;">☠️ RAID_BOSSES_STATUS</h3>
             <div id="boss-list-container"></div>
 
-            <h3 style="color: var(--neon-green); border-bottom: 1px solid #222; padding-bottom: 5px; font-size: 1rem; position: sticky; top: 0; background: #0c0c0c; z-index: 10; margin-top: 30px;">🏰 TERRITORIOS DOMINADOS</h3>
+            <h3 style="color: var(--neon-green); border-bottom: 1px solid #222; padding-bottom: 5px; font-size: 1rem; position: sticky; top: 0; background: #0c0c0c; z-index: 10; margin-top: 30px;">🏰 DOMINIOS DE CLANES</h3>
             <div id="territory-list-container">
                 <p style="color: #666; font-size: 0.8rem; text-align: center; margin-top: 10px;">Cargando dominios...</p>
             </div>
@@ -259,7 +260,7 @@
 </div>
 
 <script>
-    const API = "https://script.google.com/macros/s/AKfycbxUThcFumpWD1kC6oqBJxe1HlAA7VINIh9nmgCfeWuOuz7UsHna6f_tLF7LPhUjVzq9/exec"; 
+    const API = "https://script.google.com/macros/s/AKfycbwPL2IWUhXtcWNxoCreEvrLyqsVCZ3MhRGmzcaFXpMua15Y4k8hXlH5b5OW_pkuKrMq/exec"; 
     let cacheClanes = [];
     let cacheBosses = []; 
     let cacheTerritorios = [];
@@ -271,7 +272,6 @@
             const res = await fetch(API);
             const data = await res.json();
             
-            // Render Clanes
             if (data.clanes) {
                 cacheClanes = data.clanes;
                 renderClanes(cacheClanes);
@@ -288,20 +288,20 @@
                 document.getElementById('count-max-nivel').innerText = maxNivel;
             }
 
-            // Render Territorios Conquistados (lee todos los que mande Apps Script)
-            if (data.territorios && data.territorios.length > 0) {
+            if (data.territorios) {
                 cacheTerritorios = data.territorios;
                 renderTerritorios();
             } else {
-                // Lista de respaldo o prueba si aún no está enlazado el JSON de territorios
                 cacheTerritorios = [
-                    { sim: "Migliori Ulivi", clan: "Hijos De La Oscuridad" },
-                    { sim: "Peaches", clan: "Hijos De La Oscuridad" }
+                    { sim: "Migliori Ulivi", clan: "HIijo De La Oscuridad" },
+                    { sim: "Peaches", clan: "HIijo De La Oscuridad" },
+                    { sim: "Westwald", clan: "HIijo De La Oscuridad" },
+                    { sim: "Seasnake", clan: "HIijo De La Oscuridad" },
+                    { sim: "Fugu", clan: "HIijo De La Oscuridad" }
                 ];
                 renderTerritorios();
             }
 
-            // Sincronización para los Bosses
             if (data.bosses && data.bosses.length > 0) {
                 cacheBosses = data.bosses;
             } else {
@@ -315,6 +315,17 @@
         } catch (e) { console.error("Error:", e); }
     }
 
+    function toggleSimsList(id) {
+        const listDiv = document.getElementById(id);
+        if (listDiv) {
+            if (listDiv.style.display === "block") {
+                listDiv.style.display = "none";
+            } else {
+                listDiv.style.display = "block";
+            }
+        }
+    }
+
     function renderTerritorios() {
         const container = document.getElementById('territory-list-container');
         if(!container) return;
@@ -325,45 +336,52 @@
             return;
         }
 
-        // 1. Contar qué clan tiene más conquistas
-        let conteoClanes = {};
+        // Agrupar territorios por Clan
+        let clanesDominios = {};
         cacheTerritorios.forEach(t => {
             let cl = t.clan ? t.clan.trim() : "Desconocido";
-            conteoClanes[cl] = (conteoClanes[cl] || 0) + 1;
+            if (!clanesDominios[cl]) clanesDominios[cl] = [];
+            clanesDominios[cl].push(t.sim);
         });
 
-        let mejorClan = "";
-        let maxConquistas = 0;
-        for (let cl in conteoClanes) {
-            if (conteoClanes[cl] > maxConquistas) {
-                maxConquistas = conteoClanes[cl];
-                mejorClan = cl;
-            }
-        }
+        // Ordenar clanes por el que tenga más conquistas (Ranking)
+        let clanesOrdenados = Object.keys(clanesDominios).sort((a, b) => clanesDominios[b].length - clanesDominios[a].length);
 
-        // 2. Placa del Dominador Global arriba
+        // Mostrar Dominador Global arriba limpio
+        let mejorClan = clanesOrdenados[0];
         if (mejorClan) {
             const topDominio = document.createElement('div');
-            topDominio.style.cssText = "background: rgba(255,0,51,0.15); border: 1px solid var(--neon-green); padding: 10px; border-radius: 4px; margin-bottom: 12px; text-align: center;";
+            topDominio.style.cssText = "background: rgba(255,0,51,0.15); border: 1px solid var(--neon-green); padding: 8px; border-radius: 4px; margin-bottom: 10px; text-align: center;";
             topDominio.innerHTML = `
-                <small style="color:var(--neon-green); display:block; font-size:0.7rem; letter-spacing:1px; font-weight:bold;">👑 DOMINADOR GLOBAL</small>
-                <strong style="color:#fff; font-size:0.95rem; text-shadow:0 0 8px var(--neon-green);">&lt; ${mejorClan} &gt;</strong>
-                <span style="display:block; font-size:0.75rem; color:#aaa; margin-top:2px;">(${maxConquistas} ${maxConquistas === 1 ? 'Sim conquistado' : 'Sims conquistados'})</span>
+                <small style="color:var(--neon-green); display:block; font-size:0.65rem; letter-spacing:1px; font-weight:bold;">👑 DOMINADOR GLOBAL</small>
+                <strong style="color:#fff; font-size:0.9rem; text-shadow:0 0 6px var(--neon-green);">&lt; ${mejorClan} &gt;</strong>
+                <span style="display:block; font-size:0.7rem; color:#aaa; margin-top:1px;">(${clanesDominios[mejorClan].length} Sims conquistados)</span>
             `;
             container.appendChild(topDominio);
         }
 
-        // 3. Pintar absolutamente todas las conquistas numeradas
-        cacheTerritorios.forEach((t, index) => {
-            let numPos = index + 1;
+        // Crear un botón desplegable por cada clan con sus Sims ocultos/minimizados
+        clanesOrdenados.forEach((clan, index) => {
+            let simsDelClan = clanesDominios[clan];
+            let listId = `sims-list-${index}`;
+            let posRank = index + 1;
+
             const card = document.createElement('div');
-            card.className = 'territory-card';
+            card.className = 'clan-territory-btn';
+            
+            let htmlSims = "";
+            simsDelClan.forEach((sim, sIdx) => {
+                htmlSims += `<div class="sim-item"><span>#${sIdx + 1}</span> 📍 ${sim}</div>`;
+            });
+
             card.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <span style="color: var(--neon-orange); font-family: monospace; font-weight: bold; font-size: 0.85rem;">#${numPos}</span>
-                    <span class="territory-sim">📍 ${t.sim}</span>
+                <div class="clan-header-row" onclick="toggleSimsList('${listId}')">
+                    <span style="color: var(--neon-green);">#${posRank} &lt; ${clan} &gt;</span>
+                    <span style="font-size: 0.75rem; color: var(--neon-orange); font-family: monospace;">[ ${simsDelClan.length} Sims ▾ ]</span>
                 </div>
-                <span class="territory-clan">&lt; ${t.clan} &gt;</span>
+                <div id="${listId}" class="sims-dropdown">
+                    ${htmlSims}
+                </div>
             `;
             container.appendChild(card);
         });
