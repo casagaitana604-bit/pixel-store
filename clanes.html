@@ -15,7 +15,7 @@
     <title>PIXEL RPG - Salón de la Sangre</title>
     <style>
         :root { 
-            --neon-green: #ff0033; /* Cambiado a rojo sangre para los clanes */
+            --neon-green: #ff0033; /* Rojo sangre */
             --neon-orange: #FF5F1F; 
             --neon-blue: #00ffff;
             --neon-red: #ff0055; 
@@ -131,6 +131,11 @@
         .boss-timer-fill.dead { background: var(--neon-red); }
         .boss-countdown { font-size: 0.75rem; color: #888; text-align: right; display: block; margin-top: 4px; font-family: monospace; font-weight: bold; }
 
+        /* Estilo para el Panel de Territorios Conquistados */
+        .territory-card { background: rgba(0,0,0,0.8); border: 1px solid var(--neon-orange); padding: 10px 14px; border-radius: 4px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .territory-sim { font-weight: bold; color: #fff; font-size: 0.9rem; }
+        .territory-clan { font-size: 0.8rem; color: var(--neon-green); font-family: monospace; text-shadow: 0 0 5px rgba(255,0,51,0.5); }
+
         /* Modal Optimizado */
         .modal { 
             display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; 
@@ -209,11 +214,16 @@
         </table>
     </div>
 
-    <!-- PANEL LATERAL DE BOSSES INTACTO -->
+    <!-- PANEL LATERAL: BOSSES Y TERRITORIOS CONQUISTADOS -->
     <div class="event-log">
         <div class="boss-panel-inside">
             <h3 style="color: var(--neon-orange); border-bottom: 1px solid #222; padding-bottom: 5px; font-size: 1rem; position: sticky; top: 0; background: #0c0c0c; z-index: 10;">☠️ RAID_BOSSES_STATUS</h3>
             <div id="boss-list-container"></div>
+
+            <h3 style="color: var(--neon-green); border-bottom: 1px solid #222; padding-bottom: 5px; font-size: 1rem; position: sticky; top: 0; background: #0c0c0c; z-index: 10; margin-top: 30px;">🏰 TERRITORIOS DOMINADOS</h3>
+            <div id="territory-list-container">
+                <p style="color: #666; font-size: 0.8rem; text-align: center; margin-top: 10px;">Cargando dominios...</p>
+            </div>
         </div>
     </div>
 </div>
@@ -241,7 +251,7 @@
         </div>
 
         <div id="boss-drops-section" style="margin-top:20px;">
-            <h4 style="color:var(--neon-blue); margin-bottom:5px; font-size: 0.9rem;">🩸 ALMAS DEL LINAJE</h4>
+            <h4 style="color:var(--neon-blue); margin-bottom:5px; font-size: 0.9rem;">🦇 ALMAS DEL LINAJE</h4>
             <div id="boss-drops-list" class="drop-list"></div>
         </div>
     </div>
@@ -251,6 +261,7 @@
     const API = "https://script.google.com/macros/s/AKfycbxxorkHRS3aujxcOBxFoza0J-xi0liekyti1MG7y2UMhrb3wdMd_dSJHF_-cHgaI846/exec"; 
     let cacheClanes = [];
     let cacheBosses = []; 
+    let cacheTerritorios = [];
     const sndHover = document.getElementById('snd-hover');
     const sndOpen = document.getElementById('snd-open');
 
@@ -276,6 +287,15 @@
                 document.getElementById('count-max-nivel').innerText = maxNivel;
             }
 
+            // Render Territorios Conquistados (si tu Apps Script los envía en data.territorios)
+            if (data.territorios) {
+                cacheTerritorios = data.territorios;
+                renderTerritorios();
+            } else {
+                // Datos de prueba o vacío si aún no está mapeado en el Apps Script web
+                renderTerritoriosPrueba();
+            }
+
             // Sincronización inofensiva y segura para los Bosses
             if (data.bosses && data.bosses.length > 0) {
                 cacheBosses = data.bosses;
@@ -288,6 +308,39 @@
             renderBosses();
             
         } catch (e) { console.error("Error:", e); }
+    }
+
+    function renderTerritorios() {
+        const container = document.getElementById('territory-list-container');
+        if(!container) return;
+        container.innerHTML = '';
+
+        if(cacheTerritorios.length === 0) {
+            container.innerHTML = '<p style="color: #666; font-size: 0.8rem; text-align: center; margin-top: 10px;">No hay territorios conquistados.</p>';
+            return;
+        }
+
+        cacheTerritorios.forEach(t => {
+            const card = document.createElement('div');
+            card.className = 'territory-card';
+            card.innerHTML = `
+                <span class="territory-sim">📍 ${t.sim}</span>
+                <span class="territory-clan">&lt; ${t.clan} &gt;</span>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function renderTerritoriosPrueba() {
+        // Esto se mostrará si la API principal aún no arroja los datos de la hoja "Territorios"
+        const container = document.getElementById('territory-list-container');
+        if(!container) return;
+        container.innerHTML = `
+            <div class="territory-card">
+                <span class="territory-sim">📍 Migliori Ulivi</span>
+                <span class="territory-clan">&lt; Hijos De La Oscuridad &gt;</span>
+            </div>
+        `;
     }
 
     function renderClanes(clanesList) {
@@ -317,7 +370,6 @@
                 <td>${c.xp.toLocaleString()} / 50.000</td>
                 <td><span style="color:var(--neon-blue);">${c.total_miembros} / 25</span></td>
             `;
-            // Pasamos el nombre del clan para abrir el modal
             row.setAttribute('onclick', `openClanProfile('${c.nombre}')`);
             body.appendChild(row);
         });
