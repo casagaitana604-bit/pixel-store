@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PRDENRQW1P"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-PRDENRQW1P');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PIXEL STORE - Mercado Global & Tienda</title>
+    <style>
+        :root { 
+            --neon-green: #39FF14; 
+            --neon-orange: #FF5F1F; 
+            --neon-blue: #00ffff;
+            --neon-red: #ff0055; 
+            --bg-overlay: rgba(0, 0, 0, 0.85);
+            --card: rgba(13, 13, 13, 0.9);
+            --text: #ffffff; 
+        }
+        
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background-image: linear-gradient(var(--bg-overlay), var(--bg-overlay)), url('https://w0.peakpx.com/wallpaper/538/103/HD-wallpaper-cs-go-cyberpunk-overpass-counter-strike-global-offensive.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--text); 
+            margin: 0; 
+            text-transform: uppercase; 
+        }
+
+        .main-nav { 
+            background: rgba(0, 0, 0, 0.9); display: flex; justify-content: space-between; align-items: center; padding: 15px 50px; 
+            border-bottom: 2px solid var(--neon-orange); box-shadow: 0 0 15px var(--neon-orange);
+            position: sticky; top: 0; z-index: 1000; 
+        }
+        .nav-logo { color: #fff; font-weight: bold; font-size: 1.4rem; letter-spacing: 3px; }
+        .nav-logo span { color: var(--neon-green); text-shadow: 0 0 10px var(--neon-green); }
+        .nav-links a { color: #ccc; text-decoration: none; margin-left: 25px; font-weight: bold; font-size: 0.9rem; transition: 0.3s; }
+        .nav-links a:hover { color: var(--neon-green); text-shadow: 0 0 5px var(--neon-green); }
+        .nav-active { color: var(--neon-green) !important; border-bottom: 2px solid var(--neon-green); padding-bottom: 5px; }
+
+        .hero-header {
+            text-align: center;
+            padding: 50px 20px 20px 20px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.95), transparent);
+        }
+        .main-title {
+            font-size: 4rem;
+            font-weight: 900;
+            margin: 0;
+            color: #fff;
+            letter-spacing: -2px;
+            text-shadow: 0 0 25px var(--neon-green), 0 0 50px var(--neon-green);
+        }
+        .subtitle-bar {
+            background: var(--neon-green);
+            color: #000;
+            display: inline-block;
+            padding: 6px 35px;
+            font-weight: 900;
+            letter-spacing: 6px;
+            margin-top: 15px;
+            font-size: 1rem;
+            box-shadow: 0 0 25px var(--neon-green);
+        }
+
+        .container { max-width: 1400px; margin: 30px auto; padding: 0 25px; }
+        
+        .section-title {
+            color: var(--neon-orange);
+            border-bottom: 2px solid var(--neon-orange);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+            letter-spacing: 3px;
+            font-size: 1.4rem;
+            text-shadow: 0 0 10px var(--neon-orange);
+        }
+
+        .store-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .store-card {
+            background: var(--card);
+            border: 1px solid #222;
+            border-radius: 6px;
+            padding: 20px;
+            text-align: center;
+            transition: 0.3s;
+            position: relative;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 15px rgba(0,0,0,0.8);
+        }
+        .store-card:hover {
+            border-color: var(--neon-green);
+            box-shadow: 0 0 20px rgba(57, 255, 20, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .store-img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid #333;
+            margin-bottom: 15px;
+            background: #111;
+        }
+
+        .item-category {
+            font-size: 0.75rem;
+            color: var(--neon-blue);
+            letter-spacing: 2px;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .item-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #fff;
+        }
+
+        .item-price {
+            font-size: 1.4rem;
+            color: var(--neon-green);
+            font-weight: 900;
+            text-shadow: 0 0 8px rgba(57, 255, 20, 0.4);
+            margin: 15px 0;
+        }
+
+        .btn-buy {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            border: 1px solid var(--neon-orange);
+            color: var(--neon-orange);
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: 0.3s;
+            box-sizing: border-box;
+            cursor: pointer;
+        }
+        .btn-buy:hover {
+            background: var(--neon-orange);
+            color: #000;
+            box-shadow: 0 0 15px var(--neon-orange);
+        }
+
+        .filter-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            background: rgba(0,0,0,0.8);
+            border: 1px solid #333;
+            color: #aaa;
+            padding: 10px 20px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: 0.3s;
+        }
+        .filter-btn:hover, .filter-btn.active {
+            border-color: var(--neon-green);
+            color: var(--neon-green);
+            box-shadow: 0 0 10px rgba(57, 255, 20, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .main-title { font-size: 2.5rem; }
+            .main-nav { padding: 15px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="main-nav">
+    <div class="nav-logo">PIXEL <span>STORE</span></div>
+    <div class="nav-links">
+        <a href="index.html">DASHBOARD</a>
+        <a href="clanes.html">CLANES</a>
+        <a href="tienda.html" class="nav-active">MERCADO & TIENDA</a>
+        <a href="info.html">INFORMACIÓN</a>
+    </div>
+</nav>
+
+<header class="hero-header">
+    <h1 class="main-title">MERCADO GLOBAL & TIENDA</h1>
+    <div class="subtitle-bar">SUMINISTROS OFICIALES Y CONSIGNACIÓN DE SUPERVIVIENTES</div>
+</header>
+
+<div class="container">
+    
+    <!-- SECCIÓN 1: TIENDA OFICIAL (Fácil de actualizar cambiando la lista de abajo) -->
+    <h2 class="section-title">⚡ TIENDA OFICIAL PIXEL STORE (ADMIN)</h2>
+    <div id="official-store-grid" class="store-grid">
+        <!-- Se rellena automáticamente con el código JS -->
+    </div>
+
+    <!-- SECCIÓN 2: MERCADO GLOBAL DE JUGADORES (Conectado a Google Sheets) -->
+    <h2 class="section-title" style="margin-top: 50px;">🌐 MERCADO GLOBAL DE SUPERVIVIENTES</h2>
+    
+    <div class="filter-container">
+        <button class="filter-btn active" onclick="filterMarket('TODOS')">TODOS</button>
+        <button class="filter-btn" onclick="filterMarket('RECURSO')">RECURSOS</button>
+        <button class="filter-btn" onclick="filterMarket('PECES')">PECES</button>
+        <button class="filter-btn" onclick="filterMarket('ARMAS')">ARMAS</button>
+        <button class="filter-btn" onclick="filterMarket('ROPA')">ROPA</button>
+    </div>
+
+    <div id="market-store-grid" class="store-grid">
+        <div style="grid-column: 1/-1; text-align: center; color: #666; padding: 40px;">CARGANDO OFERTAS DE LA NUBE...</div>
+    </div>
+
+</div>
+
+<script>
+    // ---------------------------------------------------------------------------
+    // 🛠️ ZONA DE CONFIGURACIÓN DE LA TIENDA OFICIAL (AQUÍ PUEDES AÑADIR O CAMBIAR)
+    // ---------------------------------------------------------------------------
+    const ARTICULOS_OFICIALES = [
+        {
+            nombre: "Águila del Desierto [Táctica]",
+            categoria: "ARMAS OFICIALES",
+            precio: "150 L$",
+            imagen: "https://i.ibb.co/LzNf9Fv/soldado-ejemplo.jpg",
+            slurl: "http://maps.secondlife.com/secondlife/Peaches/138/183/2920"
+        },
+        {
+            nombre: "Pack Munición Pesada (x500)",
+            categoria: "MUNICIÓN",
+            precio: "50 L$",
+            imagen: "https://img.freepik.com/psd-premium/nino-linde-camuflaje-uniforme-combate-soldado-rifle-mano_1104289-67.jpg?w=740",
+            slurl: "http://maps.secondlife.com/secondlife/Peaches/138/183/2920"
+        },
+        {
+            nombre: "Poción de Supervivencia (x10)",
+            categoria: "CONSUMIBLES",
+            precio: "30 L$",
+            imagen: "https://static.vecteezy.com/system/resources/previews/039/657/374/non_2x/ai-generated-us-soldier-with-rifle-free-png.png",
+            slurl: "http://maps.secondlife.com/secondlife/Peaches/138/183/2920"
+        },
+        {
+            nombre: "Caja Sorpresa Táctica V3.0",
+            categoria: "CAJAS MISTERIOSAS",
+            precio: "100 L$",
+            imagen: "https://img.magnific.com/fotos-premium/guerrero-metal-ilustracion-vibrante-mujer-escena-militar-meticulosa_899449-121754.jpg",
+            slurl: "http://maps.secondlife.com/secondlife/Peaches/138/183/2920"
+        }
+    ];
+
+    const API_MERCADO = "https://script.google.com/macros/s/AKfycbxxorkHRS3aujxcOBxFoza0J-xi0liekyti1MG7y2UMhrb3wdMd_dSJHF_-cHgaI846/exec"; // Usa la URL de tu API o la del mercado global
+    let mercadoCache = [];
+    let filtroActual = 'TODOS';
+
+    // Cargar tienda oficial
+    function renderTiendaOficial() {
+        const grid = document.getElementById('official-store-grid');
+        grid.innerHTML = '';
+        
+        ARTICULOS_OFICIALES.forEach(item => {
+            grid.innerHTML += `
+                <div class="store-card">
+                    <span class="item-category">${item.categoria}</span>
+                    <img src="${item.imagen}" class="store-img" alt="${item.nombre}">
+                    <div class="item-name">${item.nombre}</div>
+                    <div class="item-price">${item.precio}</div>
+                    <a href="${item.slurl}" target="_blank" class="btn-buy">COMPRAR IN-WORLD</a>
+                </div>
+            `;
+        });
+    }
+
+    // Cargar mercado global desde Google Sheets
+    async function cargarMercadoGlobal() {
+        try {
+            const res = await fetch(API_MERCADO);
+            const data = await res.json();
+            
+            // Si la API devuelve un array directo o un objeto con datos
+            mercadoCache = Array.isArray(data) ? data : (data.items || []);
+            renderMercado(mercadoCache);
+        } catch (e) {
+            document.getElementById('market-store-grid').innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--neon-red); padding: 40px;">ERROR AL CONECTAR CON LA NUBE DEL MERCADO</div>';
+        }
+    }
+
+    function renderMercado(items) {
+        const grid = document.getElementById('market-store-grid');
+        grid.innerHTML = '';
+
+        let filtrados = items;
+        if (filtroActual !== 'TODOS') {
+            filtrados = items.filter(i => i.tipo === filtroActual);
+        }
+
+        if (filtrados.length === 0) {
+            grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #777; padding: 40px;">NO HAY ARTÍCULOS DISPONIBLES EN ESTA CATEGORÍA</div>';
+            return;
+        }
+
+        filtrados.forEach(item => {
+            // Asignar imagen según categoría
+            let imgDefault = "https://img.freepik.com/premium-vector/soldier-uniform-cartoon-character-vector_614983-3103.jpg?w=2000";
+            if(item.tipo === "RECURSO") imgDefault = "https://img.freepik.com/fotos-premium/alegre-aventura-camuflaje-alegre-animado-joven-soldado-equipo-militar_337384-58330.jpg";
+            if(item.tipo === "PECES") imgDefault = "https://www.gifss.com/profesiones/soldados/soldado-02.gif";
+
+            grid.innerHTML += `
+                <div class="store-card">
+                    <span class="item-category">CONSIGNADO [${item.tipo}]</span>
+                    <img src="${imgDefault}" class="store-img" alt="${item.nombre}">
+                    <div class="item-name">${item.nombre}</div>
+                    <div style="font-size:0.75rem; color:#aaa; margin-bottom:5px;">Vendedor: ${item.vendedor_nombre || 'Superviviente'}</div>
+                    <div class="item-price">${item.precio} L$</div>
+                    <a href="http://maps.secondlife.com/secondlife/Peaches/138/183/2920" target="_blank" class="btn-buy">ADQUIRIR EN KIOSCO</a>
+                </div>
+            `;
+        });
+    }
+
+    function filterMarket(tipo) {
+        filtroActual = tipo;
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        event.target.classList.add('active');
+        renderMercado(mercadoCache);
+    }
+
+    // Inicializar
+    renderTiendaOficial();
+    cargarMercadoGlobal();
+    setInterval(cargarMercadoGlobal, 30000); // Actualiza el mercado cada 30 segundos
+</script>
+
+</body>
+</html>
