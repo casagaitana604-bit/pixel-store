@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="es">
 <head>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-PRDENRQW1P"></script>
@@ -146,6 +146,21 @@
         .status-offline { color: #666; background: #222; border: 1px solid #333; }
         @keyframes statusPulse { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.3); } }
 
+        /* Estilo para insignia de clan */
+        .clan-badge {
+            background: rgba(0, 255, 255, 0.1);
+            color: var(--neon-blue);
+            border: 1px solid var(--neon-blue);
+            font-size: 0.75rem;
+            font-weight: bold;
+            padding: 2px 7px;
+            border-radius: 3px;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin-left: 8px;
+            text-shadow: 0 0 5px rgba(0,255,255,0.4);
+        }
+
         .boss-panel-inside { margin-top: 25px; background: rgba(5,5,5,0.4); padding: 15px; border-top: 1px solid #333; max-height: 280px; overflow-y: auto; padding-right: 5px; }
         .boss-panel-inside::-webkit-scrollbar { width: 4px; }
         .boss-panel-inside::-webkit-scrollbar-thumb { background: var(--neon-orange); border-radius: 2px; }
@@ -243,7 +258,7 @@
         </div>
 
         <div class="search-container">
-            <input type="text" id="avatarSearch" placeholder="IDENTIFICAR SUPERVIVIENTE POR NOMBRE..." onkeyup="filterPlayers()">
+            <input type="text" id="avatarSearch" placeholder="IDENTIFICAR SUPERVIVIENTE POR NOMBRE O CLAN..." onkeyup="filterPlayers()">
         </div>
 
         <table class="survival-table">
@@ -278,6 +293,7 @@
     <div class="modal-content">
         <img id="p-img" src="" class="profile-img">
         <h2 id="p-name" style="margin:5px 0; color:var(--neon-green); letter-spacing:3px; text-shadow: 0 0 15px var(--neon-green);">NOMBRE</h2>
+        <p id="p-clan" style="font-weight:bold; color:var(--neon-blue); font-size:0.85rem; letter-spacing:2px; margin: 4px 0 10px 0;">CLAN: NINGUNO</p>
         <p id="p-rango" style="font-weight:bold; color:var(--neon-orange); font-size:0.9rem; text-shadow: 0 0 8px var(--neon-orange); margin-bottom: 20px;">RANGO_ANALYSIS</p>
         
         <div class="xp-bar-container"><div id="p-xp-fill" class="xp-bar-fill"></div></div>
@@ -376,7 +392,9 @@
             
             if (data.facciones) {
                 data.facciones.forEach(f => {
+                    let nombreFac = f.faccion || f.nombre || "SIN CLAN";
                     f.lista_integrantes.forEach(j => {
+                        j.clan = j.clan || nombreFac; // Se asigna el clan al avatar
                         list.push(j);
                         n_total += parseInt(j.npc || 0);
                         p_total += parseInt(j.pvp || 0);
@@ -385,6 +403,14 @@
                             on_total++;
                         }
                     });
+                });
+            } else if (data.jugadores) {
+                data.jugadores.forEach(j => {
+                    j.clan = j.clan || "SIN CLAN";
+                    list.push(j);
+                    n_total += parseInt(j.npc || 0);
+                    p_total += parseInt(j.pvp || 0);
+                    if (verificarOnline(j.fecha)) on_total++;
                 });
             }
             
@@ -450,7 +476,9 @@
             div.className = 'event-item';
             
             let detalle = `SE HA ENLAZADO A LA RED GLOBAL DE SUPERVIVENCIA.`;
-            if (parseInt(p.pvp) > 0 && i % 3 === 0) {
+            if (p.clan && p.clan !== "SIN CLAN" && i % 4 === 0) {
+                detalle = `PATRULLANDO CON EL CLAN <span style="color:var(--neon-blue); font-weight:bold;">[${p.clan}]</span>.`;
+            } else if (parseInt(p.pvp) > 0 && i % 3 === 0) {
                 detalle = `HA SIDO UBICADO EN EL SECTOR PVP CON ${p.pvp} BAJAS DE AVATARES CONFIRMADAS.`;
             } else if (parseInt(p.npc) > 100 && i % 2 === 0) {
                 detalle = `REGISTRA ALTA ACTIVIDAD TÁCTICA. NEUTRALIZADOS: ${p.npc} INFECTADOS.`;
@@ -474,13 +502,14 @@
             
             let estaOnline = verificarOnline(j.fecha);
             let statusTag = estaOnline ? `<span class="status-tag status-online">[ONLINE]</span>` : `<span class="status-tag status-offline">[OFFLINE]</span>`;
+            let clanTag = (j.clan && j.clan !== "SIN CLAN") ? `<span class="clan-badge">${j.clan}</span>` : ``;
 
             row.innerHTML = `
                 <td style="color:var(--neon-blue); font-weight:bold; font-size:1.1rem; text-align:center;">#${index + 1}</td>
                 <td>
                     <img src="${avatarImg}" 
                          style="width:35px; height:35px; border:1px solid var(--neon-green); vertical-align:middle; margin-right:15px; box-shadow: 0 0 8px var(--neon-green); object-fit: cover; border-radius: 3px;"> 
-                    ${j.nombre} ${statusTag}
+                    ${j.nombre} ${clanTag} ${statusTag}
                 </td>
                 <td><span style="color:var(--neon-green); text-shadow: 0 0 5px var(--neon-green); font-weight:bold;">NIVEL ${j.nivel}</span></td>
                 <td style="color:#aaa; font-size:0.85rem">💀 NPC: ${j.npc}  |  ⚔️ PVP: ${j.pvp}</td>
@@ -571,6 +600,7 @@
         document.getElementById('p-name').style.color = b.vivo ? "var(--neon-green)" : "var(--neon-red)";
         document.getElementById('p-name').style.textShadow = b.vivo ? "0 0 15px var(--neon-green)" : "0 0 15px var(--neon-red)";
         
+        document.getElementById('p-clan').style.display = 'none'; // Oculta el clan para bosses
         document.getElementById('p-rango').innerText = b.vivo ? ">> AMENAZA TÁCTICA: CRÍTICA / ONLINE" : ">> AMENAZA TÁCTICA: NEUTRALIZADO";
         document.getElementById('p-rango').style.color = b.vivo ? "var(--neon-green)" : "var(--neon-orange)";
         
@@ -607,7 +637,10 @@
 
     function filterPlayers() {
         const text = document.getElementById('avatarSearch').value.toLowerCase();
-        const filtered = cachePlayers.filter(p => p.nombre.toLowerCase().includes(text));
+        const filtered = cachePlayers.filter(p => 
+            p.nombre.toLowerCase().includes(text) || 
+            (p.clan && p.clan.toLowerCase().includes(text))
+        );
         renderPlayers(filtered);
     }
 
@@ -627,6 +660,12 @@
         document.getElementById('p-name').innerText = p.nombre;
         document.getElementById('p-name').style.color = "var(--neon-green)";
         document.getElementById('p-name').style.textShadow = "0 0 15px var(--neon-green)";
+        
+        // Muestra y actualiza el clan del jugador en el modal
+        const clanElem = document.getElementById('p-clan');
+        clanElem.style.display = 'block';
+        clanElem.innerText = (p.clan && p.clan !== "SIN CLAN") ? `🛡️ CLAN: [ ${p.clan} ]` : `🛡️ CLAN: NEUTRAL (SIN CLAN)`;
+
         document.getElementById('p-npc').innerText = p.npc;
         document.getElementById('p-pvp').innerText = p.pvp;
         
@@ -654,10 +693,10 @@
     }
 
     function closeModal() { document.getElementById('playerModal').style.display = 'none'; }
-update();
+    update();
     setInterval(update, 30000);
 </script>
 
 <script id="_wau1n8">var _wau = _wau || []; _wau.push(["dynamic", "9i0rr39hll", "1n8", "c4302bffffff", "small"]);</script><script async src="//waust.at/d.js"></script>
 </body>
-</html>
+</html>    
