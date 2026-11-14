@@ -40,7 +40,7 @@
             line-height: 1.75;
         }
 
-        h1, h2, h3, h4, .nav-logo, .nav-links a, th, .badge-tag, .toc-link {
+        h1, h2, h3, h4, .nav-logo, .nav-links a, th, .badge-tag, .toc-link, .lang-btn {
             font-family: 'Cinzel', serif;
             text-transform: uppercase;
         }
@@ -60,10 +60,10 @@
         }
         .nav-logo { color: var(--parchment); font-weight: 900; font-size: 1.45rem; letter-spacing: 3px; }
         .nav-logo span { color: var(--gold); }
+        .nav-links { display: flex; align-items: center; flex-wrap: wrap; gap: 22px; }
         .nav-links a { 
             color: var(--muted); 
             text-decoration: none; 
-            margin-left: 28px; 
             font-weight: 700; 
             font-size: 0.88rem; 
             letter-spacing: 1.5px;
@@ -74,6 +74,33 @@
             color: var(--gold-bright) !important; 
             border-bottom: 2px solid var(--gold); 
             padding-bottom: 5px; 
+        }
+
+        /* SELECTOR DE IDIOMA POR PÁGINA */
+        .lang-switcher {
+            display: inline-flex;
+            align-items: center;
+            background: #14100d;
+            border: 1px solid var(--gold);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-left: 8px;
+        }
+        .lang-btn {
+            background: transparent;
+            border: none;
+            color: var(--muted);
+            padding: 6px 10px;
+            font-size: 0.74rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .lang-btn:hover { color: var(--parchment); background: rgba(201, 162, 82, 0.15); }
+        .lang-btn.active {
+            background: var(--gold);
+            color: #120d08;
         }
 
         /* CABECERA */
@@ -134,6 +161,16 @@
 
         .container { max-width: 1140px; margin: 20px auto 90px auto; padding: 0 20px; }
 
+        /* GUÍA RÁPIDA EN INGLÉS / PORTUGUÉS */
+        .quick-summary-banner {
+            display: none;
+            background: rgba(24, 18, 14, 0.96);
+            border: 1px solid var(--gold);
+            padding: 24px 28px;
+            margin-bottom: 28px;
+            border-radius: 3px;
+        }
+
         /* TARJETAS DE CAPÍTULO */
         .info-section { 
             background: var(--stone-card); 
@@ -189,7 +226,6 @@
         li { margin-bottom: 11px; padding-left: 22px; position: relative; color: #cfc3ae; }
         li::before { content: '⚔'; position: absolute; left: 0; color: var(--gold); font-size: 0.8rem; top: 2px; }
 
-        /* CAJAS DE PERGAMINO INTERNAS */
         .parchment-box {
             background: rgba(12, 10, 9, 0.85);
             padding: 18px;
@@ -197,7 +233,7 @@
             border: 1px solid var(--border-iron);
         }
 
-        /* TABLA DE FORJA / CRAFTEO */
+        /* TABLA DE FORJA */
         .tabla-contenedor { overflow-x: auto; margin-top: 18px; }
         .tabla-crafteo { width: 100%; border-collapse: collapse; background: rgba(10, 8, 7, 0.9); }
         .tabla-crafteo th { 
@@ -245,7 +281,7 @@
             .grid-stats, .grid-4 { grid-template-columns: 1fr; }
             .main-title { font-size: 2.6rem; }
             .main-nav { padding: 14px 20px; flex-direction: column; gap: 10px; }
-            .nav-links a { margin: 0 10px; }
+            .nav-links { justify-content: center; gap: 14px; }
             .info-section { padding: 25px 20px; }
         }
     </style>
@@ -255,35 +291,43 @@
 <nav class="main-nav">
     <div class="nav-logo">DARK REALMS <span>SURVIVAL</span></div>
     <div class="nav-links">
-        <a href="index.html">REINO</a>
-        <a href="clanes.html">CLANES &amp; RAZAS</a>
-        <a href="tienda.html">MERCADO</a>
-        <a href="info.html" class="nav-active">CÓDICE</a>
+        <a href="index.html" data-i18n="nav_reino">REINO</a>
+        <a href="clanes.html" data-i18n="nav_clanes">CLANES &amp; RAZAS</a>
+        <a href="tienda.html" data-i18n="nav_mercado">MERCADO</a>
+        <a href="info.html" class="nav-active" data-i18n="nav_codice">CÓDICE</a>
+        <div class="lang-switcher" title="Idioma / Language">
+            <button id="lang-es" class="lang-btn active" onclick="setLanguage('es')">ES</button>
+            <button id="lang-en" class="lang-btn" onclick="setLanguage('en')">EN</button>
+            <button id="lang-pt" class="lang-btn" onclick="setLanguage('pt')">PT</button>
+        </div>
     </div>
 </nav>
 
 <header class="hero-header">
-    <h1 class="main-title">CÓDICE DEL REINO</h1>
-    <div class="subtitle-bar">CRÓNICAS, LEYES Y ARTES DE GUERRA — VERSIÓN 3.5</div>
+    <h1 class="main-title" data-i18n="hero_title">CÓDICE DEL REINO</h1>
+    <div class="subtitle-bar" data-i18n="hero_subtitle">CRÓNICAS, LEYES Y ARTES DE GUERRA — VERSIÓN 3.5</div>
 </header>
 
 <div class="toc-bar">
-    <a href="#sec-nucleo" class="toc-link">I. El Alma y Vitales</a>
-    <a href="#sec-clases" class="toc-link">II. Las 4 Razas</a>
-    <a href="#sec-vampiro" class="toc-link">III. Rol Vampiro</a>
-    <a href="#sec-lycan" class="toc-link">IV. Rol Lycan</a>
-    <a href="#sec-clanes" class="toc-link">V. Altar y Territorios</a>
-    <a href="#sec-arsenal" class="toc-link">VI. Arsenal y Forja</a>
-    <a href="#sec-armadura" class="toc-link">VII. Armaduras y Sastrería</a>
-    <a href="#sec-oficios" class="toc-link">VIII. Pesca y Recolección</a>
-    <a href="#sec-misiones" class="toc-link">IX. Pruebas y Bestias</a>
+    <a href="#sec-nucleo" class="toc-link" data-i18n="toc_1">I. El Alma y Vitales</a>
+    <a href="#sec-clases" class="toc-link" data-i18n="toc_2">II. Las 4 Razas</a>
+    <a href="#sec-vampiro" class="toc-link" data-i18n="toc_3">III. Rol Vampiro</a>
+    <a href="#sec-lycan" class="toc-link" data-i18n="toc_4">IV. Rol Lycan</a>
+    <a href="#sec-clanes" class="toc-link" data-i18n="toc_5">V. Altar y Territorios</a>
+    <a href="#sec-arsenal" class="toc-link" data-i18n="toc_6">VI. Arsenal y Forja</a>
+    <a href="#sec-armadura" class="toc-link" data-i18n="toc_7">VII. Armaduras y Sastrería</a>
+    <a href="#sec-oficios" class="toc-link" data-i18n="toc_8">VIII. Pesca y Recolección</a>
+    <a href="#sec-misiones" class="toc-link" data-i18n="toc_9">IX. Pruebas y Bestias</a>
 </div>
 
 <div class="container">
+
+    <!-- RESUMEN TRADUCIDO AUTOMÁTICO PARA EN / PT -->
+    <div id="quick-lang-summary" class="quick-summary-banner"></div>
     
     <!-- I. EL NÚCLEO DE SUPERVIVENCIA -->
     <section id="sec-nucleo" class="info-section">
-        <h2>I. EL NÚCLEO DE SUPERVIVENCIA Y VITALES</h2>
+        <h2 data-i18n="h2_1">I. EL NÚCLEO DE SUPERVIVENCIA Y VITALES</h2>
         <p>Tu HUD es el vínculo sagrado con los archivos eternos del reino. Cada batalla librada, contrato cumplido y gota de energía consumida queda registrada automáticamente en la <span class="highlight">Crónica Celestial (Nube)</span>.</p>
         
         <div class="grid-stats">
@@ -291,7 +335,7 @@
                 <h3 style="margin-top:0;">Vitalidad, Vigor y Maná</h3>
                 <ul>
                     <li><span class="highlight">SALUD ESCALABLE:</span> Tu vitalidad máxima aumenta <span class="highlight">+2 HP</span> por cada nivel alcanzado hasta Nivel 200.</li>
-                    <li><span class="highlight">VIGOR (STAMINA):</span> Correr o saltar consume vigor. Si llega a cero, el agotamiento drenará tu salud hasta hacerte caer.</li>
+                    <li><span class="highlight">VIGOR (STAMINA):</span> Correr o saltar consume vigor. Si llegas a cero, el agotamiento drenará tu salud hasta hacerte caer.</li>
                     <li><span class="highlight">ESENCIA ARCANA (MANÁ):</span> Se regenera pasivamente cada minuto o mediante pociones azules. Indispensable para conjuros de Bruja e invasiones.</li>
                     <li><span class="highlight">CONTRATOS DIARIOS:</span> Cada día recibirás un encargo automático (cazar, talar, picar, pescar o excavar) que otorga <span class="highlight">+2,500 XP, 10 Pociones y 1 Moneda Linde</span>.</li>
                 </ul>
@@ -314,7 +358,7 @@
 
     <!-- II. LAS 4 RAZAS DEL REINO -->
     <section id="sec-clases" class="info-section" style="border-left-color: var(--crimson-bright);">
-        <h2>II. LOS CUATRO LINAJES ANCESTRALES <span class="badge-tag">ESPECIALIZACIÓN</span></h2>
+        <h2 data-i18n="h2_2">II. LOS CUATRO LINAJES ANCESTRALES <span class="badge-tag">ESPECIALIZACIÓN</span></h2>
         <p>Al alcanzar el <span class="highlight">Nivel 50</span> (o al fundar/unirte a una facción en el Altar Ancestral), despertarás la sangre de tu linaje, obteniendo bonificaciones pasivas y habilidades únicas:</p>
         
         <div class="grid-4">
@@ -354,7 +398,7 @@
 
     <!-- III. MÓDULO VAMPIRO -->
     <section id="sec-vampiro" class="info-section" style="border-left-color: var(--race-vampiro);">
-        <h2 style="color: #f28b9c;">III. ARTES OSCURAS: EL CAZADOR VAMPIRO <span class="badge-tag" style="background:var(--race-vampiro);">MÓDULO DE SANGRE</span></h2>
+        <h2 style="color: #f28b9c;" data-i18n="h2_3">III. ARTES OSCURAS: EL CAZADOR VAMPIRO <span class="badge-tag" style="background:var(--race-vampiro);">MÓDULO DE SANGRE</span></h2>
         <p>Un sistema de caza independiente enlazado al HUD diseñado para el acecho nocturno, el drenado de esencia y la ejecución silenciosa.</p>
         
         <div class="grid-stats">
@@ -382,7 +426,7 @@
 
     <!-- IV. MÓDULO LYCAN -->
     <section id="sec-lycan" class="info-section" style="border-left-color: var(--race-lycan);">
-        <h2 style="color: #f5b971;">IV. INSTINTO SALVAJE: EL GUERRERO LYCAN <span class="badge-tag" style="background:var(--race-lycan); color:#120d08;">NUEVO ROL</span></h2>
+        <h2 style="color: #f5b971;" data-i18n="h2_4">IV. INSTINTO SALVAJE: EL GUERRERO LYCAN <span class="badge-tag" style="background:var(--race-lycan); color:#120d08;">NUEVO ROL</span></h2>
         <p>La bestia despierta. El módulo Lycan sustituye el sigilo vampírico por fuerza bruta, daño continuo por hemorragia y el poder de la luna llena.</p>
         
         <div class="grid-stats">
@@ -409,7 +453,7 @@
 
     <!-- V. ALTAR ANCESTRAL, FACCIONES Y TERRITORIOS -->
     <section id="sec-clanes" class="info-section" style="border-left-color: var(--gold);">
-        <h2>V. ALTAR ANCESTRAL, FACCIONES Y CONQUISTA <span class="badge-tag">GUERRA DE CLANES</span></h2>
+        <h2 data-i18n="h2_5">V. ALTAR ANCESTRAL, FACCIONES Y CONQUISTA <span class="badge-tag">GUERRA DE CLANES</span></h2>
         <p>Las facciones del reino ahora se dividen según su sangre ancestral: <span class="highlight-red">Casas Vampíricas</span>, <span class="highlight-amber">Manadas Lycan</span>, <span class="highlight-purple">Aquelarres de Brujas</span> y <span class="highlight-red">Legiones Demoníacas</span>.</p>
         
         <div class="grid-stats">
@@ -436,7 +480,7 @@
 
     <!-- VI. ARSENAL Y MAESTRO ARMERO -->
     <section id="sec-arsenal" class="info-section" style="border-left-color: var(--crimson);">
-        <h2>VI. ARSENAL DE GUERRA, FORJA Y BANCO</h2>
+        <h2 data-i18n="h2_6">VI. ARSENAL DE GUERRA, FORJA Y BANCO</h2>
         <p>El sistema de combate combina proyectiles Raycast de alta precisión con espadas cuerpo a cuerpo. Al apuntar en vista subjetiva (Mouselook), identificarás el nombre y la salud del objetivo.</p>
 
         <h3>Encantamiento de Armas (Maestro Enchanter)</h3>
@@ -481,7 +525,7 @@
 
     <!-- VII. ARMADURAS Y SASTRERÍA -->
     <section id="sec-armadura" class="info-section" style="border-left-color: var(--race-bruja);">
-        <h2>VII. ARMADURAS Y SASTRERÍA ENCANTADA</h2>
+        <h2 data-i18n="h2_7">VII. ARMADURAS Y SASTRERÍA ENCANTADA</h2>
         <p>Las prendas tácticas y armaduras equipadas reducen porcentualmente el daño recibido en combate.</p>
         
         <div class="grid-stats">
@@ -505,7 +549,7 @@
 
     <!-- VIII. PESCA, RECOLECCIÓN Y TABERNA -->
     <section id="sec-oficios" class="info-section" style="border-left-color: var(--gold);">
-        <h2>VIII. PESCA, RECOLECCIÓN Y TABERNA DE AZAR</h2>
+        <h2 data-i18n="h2_8">VIII. PESCA, RECOLECCIÓN Y TABERNA DE AZAR</h2>
         <p>Interactúa con ríos, árboles, vetas de mineral o tumbas antiguas para iniciar ciclos de extracción de <strong>15 segundos</strong> que envían los materiales directamente a tu banco.</p>
 
         <div class="grid-4">
@@ -545,7 +589,7 @@
 
     <!-- IX. PRUEBAS DE ASCENSO Y BESTIAS -->
     <section id="sec-misiones" class="info-section" style="border-left-color: var(--crimson-bright);">
-        <h2>IX. PRUEBAS DE ASCENSO Y SEÑORES DEL ABISMO</h2>
+        <h2 data-i18n="h2_9">IX. PRUEBAS DE ASCENSO Y SEÑORES DEL ABISMO</h2>
         <p>Al alcanzar niveles clave, tu experiencia quedará sellada hasta que derrotes al guardián correspondiente en la <strong>Terminal de Misiones</strong>:</p>
         
         <div class="parchment-box">
@@ -559,10 +603,148 @@
         </div>
     </section>
 
-    <div class="footer-cta">
+    <div class="footer-cta" data-i18n="footer_cta">
         ⚔️ DARK REALMS SURVIVAL V3.5 — FORJA TU LEYENDA EN EL REINO ⚔️
     </div>
 </div>
+
+<script>
+    let currentLang = localStorage.getItem("darkrealms_lang") || "es";
+
+    const I18N = {
+        es: {
+            nav_reino: "REINO",
+            nav_clanes: "CLANES & RAZAS",
+            nav_mercado: "MERCADO",
+            nav_codice: "CÓDICE",
+            hero_title: "CÓDICE DEL REINO",
+            hero_subtitle: "CRÓNICAS, LEYES Y ARTES DE GUERRA — VERSIÓN 3.5",
+            toc_1: "I. El Alma y Vitales",
+            toc_2: "II. Las 4 Razas",
+            toc_3: "III. Rol Vampiro",
+            toc_4: "IV. Rol Lycan",
+            toc_5: "V. Altar y Territorios",
+            toc_6: "VI. Arsenal y Forja",
+            toc_7: "VII. Armaduras y Sastrería",
+            toc_8: "VIII. Pesca y Recolección",
+            toc_9: "IX. Pruebas y Bestias",
+            h2_1: "I. EL NÚCLEO DE SUPERVIVENCIA Y VITALES",
+            h2_2: `II. LOS CUATRO LINAJES ANCESTRALES <span class="badge-tag">ESPECIALIZACIÓN</span>`,
+            h2_3: `III. ARTES OSCURAS: EL CAZADOR VAMPIRO <span class="badge-tag" style="background:var(--race-vampiro);">MÓDULO DE SANGRE</span>`,
+            h2_4: `IV. INSTINTO SALVAJE: EL GUERRERO LYCAN <span class="badge-tag" style="background:var(--race-lycan); color:#120d08;">NUEVO ROL</span>`,
+            h2_5: `V. ALTAR ANCESTRAL, FACCIONES Y CONQUISTA <span class="badge-tag">GUERRA DE CLANES</span>`,
+            h2_6: "VI. ARSENAL DE GUERRA, FORJA Y BANCO",
+            h2_7: "VII. ARMADURAS Y SASTRERÍA ENCANTADA",
+            h2_8: "VIII. PESCA, RECOLECCIÓN Y TABERNA DE AZAR",
+            h2_9: "IX. PRUEBAS DE ASCENSO Y SEÑORES DEL ABISMO",
+            footer_cta: "⚔️ DARK REALMS SURVIVAL V3.5 — FORJA TU LEYENDA EN EL REINO ⚔️",
+            summary_html: ""
+        },
+        en: {
+            nav_reino: "REALM",
+            nav_clanes: "CLANS & RACES",
+            nav_mercado: "MARKET",
+            nav_codice: "CODEX",
+            hero_title: "CODEX OF THE REALM",
+            hero_subtitle: "CHRONICLES, LAWS & ARTS OF WAR — VERSION 3.5",
+            toc_1: "I. Soul & Vitals",
+            toc_2: "II. The 4 Bloodlines",
+            toc_3: "III. Vampire Role",
+            toc_4: "IV. Lycan Role",
+            toc_5: "V. Altar & Territories",
+            toc_6: "VI. Arsenal & Forge",
+            toc_7: "VII. Armor & Tailoring",
+            toc_8: "VIII. Fishing & Gathering",
+            toc_9: "IX. Trials & Beasts",
+            h2_1: "I. THE SURVIVAL CORE & VITALS",
+            h2_2: `II. THE FOUR ANCESTRAL BLOODLINES <span class="badge-tag">SPECIALIZATION</span>`,
+            h2_3: `III. DARK ARTS: THE VAMPIRE HUNTER <span class="badge-tag" style="background:var(--race-vampiro);">BLOOD MODULE</span>`,
+            h2_4: `IV. WILD INSTINCT: THE LYCAN WARRIOR <span class="badge-tag" style="background:var(--race-lycan); color:#120d08;">NEW ROLE</span>`,
+            h2_5: `V. ANCESTRAL ALTAR, FACTIONS & CONQUEST <span class="badge-tag">CLAN WARFARE</span>`,
+            h2_6: "VI. WAR ARSENAL, FORGE & BANK",
+            h2_7: "VII. ARMOR & ENCHANTED TAILORING",
+            h2_8: "VIII. FISHING, GATHERING & TAVERN SLOTS",
+            h2_9: "IX. ASCENSION TRIALS & ABYSSAL LORDS",
+            footer_cta: "⚔️ DARK REALMS SURVIVAL V3.5 — FORGE YOUR LEGEND IN THE REALM ⚔️",
+            summary_html: `
+                <h3 style="margin-top:0; color:var(--gold-bright);">📜 QUICK CODEX SUMMARY (ENGLISH)</h3>
+                <ul style="margin-bottom:0;">
+                    <li><strong>Vitals &amp; Progression:</strong> Max HP scales +2 per level up to Level 200. Level caps require Boss Trials at Levels 20, 50, 75, 100 and 150.</li>
+                    <li><strong>4 Bloodlines (Level 50+ or Ancestral Altar):</strong> 🦇 <em>Vampire</em> (Lifesteal, Night bonus, 5-drop Blood Fury), 🐺 <em>Lycan</em> (+20 passive armor, 2x stamina regen, 30% bleed crit, +15% High Moon damage, Alpha Frenzy), 🔮 <em>Witch</em> (Cauldron alchemy &amp; ally healing), 😈 <em>Demon</em> (Infernal Legions &amp; territorial warfare).</li>
+                    <li><strong>Factions &amp; Conquest:</strong> Reach Level 21+ with 100 Potions at the Ancestral Altar to found a faction (up to 25 members). Invade Sims for 3 minutes (requires 20% Mana) to claim territories on the world map.</li>
+                </ul>
+            `
+        },
+        pt: {
+            nav_reino: "REINO",
+            nav_clanes: "CLÃS & RAÇAS",
+            nav_mercado: "MERCADO",
+            nav_codice: "CÓDICE",
+            hero_title: "CÓDICE DO REINO",
+            hero_subtitle: "CRÔNICAS, LEIS E ARTES DE GUERRA — VERSÃO 3.5",
+            toc_1: "I. Alma e Vitais",
+            toc_2: "II. As 4 Linhagens",
+            toc_3: "III. Papel Vampiro",
+            toc_4: "IV. Papel Lycan",
+            toc_5: "V. Altar e Territórios",
+            toc_6: "VI. Arsenal e Forja",
+            toc_7: "VII. Armaduras e Alfaiataria",
+            toc_8: "VIII. Pesca e Coleta",
+            toc_9: "IX. Provas e Bestas",
+            h2_1: "I. O NÚCLEO DE SOBREVIVÊNCIA E VITAIS",
+            h2_2: `II. AS QUATRO LINHAGENS ANCESTRAIS <span class="badge-tag">ESPECIALIZAÇÃO</span>`,
+            h2_3: `III. ARTES SOMBRIAS: O CAÇADOR VAMPIRO <span class="badge-tag" style="background:var(--race-vampiro);">MÓDULO DE SANGUE</span>`,
+            h2_4: `IV. INSTINTO SELVAGEM: O GUERREIRO LYCAN <span class="badge-tag" style="background:var(--race-lycan); color:#120d08;">NOVO PAPEL</span>`,
+            h2_5: `V. ALTAR ANCESTRAL, FACÇÕES E CONQUISTA <span class="badge-tag">GUERRA DE CLÃS</span>`,
+            h2_6: "VI. ARSENAL DE GUERRA, FORJA E BANCO",
+            h2_7: "VII. ARMADURAS E ALFAIATARIA ENCANTADA",
+            h2_8: "VIII. PESCA, COLETA E TAVERNA DO DESTINO",
+            h2_9: "IX. PROVAS DE ASCENSÃO E SENHORES DO ABISMO",
+            footer_cta: "⚔️ DARK REALMS SURVIVAL V3.5 — FORJE SUA LENDA NO REINO ⚔️",
+            summary_html: `
+                <h3 style="margin-top:0; color:var(--gold-bright);">📜 RESUMO RÁPIDO DO CÓDICE (PORTUGUÊS)</h3>
+                <ul style="margin-bottom:0;">
+                    <li><strong>Vitais e Progressão:</strong> Vida máxima sobe +2 por nível até o Nível 200. Bloqueios de nível exigem derrotar Chefes nos níveis 20, 50, 75, 100 e 150.</li>
+                    <li><strong>4 Linhagens (Nível 50+ ou Altar Ancestral):</strong> 🦇 <em>Vampiro</em> (Roubo de vida, bônus noturno, Fúria de Sangue), 🐺 <em>Lycan</em> (+20 armadura passiva, 2x regeneração de vigor, 30% crítico, +15% dano sob Lua Alta, Frenesi Alfa), 🔮 <em>Bruxa</em> (Alquimia no Caldeirão e cura de aliados), 😈 <em>Demônio</em> (Legiões Infernais e guerra territorial).</li>
+                    <li><strong>Facções e Conquista:</strong> Alcance o Nível 21+ com 100 Poções no Altar Ancestral para fundar uma facção (até 25 membros). Invada Sims por 3 minutos (requer 20% de Mana) para conquistar territórios.</li>
+                </ul>
+            `
+        }
+    };
+
+    function t(key) {
+        return (I18N[currentLang] && I18N[currentLang][key]) || I18N.es[key] || key;
+    }
+
+    function setLanguage(lang) {
+        if (!I18N[lang]) return;
+        currentLang = lang;
+        localStorage.setItem("darkrealms_lang", lang);
+        document.documentElement.lang = lang;
+
+        ["es", "en", "pt"].forEach(l => {
+            const btn = document.getElementById(`lang-${l}`);
+            if (btn) btn.classList.toggle("active", l === lang);
+        });
+
+        document.querySelectorAll("[data-i18n]").forEach(el => {
+            const key = el.getAttribute("data-i18n");
+            el.innerHTML = t(key);
+        });
+
+        const summaryBox = document.getElementById("quick-lang-summary");
+        if (summaryBox) {
+            if (t("summary_html")) {
+                summaryBox.innerHTML = t("summary_html");
+                summaryBox.style.display = "block";
+            } else {
+                summaryBox.style.display = "none";
+            }
+        }
+    }
+
+    setLanguage(currentLang);
+</script>
 
 </body>
 </html>
