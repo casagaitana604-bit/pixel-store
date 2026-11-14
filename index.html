@@ -48,7 +48,7 @@
             margin: 0; 
         }
 
-        h1, h2, h3, h4, .font-medieval, .nav-logo, .nav-links a, th, .race-tab, .btn-portal {
+        h1, h2, h3, h4, .font-medieval, .nav-logo, .nav-links a, th, .race-tab, .btn-portal, .lang-btn {
             font-family: 'Cinzel', serif;
             text-transform: uppercase;
         }
@@ -93,10 +93,10 @@
         }
         .nav-logo { color: var(--parchment); font-weight: 900; font-size: 1.45rem; letter-spacing: 3px; }
         .nav-logo span { color: var(--gold); }
+        .nav-links { display: flex; align-items: center; flex-wrap: wrap; gap: 22px; }
         .nav-links a { 
             color: var(--muted); 
             text-decoration: none; 
-            margin-left: 28px; 
             font-weight: 700; 
             font-size: 0.88rem; 
             letter-spacing: 1.5px;
@@ -107,6 +107,33 @@
             color: var(--gold-bright) !important; 
             border-bottom: 2px solid var(--gold); 
             padding-bottom: 5px; 
+        }
+
+        /* SELECTOR DE IDIOMA MEDIEVAL */
+        .lang-switcher {
+            display: inline-flex;
+            align-items: center;
+            background: #14100d;
+            border: 1px solid var(--gold);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-left: 10px;
+        }
+        .lang-btn {
+            background: transparent;
+            border: none;
+            color: var(--muted);
+            padding: 6px 10px;
+            font-size: 0.74rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .lang-btn:hover { color: var(--parchment); background: rgba(201, 162, 82, 0.15); }
+        .lang-btn.active {
+            background: var(--gold);
+            color: #120d08;
         }
 
         /* CABECERA HERO */
@@ -411,7 +438,7 @@
             .stats-grid { grid-template-columns: 1fr; } 
             .races-overview-grid { grid-template-columns: repeat(2, 1fr); }
             .main-nav { padding: 14px 20px; flex-direction: column; gap: 10px; }
-            .nav-links a { margin: 0 10px; }
+            .nav-links { justify-content: center; gap: 14px; }
         }
     </style>
 </head>
@@ -423,31 +450,36 @@
 <nav class="main-nav">
     <div class="nav-logo">DARK REALMS <span>SURVIVAL</span></div>
     <div class="nav-links">
-        <a href="index.html" class="nav-active">REINO</a>
-        <a href="clanes.html">CLANES &amp; RAZAS</a>
-        <a href="tienda.html">MERCADO</a>
-        <a href="info.html">CÓDICE</a>
+        <a href="index.html" class="nav-active" data-i18n="nav_reino">REINO</a>
+        <a href="clanes.html" data-i18n="nav_clanes">CLANES &amp; RAZAS</a>
+        <a href="tienda.html" data-i18n="nav_mercado">MERCADO</a>
+        <a href="info.html" data-i18n="nav_codice">CÓDICE</a>
+        <div class="lang-switcher" title="Cambiar idioma / Change language">
+            <button id="lang-es" class="lang-btn active" onclick="setLanguage('es')">ES</button>
+            <button id="lang-en" class="lang-btn" onclick="setLanguage('en')">EN</button>
+            <button id="lang-pt" class="lang-btn" onclick="setLanguage('pt')">PT</button>
+        </div>
     </div>
 </nav>
 
 <header class="hero-header">
-    <h1 class="main-title">DARK REALMS : CRÓNICAS DE SANGRE</h1>
-    <div class="subtitle-bar">REGISTRO ANCESTRAL DE GUERREROS Y LINAJES</div>
-    <div class="race-banner-icons">🦇 VAMPIROS &nbsp;•&nbsp; 🐺 LYCANS &nbsp;•&nbsp; 🔮 BRUJAS &nbsp;•&nbsp; 😈 DEMONIOS</div>
-    <a href="http://maps.secondlife.com/secondlife/Peaches/138/183/2920" class="btn-portal">
+    <h1 class="main-title" data-i18n="hero_title">DARK REALMS : CRÓNICAS DE SANGRE</h1>
+    <div class="subtitle-bar" data-i18n="hero_subtitle">REGISTRO ANCESTRAL DE GUERREROS Y LINAJES</div>
+    <div class="race-banner-icons" data-i18n="hero_races">🦇 VAMPIROS &nbsp;•&nbsp; 🐺 LYCANS &nbsp;•&nbsp; 🔮 BRUJAS &nbsp;•&nbsp; 😈 DEMONIOS</div>
+    <a href="http://maps.secondlife.com/secondlife/Peaches/138/183/2920" class="btn-portal" data-i18n="btn_portal">
         ⚔️ VIAJAR AL REINO [PEACHES]
     </a>
 </header>
 
 <div class="event-container">
     <div class="event-box">
-        <h3 style="color: var(--gold-bright); margin: 0 0 6px 0; letter-spacing: 3px;">⚔️ CRUZADA DEL REINO: PURGA DE LA PLAGA</h3>
-        <p style="margin: 0; font-size: 0.85rem; color: var(--muted);">OBJETIVO: ANIQUILAR CRIATURAS INFECTADAS PARA ABRIR EL ARCA REAL</p>
+        <h3 style="color: var(--gold-bright); margin: 0 0 6px 0; letter-spacing: 3px;" data-i18n="crusade_title">⚔️ CRUZADA DEL REINO: PURGA DE LA PLAGA</h3>
+        <p style="margin: 0; font-size: 0.85rem; color: var(--muted);" data-i18n="crusade_desc">OBJETIVO: ANIQUILAR CRIATURAS INFECTADAS PARA ABRIR EL ARCA REAL</p>
         <div class="event-bar-bg">
             <div id="event-bar-fill" class="event-bar-fill"></div>
-            <div id="event-text" class="event-text-overlay">CONSULTANDO PERGAMINOS DEL REINO...</div>
+            <div id="event-text" class="event-text-overlay" data-i18n="crusade_sync">CONSULTANDO PERGAMINOS DEL REINO...</div>
         </div>
-        <p style="margin-top: 10px; font-size: 0.85rem; color: var(--parchment);">BOTÍN DE CRUZADA: <span style="color:var(--gold-bright); font-weight:bold;">10,000 XP</span> + <span style="color:#e57373; font-weight:bold;">50 POCIONES</span> (RECLAMAR EN EL CUARTEL)</p>
+        <p style="margin-top: 10px; font-size: 0.85rem; color: var(--parchment);" data-i18n="crusade_reward">BOTÍN DE CRUZADA: <span style="color:var(--gold-bright); font-weight:bold;">10,000 XP</span> + <span style="color:#e57373; font-weight:bold;">50 POCIONES</span> (RECLAMAR EN EL CUARTEL)</p>
     </div>
 </div>
 
@@ -456,30 +488,30 @@
         <!-- ESTADÍSTICAS DEL REINO -->
         <div class="stats-grid">
             <div id="box-online" class="stat-box">
-                <span class="stat-label">ALMAS EN EL REINO</span>
+                <span class="stat-label" data-i18n="stat_souls">ALMAS EN EL REINO</span>
                 <h2 id="count-online">0</h2>
                 <span id="sub-registrados" class="stat-sublabel">CENSADOS: 0</span>
             </div>
-            <div class="stat-box"><span class="stat-label">CRIATURAS ABATIDAS</span><h2 id="count-npc">0</h2></div>
-            <div class="stat-box"><span class="stat-label">DUELOS MORTALES (PVP)</span><h2 id="count-pvp">0</h2></div>
+            <div class="stat-box"><span class="stat-label" data-i18n="stat_creatures">CRIATURAS ABATIDAS</span><h2 id="count-npc">0</h2></div>
+            <div class="stat-box"><span class="stat-label" data-i18n="stat_duels">DUELOS MORTALES (PVP)</span><h2 id="count-pvp">0</h2></div>
         </div>
 
         <!-- ESTANDARTES POR RAZA -->
         <div class="races-overview-grid">
             <div class="race-stat-card vampiro" onclick="setRaceFilter('VAMPIRO')">
-                <span class="race-stat-title" style="color:#f28b9c;">🦇 VAMPIROS</span>
+                <span class="race-stat-title" style="color:#f28b9c;" data-i18n="card_vampires">🦇 VAMPIROS</span>
                 <span id="stat-race-vampiro" class="race-stat-nums">0 GUERREROS | 0 CLANES</span>
             </div>
             <div class="race-stat-card lycan" onclick="setRaceFilter('LYCAN')">
-                <span class="race-stat-title" style="color:#f5b971;">🐺 LYCANS</span>
+                <span class="race-stat-title" style="color:#f5b971;" data-i18n="card_lycans">🐺 LYCANS</span>
                 <span id="stat-race-lycan" class="race-stat-nums">0 GUERREROS | 0 MANADAS</span>
             </div>
             <div class="race-stat-card bruja" onclick="setRaceFilter('BRUJA')">
-                <span class="race-stat-title" style="color:#d5a6f5;">🔮 BRUJAS</span>
+                <span class="race-stat-title" style="color:#d5a6f5;" data-i18n="card_witches">🔮 BRUJAS</span>
                 <span id="stat-race-bruja" class="race-stat-nums">0 GUERREROS | 0 AQUELARRES</span>
             </div>
             <div class="race-stat-card demonio" onclick="setRaceFilter('DEMONIO')">
-                <span class="race-stat-title" style="color:#f79288;">😈 DEMONIOS</span>
+                <span class="race-stat-title" style="color:#f79288;" data-i18n="card_demons">😈 DEMONIOS</span>
                 <span id="stat-race-demonio" class="race-stat-nums">0 GUERREROS | 0 LEGIONES</span>
             </div>
         </div>
@@ -491,7 +523,7 @@
             <button id="tab-LYCAN" class="race-tab" onclick="setRaceFilter('LYCAN')">🐺 LYCAN</button>
             <button id="tab-BRUJA" class="race-tab" onclick="setRaceFilter('BRUJA')">🔮 BRUJA</button>
             <button id="tab-DEMONIO" class="race-tab" onclick="setRaceFilter('DEMONIO')">😈 DEMONIO</button>
-            <button id="tab-NINGUNA" class="race-tab" onclick="setRaceFilter('NINGUNA')">🗡️ ERRANTE</button>
+            <button id="tab-NINGUNA" class="race-tab" onclick="setRaceFilter('NINGUNA')">🗡️ ERRANTES</button>
         </div>
 
         <!-- BUSCADOR -->
@@ -503,10 +535,10 @@
         <table class="survival-table">
             <thead>
                 <tr>
-                    <th style="width: 55px; text-align:center;">RANGO</th>
-                    <th>GUERRERO / LINAJE / FACCIÓN</th>
-                    <th>NIVEL</th>
-                    <th>HAZAÑAS DE COMBATE</th>
+                    <th style="width: 55px; text-align:center;" data-i18n="th_rank">RANGO</th>
+                    <th data-i18n="th_warrior">GUERRERO / LINAJE / FACCIÓN</th>
+                    <th data-i18n="th_level">NIVEL</th>
+                    <th data-i18n="th_feats">HAZAÑAS DE COMBATE</th>
                 </tr>
             </thead>
             <tbody id="table-players"></tbody>
@@ -515,13 +547,13 @@
 
     <!-- PANEL LATERAL: CRÓNICAS Y BESTIAS -->
     <div class="event-log">
-        <h3>📜 CRÓNICAS DEL REINO</h3>
+        <h3 data-i18n="side_chronicles">📜 CRÓNICAS DEL REINO</h3>
         <div id="log-content">
-            <div class="event-item">Abriendo los archivos antiguos...</div>
+            <div class="event-item" data-i18n="log_loading">Abriendo los archivos antiguos...</div>
         </div>
         
         <div class="boss-panel-inside">
-            <h3 style="color: var(--crimson-bright); border-bottom: 1px solid var(--border-iron); padding-bottom: 6px; font-size: 0.95rem; position: sticky; top: 0; background: #0e0b0a; z-index: 10;">🐉 BESTIAS Y SEÑORES OSCUROS</h3>
+            <h3 style="color: var(--crimson-bright); border-bottom: 1px solid var(--border-iron); padding-bottom: 6px; font-size: 0.95rem; position: sticky; top: 0; background: #0e0b0a; z-index: 10;" data-i18n="side_bosses">🐉 BESTIAS Y SEÑORES OSCUROS</h3>
             <div id="boss-list-container"></div>
         </div>
     </div>
@@ -529,7 +561,7 @@
 
 <!-- MODAL DE PERGAMINO DE PERSONAJE / BESTIA -->
 <div id="playerModal" class="modal">
-    <span onclick="closeModal()" class="modal-close-btn">[X] CERRAR</span>
+    <span onclick="closeModal()" class="modal-close-btn" data-i18n="btn_close">[X] CERRAR</span>
     
     <div id="modal-box" class="modal-content">
         <img id="p-img" src="" class="profile-img">
@@ -553,7 +585,7 @@
         </div>
 
         <div id="boss-drops-section" style="display:none; margin-top:20px;">
-            <h4 style="color:var(--gold); margin-bottom:6px; font-size: 0.88rem;">💰 RELIQUIAS Y BOTÍN</h4>
+            <h4 style="color:var(--gold); margin-bottom:6px; font-size: 0.88rem;" data-i18n="modal_drops">💰 RELIQUIAS Y BOTÍN</h4>
             <div id="boss-drops-list" class="drop-list"></div>
         </div>
     </div>
@@ -564,17 +596,303 @@
     let cachePlayers = [];
     let cacheClanes = [];
     let cacheBosses = []; 
+    let cacheEvento = null;
     let filtroRazaActual = "ALL";
+    let currentLang = localStorage.getItem("darkrealms_lang") || "es";
 
     const sndHover = document.getElementById('snd-hover');
     const sndOpen = document.getElementById('snd-open');
 
+    // =========================================================================
+    // 🌐 DICCIONARIO DE IDIOMAS (ESPAÑOL / ENGLISH / PORTUGUÊS)
+    // =========================================================================
+    const I18N = {
+        es: {
+            nav_reino: "REINO",
+            nav_clanes: "CLANES & RAZAS",
+            nav_mercado: "MERCADO",
+            nav_codice: "CÓDICE",
+            hero_title: "DARK REALMS : CRÓNICAS DE SANGRE",
+            hero_subtitle: "REGISTRO ANCESTRAL DE GUERREROS Y LINAJES",
+            hero_races: "🦇 VAMPIROS  •  🐺 LYCANS  •  🔮 BRUJAS  •  😈 DEMONIOS",
+            btn_portal: "⚔️ VIAJAR AL REINO [PEACHES]",
+            crusade_title: "⚔️ CRUZADA DEL REINO: PURGA DE LA PLAGA",
+            crusade_desc: "OBJETIVO: ANIQUILAR CRIATURAS INFECTADAS PARA ABRIR EL ARCA REAL",
+            crusade_sync: "CONSULTANDO PERGAMINOS DEL REINO...",
+            crusade_progress: (act, meta, pct) => `PROGRESO DE CRUZADA: ${act} / ${meta} (${pct}%)`,
+            crusade_reward: `BOTÍN DE CRUZADA: <span style="color:var(--gold-bright); font-weight:bold;">10,000 XP</span> + <span style="color:#e57373; font-weight:bold;">50 POCIONES</span> (RECLAMAR EN EL CUARTEL)`,
+            stat_souls: "ALMAS EN EL REINO",
+            stat_creatures: "CRIATURAS ABATIDAS",
+            stat_duels: "DUELOS MORTALES (PVP)",
+            active_suffix: "ACTIVOS",
+            registered_prefix: "CENSADOS",
+            card_vampires: "🦇 VAMPIROS",
+            card_lycans: "🐺 LYCANS",
+            card_witches: "🔮 BRUJAS",
+            card_demons: "😈 DEMONIOS",
+            warriors: "GUERREROS",
+            suf_vampiro: "CLANES",
+            suf_lycan: "MANADAS",
+            suf_bruja: "AQUELARRES",
+            suf_demonio: "LEGIONES",
+            tab_all: "🏰 TODOS",
+            tab_vampiro: "🦇 VAMPIRO",
+            tab_lycan: "🐺 LYCAN",
+            tab_bruja: "🔮 BRUJA",
+            tab_demonio: "😈 DEMONIO",
+            tab_ninguna: "🗡️ ERRANTES",
+            race_vampiro: "VAMPIRO",
+            race_lycan: "LYCAN",
+            race_bruja: "BRUJA",
+            race_demonio: "DEMONIO",
+            race_ninguna: "ERRANTE",
+            search_placeholder: "BUSCAR EN EL REGISTRO POR NOMBRE, LINAJE O CLAN...",
+            th_rank: "RANGO",
+            th_warrior: "GUERRERO / LINAJE / FACCIÓN",
+            th_level: "NIVEL",
+            th_feats: "HAZAÑAS DE COMBATE",
+            side_chronicles: "📜 CRÓNICAS DEL REINO",
+            log_loading: "Abriendo los archivos antiguos...",
+            log_empty: "Los pergaminos aún están en blanco...",
+            side_bosses: "🐉 BESTIAS Y SEÑORES OSCUROS",
+            btn_close: "[X] CERRAR",
+            modal_drops: "💰 RELIQUIAS Y BOTÍN",
+            no_players: "Ningún guerrero de este linaje ha sido registrado aún.",
+            status_online: "EN EL REINO",
+            status_offline: "AUSENTE",
+            level_word: "NIVEL",
+            beasts_word: "Bestias",
+            duels_word: "Duelos",
+            boss_stalking: "ACECHANDO",
+            boss_dead: "CAÍDO",
+            boss_present: "PRESENTE EN EL REINO",
+            boss_resurge: "RESURGE EN",
+            boss_view_drops: "📜 VER RELIQUIAS DEL BOTÍN",
+            boss_threat_live: "AMENAZA ANCESTRAL: ACTIVA",
+            boss_threat_dead: "BESTIA DERROTADA",
+            boss_desc_live: "La bestia acecha en las tierras del reino.",
+            boss_desc_dead: "Las sombras regeneran su forma física...",
+            lbl_vitality: "VITALIDAD",
+            lbl_respawn: "CICLO DE RESURRECCIÓN",
+            lbl_creatures: "CRIATURAS ABATIDAS",
+            lbl_pvp: "VICTORIAS PVP",
+            faction_label: "FACCIÓN",
+            no_oath: "SIN JURAMENTO",
+            title_prefix: "TÍTULO",
+            xp_line: (xp, req, tot) => `EXPERIENCIA: ${xp} / ${req} | TOTAL ACUMULADO: ${tot}`,
+            log_oath: (ico, lbl) => `ha jurado lealtad al linaje ${ico} <strong>${lbl}</strong>.`,
+            log_march: (clan) => `marcha bajo el estandarte de <span style="color:var(--gold-bright); font-weight:bold;">[${clan}]</span>.`,
+            log_pvp: (pvp, lbl) => `reclama ${pvp} victorias en duelo mortal para los ${lbl}.`,
+            log_npc: (npc) => `ha purgado ${npc} bestias de la plaga en las tierras oscuras.`,
+            log_lvl: (lvl, lbl) => `ha alcanzado el rango de Nivel ${lvl} [${lbl}].`
+        },
+        en: {
+            nav_reino: "REALM",
+            nav_clanes: "CLANS & RACES",
+            nav_mercado: "MARKET",
+            nav_codice: "CODEX",
+            hero_title: "DARK REALMS : CHRONICLES OF BLOOD",
+            hero_subtitle: "ANCESTRAL REGISTRY OF WARRIORS & BLOODLINES",
+            hero_races: "🦇 VAMPIRES  •  🐺 LYCANS  •  🔮 WITCHES  •  😈 DEMONS",
+            btn_portal: "⚔️ TRAVEL TO REALM [PEACHES]",
+            crusade_title: "⚔️ REALM CRUSADE: PURGE OF THE PLAGUE",
+            crusade_desc: "OBJECTIVE: SLAY INFECTED CREATURES TO UNLOCK THE ROYAL VAULT",
+            crusade_sync: "CONSULTING REALM SCROLLS...",
+            crusade_progress: (act, meta, pct) => `CRUSADE PROGRESS: ${act} / ${meta} (${pct}%)`,
+            crusade_reward: `CRUSADE BOUNTY: <span style="color:var(--gold-bright); font-weight:bold;">10,000 XP</span> + <span style="color:#e57373; font-weight:bold;">50 POTIONS</span> (CLAIM AT BARRACKS)`,
+            stat_souls: "SOULS IN THE REALM",
+            stat_creatures: "CREATURES SLAIN",
+            stat_duels: "MORTAL DUELS (PVP)",
+            active_suffix: "ACTIVE",
+            registered_prefix: "REGISTERED",
+            card_vampires: "🦇 VAMPIRES",
+            card_lycans: "🐺 LYCANS",
+            card_witches: "🔮 WITCHES",
+            card_demons: "😈 DEMONS",
+            warriors: "WARRIORS",
+            suf_vampiro: "CLANS",
+            suf_lycan: "PACKS",
+            suf_bruja: "COVENS",
+            suf_demonio: "LEGIONS",
+            tab_all: "🏰 ALL",
+            tab_vampiro: "🦇 VAMPIRE",
+            tab_lycan: "🐺 LYCAN",
+            tab_bruja: "🔮 WITCH",
+            tab_demonio: "😈 DEMON",
+            tab_ninguna: "🗡️ WANDERERS",
+            race_vampiro: "VAMPIRE",
+            race_lycan: "LYCAN",
+            race_bruja: "WITCH",
+            race_demonio: "DEMON",
+            race_ninguna: "WANDERER",
+            search_placeholder: "SEARCH REGISTRY BY NAME, BLOODLINE OR CLAN...",
+            th_rank: "RANK",
+            th_warrior: "WARRIOR / BLOODLINE / FACTION",
+            th_level: "LEVEL",
+            th_feats: "COMBAT FEATS",
+            side_chronicles: "📜 REALM CHRONICLES",
+            log_loading: "Opening ancient archives...",
+            log_empty: "The parchments are still blank...",
+            side_bosses: "🐉 BEASTS & DARK LORDS",
+            btn_close: "[X] CLOSE",
+            modal_drops: "💰 RELICS & LOOT",
+            no_players: "No warriors of this bloodline have been recorded yet.",
+            status_online: "IN REALM",
+            status_offline: "AWAY",
+            level_word: "LEVEL",
+            beasts_word: "Beasts",
+            duels_word: "Duels",
+            boss_stalking: "STALKING",
+            boss_dead: "FALLEN",
+            boss_present: "PRESENT IN THE REALM",
+            boss_resurge: "RISES IN",
+            boss_view_drops: "📜 VIEW LOOT RELICS",
+            boss_threat_live: "ANCESTRAL THREAT: ACTIVE",
+            boss_threat_dead: "BEAST DEFEATED",
+            boss_desc_live: "The beast stalks the lands of the realm.",
+            boss_desc_dead: "The shadows are regenerating its physical form...",
+            lbl_vitality: "VITALITY",
+            lbl_respawn: "RESURRECTION CYCLE",
+            lbl_creatures: "CREATURES SLAIN",
+            lbl_pvp: "PVP VICTORIES",
+            faction_label: "FACTION",
+            no_oath: "UNSWORN",
+            title_prefix: "TITLE",
+            xp_line: (xp, req, tot) => `EXPERIENCE: ${xp} / ${req} | TOTAL ACCUMULATED: ${tot}`,
+            log_oath: (ico, lbl) => `has sworn loyalty to the ${ico} <strong>${lbl}</strong> bloodline.`,
+            log_march: (clan) => `marches under the banner of <span style="color:var(--gold-bright); font-weight:bold;">[${clan}]</span>.`,
+            log_pvp: (pvp, lbl) => `claims ${pvp} mortal duel victories for the ${lbl}.`,
+            log_npc: (npc) => `has purged ${npc} plague beasts across the dark lands.`,
+            log_lvl: (lvl, lbl) => `has reached Level ${lvl} [${lbl}].`
+        },
+        pt: {
+            nav_reino: "REINO",
+            nav_clanes: "CLÃS & RAÇAS",
+            nav_mercado: "MERCADO",
+            nav_codice: "CÓDICE",
+            hero_title: "DARK REALMS : CRÔNICAS DE SANGUE",
+            hero_subtitle: "REGISTRO ANCESTRAL DE GUERREIROS E LINHAGENS",
+            hero_races: "🦇 VAMPIROS  •  🐺 LYCANS  •  🔮 BRUXAS  •  😈 DEMÔNIOS",
+            btn_portal: "⚔️ VIAJAR AO REINO [PEACHES]",
+            crusade_title: "⚔️ CRUZADA DO REINO: EXPURGO DA PRAGA",
+            crusade_desc: "OBJETIVO: ANIQUILAR CRIATURAS INFECTADAS PARA ABRIR O COFRE REAL",
+            crusade_sync: "CONSULTANDO PERGAMINHOS DO REINO...",
+            crusade_progress: (act, meta, pct) => `PROGRESSO DA CRUZADA: ${act} / ${meta} (${pct}%)`,
+            crusade_reward: `ESPÓLIO DA CRUZADA: <span style="color:var(--gold-bright); font-weight:bold;">10,000 XP</span> + <span style="color:#e57373; font-weight:bold;">50 POÇÕES</span> (RESGATAR NO QUARTEL)`,
+            stat_souls: "ALMAS NO REINO",
+            stat_creatures: "CRIATURAS ABATIDAS",
+            stat_duels: "DUELOS MORTAIS (PVP)",
+            active_suffix: "ATIVOS",
+            registered_prefix: "REGISTRADOS",
+            card_vampires: "🦇 VAMPIROS",
+            card_lycans: "🐺 LYCANS",
+            card_witches: "🔮 BRUXAS",
+            card_demons: "😈 DEMÔNIOS",
+            warriors: "GUERREIROS",
+            suf_vampiro: "CLÃS",
+            suf_lycan: "ALCATEIAS",
+            suf_bruja: "COVENS",
+            suf_demonio: "LEGIÕES",
+            tab_all: "🏰 TODOS",
+            tab_vampiro: "🦇 VAMPIRO",
+            tab_lycan: "🐺 LYCAN",
+            tab_bruja: "🔮 BRUXA",
+            tab_demonio: "😈 DEMÔNIO",
+            tab_ninguna: "🗡️ ERRANTES",
+            race_vampiro: "VAMPIRO",
+            race_lycan: "LYCAN",
+            race_bruja: "BRUXA",
+            race_demonio: "DEMÔNIO",
+            race_ninguna: "ERRANTE",
+            search_placeholder: "BUSCAR NO REGISTRO POR NOME, LINHAGEM OU CLÃ...",
+            th_rank: "RANQUE",
+            th_warrior: "GUERREIRO / LINHAGEM / FACÇÃO",
+            th_level: "NÍVEL",
+            th_feats: "FEITOS DE COMBATE",
+            side_chronicles: "📜 CRÔNICAS DO REINO",
+            log_loading: "Abrindo os arquivos antigos...",
+            log_empty: "Os pergaminhos ainda estão em branco...",
+            side_bosses: "🐉 BESTAS E SENHORES SOMBRIOS",
+            btn_close: "[X] FECHAR",
+            modal_drops: "💰 RELÍQUIAS E ESPÓLIO",
+            no_players: "Nenhum guerreiro desta linhagem foi registrado ainda.",
+            status_online: "NO REINO",
+            status_offline: "AUSENTE",
+            level_word: "NÍVEL",
+            beasts_word: "Bestas",
+            duels_word: "Duelos",
+            boss_stalking: "ESPREITANDO",
+            boss_dead: "CAÍDO",
+            boss_present: "PRESENTE NO REINO",
+            boss_resurge: "RESSURGE EM",
+            boss_view_drops: "📜 VER RELÍQUIAS DO ESPÓLIO",
+            boss_threat_live: "AMEAÇA ANCESTRAL: ATIVA",
+            boss_threat_dead: "BESTA DERROTADA",
+            boss_desc_live: "A besta espreita nas terras do reino.",
+            boss_desc_dead: "As sombras regeneram sua forma física...",
+            lbl_vitality: "VITALIDADE",
+            lbl_respawn: "CICLO DE RESSURREIÇÃO",
+            lbl_creatures: "CRIATURAS ABATIDAS",
+            lbl_pvp: "VITÓRIAS PVP",
+            faction_label: "FACÇÃO",
+            no_oath: "SEM JURAMENTO",
+            title_prefix: "TÍTULO",
+            xp_line: (xp, req, tot) => `EXPERIÊNCIA: ${xp} / ${req} | TOTAL ACUMULADO: ${tot}`,
+            log_oath: (ico, lbl) => `jurou lealdade à linhagem ${ico} <strong>${lbl}</strong>.`,
+            log_march: (clan) => `marcha sob o estandarte de <span style="color:var(--gold-bright); font-weight:bold;">[${clan}]</span>.`,
+            log_pvp: (pvp, lbl) => `reivindica ${pvp} vitórias em duelo mortal pelos ${lbl}.`,
+            log_npc: (npc) => `expurgou ${npc} bestas da praga nas terras sombrias.`,
+            log_lvl: (lvl, lbl) => `alcançou o Nível ${lvl} [${lbl}].`
+        }
+    };
+
+    function t(key) {
+        return (I18N[currentLang] && I18N[currentLang][key]) || I18N.es[key] || key;
+    }
+
+    function setLanguage(lang) {
+        if (!I18N[lang]) return;
+        currentLang = lang;
+        localStorage.setItem("darkrealms_lang", lang);
+        document.documentElement.lang = lang;
+
+        ["es", "en", "pt"].forEach(l => {
+            const btn = document.getElementById(`lang-${l}`);
+            if (btn) btn.classList.toggle("active", l === lang);
+        });
+
+        document.querySelectorAll("[data-i18n]").forEach(el => {
+            const key = el.getAttribute("data-i18n");
+            const val = t(key);
+            if (typeof val === "string") el.innerHTML = val;
+        });
+
+        const searchInput = document.getElementById("avatarSearch");
+        if (searchInput) searchInput.placeholder = t("search_placeholder");
+
+        // Re-renderiza datos dinámicos en el idioma elegido
+        if (cachePlayers.length > 0) {
+            actualizarResumenRazas(cachePlayers, cacheClanes);
+            renderActividadLog(cachePlayers);
+            filterPlayers();
+            const onlineCnt = cachePlayers.filter(j => verificarOnline(j.fecha)).length;
+            document.getElementById('count-online').innerText = `${onlineCnt} ${t("active_suffix")}`;
+            document.getElementById('sub-registrados').innerText = `${t("registered_prefix")}: ${cachePlayers.length}`;
+        }
+        if (cacheBosses.length > 0) renderBosses();
+        if (cacheEvento) {
+            let n_total = cachePlayers.reduce((acc, j) => acc + parseInt(j.npc || 0), 0);
+            let pct = (n_total / cacheEvento.meta) * 100;
+            document.getElementById('event-text').innerText = t("crusade_progress")(n_total.toLocaleString(), cacheEvento.meta.toLocaleString(), Math.round(pct));
+        }
+    }
+
     const CONFIG_RAZAS = {
-        "VAMPIRO": { icon: "🦇", label: "VAMPIRO", cls: "rb-vampiro", color: "#b81d38" },
-        "LYCAN":   { icon: "🐺", label: "LYCAN",   cls: "rb-lycan",   color: "#c87a28" },
-        "BRUJA":   { icon: "🔮", label: "BRUJA",   cls: "rb-bruja",   color: "#8246af" },
-        "DEMONIO": { icon: "😈", label: "DEMONIO", cls: "rb-demonio", color: "#c92a1d" },
-        "NINGUNA": { icon: "🗡️", label: "ERRANTE", cls: "rb-libre",   color: "#c9a252" }
+        "VAMPIRO": { icon: "🦇", key: "race_vampiro", cls: "rb-vampiro", color: "#b81d38" },
+        "LYCAN":   { icon: "🐺", key: "race_lycan",   cls: "rb-lycan",   color: "#c87a28" },
+        "BRUJA":   { icon: "🔮", key: "race_bruja",   cls: "rb-bruja",   color: "#8246af" },
+        "DEMONIO": { icon: "😈", key: "race_demonio", cls: "rb-demonio", color: "#c92a1d" },
+        "NINGUNA": { icon: "🗡️", key: "race_ninguna", cls: "rb-libre",   color: "#c9a252" }
     };
 
     function normalizarRazaUI(r) {
@@ -586,7 +904,7 @@
     function obtenerBadgeRazaHTML(razaRaw) {
         let r = normalizarRazaUI(razaRaw);
         let cfg = CONFIG_RAZAS[r];
-        return `<span class="race-badge ${cfg.cls}">${cfg.icon} ${cfg.label}</span>`;
+        return `<span class="race-badge ${cfg.cls}">${cfg.icon} ${t(cfg.key)}</span>`;
     }
 
     const FOTOS_MANUALES = {
@@ -646,31 +964,31 @@
 
     function actualizarResumenRazas(players, clanes) {
         const razas = ["VAMPIRO", "LYCAN", "BRUJA", "DEMONIO"];
-        const sufijos = { "VAMPIRO": "CLANES", "LYCAN": "MANADAS", "BRUJA": "AQUELARRES", "DEMONIO": "LEGIONES" };
+        const sufKeys = { "VAMPIRO": "suf_vampiro", "LYCAN": "suf_lycan", "BRUJA": "suf_bruja", "DEMONIO": "suf_demonio" };
 
         razas.forEach(r => {
             let totalJug = players.filter(p => normalizarRazaUI(p.raza) === r).length;
             let totalClanes = clanes.filter(c => normalizarRazaUI(c.raza) === r).length;
             let el = document.getElementById(`stat-race-${r.toLowerCase()}`);
-            if (el) el.innerText = `${totalJug} GUERREROS | ${totalClanes} ${sufijos[r]}`;
+            if (el) el.innerText = `${totalJug} ${t("warriors")} | ${totalClanes} ${t(sufKeys[r])}`;
         });
 
-        document.getElementById("tab-ALL").innerText = `🏰 TODOS (${players.length})`;
-        document.getElementById("tab-VAMPIRO").innerText = `🦇 VAMPIRO (${players.filter(p => normalizarRazaUI(p.raza) === "VAMPIRO").length})`;
-        document.getElementById("tab-LYCAN").innerText = `🐺 LYCAN (${players.filter(p => normalizarRazaUI(p.raza) === "LYCAN").length})`;
-        document.getElementById("tab-BRUJA").innerText = `🔮 BRUJA (${players.filter(p => normalizarRazaUI(p.raza) === "BRUJA").length})`;
-        document.getElementById("tab-DEMONIO").innerText = `😈 DEMONIO (${players.filter(p => normalizarRazaUI(p.raza) === "DEMONIO").length})`;
-        document.getElementById("tab-NINGUNA").innerText = `🗡️ ERRANTES (${players.filter(p => normalizarRazaUI(p.raza) === "NINGUNA").length})`;
+        document.getElementById("tab-ALL").innerText = `${t("tab_all")} (${players.length})`;
+        document.getElementById("tab-VAMPIRO").innerText = `${t("tab_vampiro")} (${players.filter(p => normalizarRazaUI(p.raza) === "VAMPIRO").length})`;
+        document.getElementById("tab-LYCAN").innerText = `${t("tab_lycan")} (${players.filter(p => normalizarRazaUI(p.raza) === "LYCAN").length})`;
+        document.getElementById("tab-BRUJA").innerText = `${t("tab_bruja")} (${players.filter(p => normalizarRazaUI(p.raza) === "BRUJA").length})`;
+        document.getElementById("tab-DEMONIO").innerText = `${t("tab_demonio")} (${players.filter(p => normalizarRazaUI(p.raza) === "DEMONIO").length})`;
+        document.getElementById("tab-NINGUNA").innerText = `${t("tab_ninguna")} (${players.filter(p => normalizarRazaUI(p.raza) === "NINGUNA").length})`;
     }
 
     function setRaceFilter(raza) {
         filtroRazaActual = raza;
         const todas = ["ALL", "VAMPIRO", "LYCAN", "BRUJA", "DEMONIO", "NINGUNA"];
-        todas.forEach(t => {
-            const btn = document.getElementById(`tab-${t}`);
+        todas.forEach(tKey => {
+            const btn = document.getElementById(`tab-${tKey}`);
             if (!btn) return;
             btn.className = "race-tab";
-            if (t === raza) btn.classList.add(`active-${t.toLowerCase()}`);
+            if (tKey === raza) btn.classList.add(`active-${tKey.toLowerCase()}`);
         });
         filterPlayers();
     }
@@ -716,17 +1034,16 @@
 
             if (data.bosses && data.bosses.length > 0) {
                 cacheBosses = data.bosses;
-                renderBosses();
             } else {
                 cacheBosses = [
-                    { id: "boss_freddy", nombre: "FREDDY [SEÑOR DEL ABISMO]", vivo: false, tiempo_restante: 9240, respawn_total: 10800, avatar: "https://i.imgur.com/vHdfY9Y.png", drops: { "Munición": "85%", "Poción": "40%", "Pergamino Bronce": "20%", "Acero": "10%", "Cofre Antiguo": "1%" } },
-                    { id: "boss_nemesis", nombre: "NÉMESIS OSCURO", vivo: true, tiempo_restante: 0, respawn_total: 7200, avatar: "https://i.imgur.com/M6X771I.png", drops: { "Munición Pesada": "90%", "Pergamino Oro": "3%", "Hierro": "30%", "Madera": "40%" } }
+                    { id: "zombie_mutante", nombre: "ZOMBIE MUTANTE|1,500", vivo: true, tiempo_restante: 0, respawn_total: 3600, drops: { "Hierro": "60%", "Carbón": "40%", "Poción": "35%" } },
+                    { id: "boss_freddy", nombre: "FREDDY [SEÑOR DEL ABISMO]", vivo: false, tiempo_restante: 9240, respawn_total: 10800, avatar: "https://i.imgur.com/vHdfY9Y.png", drops: { "Munición": "85%", "Poción": "40%", "Pergamino Bronce": "20%", "Acero": "10%" } }
                 ];
-                renderBosses();
             }
+            renderBosses();
             
-            document.getElementById('count-online').innerText = on_total + " ACTIVOS";
-            document.getElementById('sub-registrados').innerText = `CENSADOS: ${list.length}`;
+            document.getElementById('count-online').innerText = `${on_total} ${t("active_suffix")}`;
+            document.getElementById('sub-registrados').innerText = `${t("registered_prefix")}: ${list.length}`;
             
             if (on_total > 0) document.getElementById('box-online').classList.add('online-active');
             else document.getElementById('box-online').classList.remove('online-active');
@@ -734,9 +1051,10 @@
             document.getElementById('count-npc').innerText = n_total;
             document.getElementById('count-pvp').innerText = p_total;
             if (data.evento) {
+                cacheEvento = data.evento;
                 let pct = (n_total / data.evento.meta) * 100;
                 document.getElementById('event-bar-fill').style.width = Math.min(pct, 100) + "%";
-                document.getElementById('event-text').innerText = `PROGRESO DE CRUZADA: ${n_total.toLocaleString()} / ${data.evento.meta.toLocaleString()} (${Math.round(pct)}%)`;
+                document.getElementById('event-text').innerText = t("crusade_progress")(n_total.toLocaleString(), data.evento.meta.toLocaleString(), Math.round(pct));
             }
         } catch (e) { console.error("Error:", e); }
     }
@@ -747,7 +1065,7 @@
         logContainer.innerHTML = '';
         
         if (players.length === 0) {
-            logContainer.innerHTML = '<div class="event-item">Los pergaminos aún están en blanco...</div>';
+            logContainer.innerHTML = `<div class="event-item">${t("log_empty")}</div>`;
             return;
         }
 
@@ -763,18 +1081,19 @@
             let p = logList[i];
             let hora = formatearHora(p.fecha);
             let cfgRaza = CONFIG_RAZAS[normalizarRazaUI(p.raza)];
+            let razaLabel = t(cfgRaza.key);
             let div = document.createElement('div');
             div.className = 'event-item';
             
-            let detalle = `ha jurado lealtad al linaje ${cfgRaza.icon} <strong>${cfgRaza.label}</strong>.`;
+            let detalle = t("log_oath")(cfgRaza.icon, razaLabel);
             if (p.clan && p.clan !== "SIN CLAN" && i % 4 === 0) {
-                detalle = `marcha bajo el estandarte de <span style="color:var(--gold-bright); font-weight:bold;">[${p.clan}]</span>.`;
+                detalle = t("log_march")(p.clan);
             } else if (parseInt(p.pvp) > 0 && i % 3 === 0) {
-                detalle = `reclama ${p.pvp} victorias en duelo mortal para los ${cfgRaza.label}.`;
+                detalle = t("log_pvp")(p.pvp, razaLabel);
             } else if (parseInt(p.npc) > 100 && i % 2 === 0) {
-                detalle = `ha purgado ${p.npc} bestias de la plaga en las tierras oscuras.`;
+                detalle = t("log_npc")(p.npc);
             } else if (parseInt(p.nivel) > 1) {
-                detalle = `ha alcanzado el rango de Nivel ${p.nivel} [${cfgRaza.label}].`;
+                detalle = t("log_lvl")(p.nivel, razaLabel);
             }
 
             div.innerHTML = `<span class="event-time">[${hora}]</span> 🕯️ <span style="color:${cfgRaza.color}; font-weight:bold;">${p.nombre}</span> ${detalle}`;
@@ -787,7 +1106,7 @@
         body.innerHTML = '';
 
         if (players.length === 0) {
-            body.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--muted); padding:28px;">Ningún guerrero de este linaje ha sido registrado aún.</td></tr>`;
+            body.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--muted); padding:28px;">${t("no_players")}</td></tr>`;
             return;
         }
 
@@ -799,7 +1118,7 @@
             const cfgRaza = CONFIG_RAZAS[normalizarRazaUI(j.raza)];
             
             let estaOnline = verificarOnline(j.fecha);
-            let statusTag = estaOnline ? `<span class="status-tag status-online">EN EL REINO</span>` : `<span class="status-tag status-offline">AUSENTE</span>`;
+            let statusTag = estaOnline ? `<span class="status-tag status-online">${t("status_online")}</span>` : `<span class="status-tag status-offline">${t("status_offline")}</span>`;
             let raceTag = obtenerBadgeRazaHTML(j.raza);
             let clanTag = (j.clan && j.clan !== "SIN CLAN") ? `<span class="clan-badge">⚜️ ${j.clan}</span>` : ``;
 
@@ -810,10 +1129,10 @@
                          style="width:38px; height:38px; border:1px solid ${cfgRaza.color}; vertical-align:middle; margin-right:12px; object-fit: cover; border-radius: 2px;"> 
                     <strong style="font-size:1rem;">${j.nombre}</strong> ${raceTag} ${clanTag} ${statusTag}
                 </td>
-                <td><span style="color:var(--gold-bright); font-family:'Cinzel',serif; font-weight:700;">NIVEL ${j.nivel}</span></td>
-                <td style="color:var(--muted); font-size:0.9rem">💀 Bestias: ${j.npc} &nbsp;|&nbsp; ⚔️ Duelos: ${j.pvp}</td>
+                <td><span style="color:var(--gold-bright); font-family:'Cinzel',serif; font-weight:700;">${t("level_word")} ${j.nivel}</span></td>
+                <td style="color:var(--muted); font-size:0.9rem">💀 ${t("beasts_word")}: ${j.npc} &nbsp;|&nbsp; ⚔️ ${t("duels_word")}: ${j.pvp}</td>
             `;
-            row.setAttribute('onclick', "openProfile('" + j.uuid + "', '" + j.nombre + "')");
+            row.setAttribute('onclick', "openProfile('" + j.uuid + "', '" + j.nombre.replace(/'/g, "\\'") + "')");
             body.appendChild(row);
         });
     }
@@ -829,18 +1148,18 @@
             card.setAttribute('onclick', `openBossProfile('${b.id}')`);
             card.addEventListener('mouseover', () => { sndHover.currentTime = 0; sndHover.volume = 0.15; sndHover.play(); });
 
-            let statusStr = b.vivo ? "ACECHANDO" : "CAÍDO";
+            let statusStr = b.vivo ? t("boss_stalking") : t("boss_dead");
             let classStr = b.vivo ? "boss-live" : "boss-dead";
             let fillClass = b.vivo ? "live" : "dead";
             
             let pct = 100;
-            let tiempoTexto = "PRESENTE EN EL REINO";
+            let tiempoTexto = t("boss_present");
             if (!b.vivo && b.tiempo_restante > 0) {
                 pct = ((b.respawn_total - b.tiempo_restante) / b.respawn_total) * 100;
                 let hrs = Math.floor(b.tiempo_restante / 3600);
                 let mins = Math.floor((b.tiempo_restante % 3600) / 60);
                 let secs = b.tiempo_restante % 60;
-                tiempoTexto = `RESURGE EN: ${String(hrs).padStart(2,'0')}:${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+                tiempoTexto = `${t("boss_resurge")}: ${String(hrs).padStart(2,'0')}:${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
             }
 
             let nombreLimpio = b.nombre.split("|")[0];
@@ -854,7 +1173,7 @@
                     <div class="boss-timer-fill ${fillClass}" style="width: ${pct}%"></div>
                 </div>
                 <span class="boss-countdown" id="timer-${b.id}">${tiempoTexto}</span>
-                <span class="drop-hint">📜 VER RELIQUIAS DEL BOTÍN</span>
+                <span class="drop-hint">${t("boss_view_drops")}</span>
             `;
             container.appendChild(card);
         });
@@ -869,7 +1188,7 @@
                     let hrs = Math.floor(b.tiempo_restante / 3600);
                     let mins = Math.floor((b.tiempo_restante % 3600) / 60);
                     let secs = b.tiempo_restante % 60;
-                    timerLabel.innerText = `RESURGE EN: ${String(hrs).padStart(2,'0')}:${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+                    timerLabel.innerText = `${t("boss_resurge")}: ${String(hrs).padStart(2,'0')}:${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
                 }
             }
         });
@@ -889,7 +1208,7 @@
             nombreLimpio = partesNombre[0];
             hpDinamico = partesNombre[1] + " HP"; 
         } else if (b.nombre.toUpperCase().includes("ZOMBIE MUTANTE")) {
-            hpDinamico = "200 HP"; 
+            hpDinamico = "1,500 HP"; 
         }
 
         const modalBox = document.getElementById('modal-box');
@@ -902,15 +1221,15 @@
         
         document.getElementById('p-race-modal').innerHTML = "";
         document.getElementById('p-clan').style.display = 'none';
-        document.getElementById('p-rango').innerText = b.vivo ? "AMENAZA ANCESTRAL: ACTIVA" : "BESTIA DERROTADA";
+        document.getElementById('p-rango').innerText = b.vivo ? t("boss_threat_live") : t("boss_threat_dead");
         document.getElementById('p-rango').style.color = b.vivo ? "#81c784" : "var(--muted)";
         
         document.getElementById('p-xp-fill').style.width = b.vivo ? "100%" : "0%";
         document.getElementById('p-xp-fill').style.background = b.vivo ? "#388e3c" : "var(--crimson-bright)";
-        document.getElementById('p-xp-text').innerText = b.vivo ? "La bestia acecha en las tierras del reino." : "Las sombras regeneran su forma física...";
+        document.getElementById('p-xp-text').innerText = b.vivo ? t("boss_desc_live") : t("boss_desc_dead");
 
-        document.getElementById('lbl-left-stat').innerText = "VITALIDAD";
-        document.getElementById('lbl-right-stat').innerText = "CICLO DE RESURRECCIÓN";
+        document.getElementById('lbl-left-stat').innerText = t("lbl_vitality");
+        document.getElementById('lbl-right-stat').innerText = t("lbl_respawn");
         
         document.getElementById('p-npc').innerText = b.vivo ? hpDinamico : "0 HP";
         document.getElementById('p-pvp').innerText = b.respawn_total >= 3600 ? Math.round(b.respawn_total / 3600) + " HRS" : Math.round(b.respawn_total / 60) + " MINS";
@@ -956,8 +1275,8 @@
         const cfgRaza = CONFIG_RAZAS[normalizarRazaUI(p.raza)];
 
         document.getElementById('boss-drops-section').style.display = 'none';
-        document.getElementById('lbl-left-stat').innerText = "CRIATURAS ABATIDAS";
-        document.getElementById('lbl-right-stat').innerText = "VICTORIAS PVP";
+        document.getElementById('lbl-left-stat').innerText = t("lbl_creatures");
+        document.getElementById('lbl-right-stat').innerText = t("lbl_pvp");
         
         sndOpen.currentTime = 0; sndOpen.volume = 0.4; sndOpen.play();
         
@@ -975,7 +1294,7 @@
 
         const clanElem = document.getElementById('p-clan');
         clanElem.style.display = 'block';
-        clanElem.innerText = (p.clan && p.clan !== "SIN CLAN") ? `⚜️ FACCIÓN: [ ${p.clan} ]` : `⚜️ FACCIÓN: SIN JURAMENTO`;
+        clanElem.innerText = (p.clan && p.clan !== "SIN CLAN") ? `⚜️ ${t("faction_label")}: [ ${p.clan} ]` : `⚜️ ${t("faction_label")}: ${t("no_oath")}`;
 
         document.getElementById('p-npc').innerText = p.npc;
         document.getElementById('p-pvp').innerText = p.pvp;
@@ -986,7 +1305,7 @@
         document.getElementById('p-xp-fill').style.background = cfgRaza.color;
         
         let xpGlobal = calcularXPGlobal(p.nivel, p.xp);
-        document.getElementById('p-xp-text').innerText = `EXPERIENCIA: ${p.xp} / ${req} | TOTAL ACUMULADO: ${xpGlobal.toLocaleString()}`;
+        document.getElementById('p-xp-text').innerText = t("xp_line")(p.xp, req, xpGlobal.toLocaleString());
         
         let rango = "INICIADO";
         const n = parseInt(p.nivel);
@@ -997,7 +1316,7 @@
         else if (n >= 40) rango = "MAESTRO DE ARMAS";
         else if (n >= 20) rango = "VETERANO";
         else if (n >= 10) rango = "GUARDIA";
-        document.getElementById('p-rango').innerText = "TÍTULO: " + rango;
+        document.getElementById('p-rango').innerText = `${t("title_prefix")}: ${rango}`;
         document.getElementById('p-rango').style.color = "var(--gold)";
         
         const modalContainer = document.getElementById('playerModal');
@@ -1006,6 +1325,9 @@
     }
 
     function closeModal() { document.getElementById('playerModal').style.display = 'none'; }
+
+    // Aplica el idioma guardado al cargar
+    setLanguage(currentLang);
     update();
     setInterval(update, 30000);
 </script>
