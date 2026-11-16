@@ -45,7 +45,6 @@
       padding-bottom: 60px;
     }
 
-    /* HEADER / HERO */
     header {
       border-bottom: 1px solid var(--border-subtle);
       background: rgba(12, 12, 18, 0.85);
@@ -107,14 +106,12 @@
       border-color: rgba(255, 255, 255, 0.25);
     }
 
-    /* CONTENEDOR PRINCIPAL */
     .container {
       max-width: 1360px;
       margin: 0 auto;
       padding: 28px 24px 0;
     }
 
-    /* RESUMEN GLOBAL */
     .stats-strip {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -147,7 +144,6 @@
       color: #fff;
     }
 
-    /* CONTROLES Y PESTAÑAS */
     .toolbar {
       display: flex;
       flex-wrap: wrap;
@@ -213,7 +209,6 @@
       border-color: #f87171;
     }
 
-    /* GRID DE TABLAS TOP 10 */
     .rankings-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(410px, 1fr));
@@ -268,7 +263,6 @@
       background: rgba(255, 255, 255, 0.08);
     }
 
-    /* TEMAS POR CATEGORÍA */
     .theme-pvp { border-top: 3px solid var(--pvp); }
     .theme-pvp .rank-badge { background: rgba(244, 63, 94, 0.18); color: #fda4af; }
 
@@ -287,7 +281,6 @@
     .theme-demonio { border-top: 3px solid var(--demonio); }
     .theme-demonio .rank-badge { background: rgba(239, 68, 68, 0.22); color: #fca5a5; }
 
-    /* FILAS DE JUGADORES */
     .rank-list {
       padding: 10px 14px 14px;
       display: flex;
@@ -312,7 +305,6 @@
       border-color: rgba(255, 255, 255, 0.08);
     }
 
-    /* PODIO TOP 3 */
     .rank-row.pos-1 {
       background: linear-gradient(90deg, rgba(251, 191, 36, 0.14), rgba(255, 255, 255, 0.02));
       border-color: rgba(251, 191, 36, 0.35);
@@ -340,7 +332,7 @@
     .player-info {
       display: flex;
       flex-direction: column;
-      gap: 3px;
+      gap: 4px;
       min-width: 0;
     }
 
@@ -356,8 +348,8 @@
     .player-meta {
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 0.76rem;
+      gap: 7px;
+      font-size: 0.75rem;
       color: var(--text-muted);
       flex-wrap: wrap;
     }
@@ -369,6 +361,16 @@
       font-size: 0.68rem;
       background: rgba(255, 255, 255, 0.08);
       color: #e5e7eb;
+    }
+
+    .pill-rango {
+      padding: 1px 7px;
+      border-radius: 5px;
+      font-weight: 700;
+      font-size: 0.68rem;
+      background: rgba(251, 191, 36, 0.14);
+      border: 1px solid rgba(251, 191, 36, 0.3);
+      color: #fde68a;
     }
 
     .player-score {
@@ -453,7 +455,7 @@
         <button class="tab-btn" data-filter="DEMONIO">😈 Demonios</button>
       </div>
       <div class="search-box">
-        <input type="text" id="buscador" placeholder="🔎 Buscar avatar o clan..." oninput="renderizarTodo()" />
+        <input type="text" id="buscador" placeholder="🔎 Buscar avatar, rango o clan..." oninput="renderizarTodo()" />
       </div>
     </section>
 
@@ -464,13 +466,13 @@
   </main>
 
   <script>
-    // 🔗 TU ENLACE OFICIAL DE GOOGLE APPS SCRIPT
     const URL_API = "https://script.google.com/macros/s/AKfycbz_oKUcvFczRfGkpgt2kBmVHVR0APoiFwaF0CCBFgFWTpItRjWtDktepASjLA3w7mYc/exec?accion=DATOS_WEB";
-    const XP_POR_NIVEL = 1000; // Escala actualizada a 1000 XP por nivel
+    const XP_POR_NIVEL = 1000;
 
     let datosGlobales = {
       jugadores: [],
-      clanes: []
+      clanes: [],
+      evolucion: {}
     };
     let filtroActual = "ALL";
 
@@ -493,6 +495,40 @@
       return "👤 Humano";
     }
 
+    function obtenerRangoPorDefecto(raza, nivelRaza) {
+      const r = String(raza || "").toUpperCase();
+      const lvl = parseInt(nivelRaza) || 1;
+      if (r === "VAMPIRO") {
+        if (lvl >= 80) return "Antediluviano";
+        if (lvl >= 60) return "Sr. de Noche";
+        if (lvl >= 40) return "Conde Carmesí";
+        if (lvl >= 20) return "Acechador";
+        return "Neófito";
+      }
+      if (r === "LYCAN") {
+        if (lvl >= 80) return "Fenrir Ancestral";
+        if (lvl >= 60) return "Alfa Supremo";
+        if (lvl >= 40) return "Colmillo Lunar";
+        if (lvl >= 20) return "Rastreador";
+        return "Cachorro";
+      }
+      if (r === "BRUJA") {
+        if (lvl >= 80) return "Oráculo Supremo";
+        if (lvl >= 60) return "Suma Sacerdotisa";
+        if (lvl >= 40) return "Tejedora Astral";
+        if (lvl >= 20) return "Hechicera";
+        return "Aprendiz";
+      }
+      if (r === "DEMONIO") {
+        if (lvl >= 80) return "Soberano Abisal";
+        if (lvl >= 60) return "Archidemonio";
+        if (lvl >= 40) return "Señor del Foso";
+        if (lvl >= 20) return "Engendro Ígneo";
+        return "Diablillo";
+      }
+      return "";
+    }
+
     async function cargarRankings() {
       const contenedor = document.getElementById("contenedor-rankings");
       contenedor.innerHTML = `<div class="loader">🔮 Sincronizando clasificaciones en vivo...</div>`;
@@ -500,20 +536,37 @@
       try {
         const resp = await fetch(URL_API + "&t=" + Date.now());
         const data = await resp.json();
-
-        datosGlobales.jugadores = (data.jugadores || []).map(j => ({
-          ...j,
-          nombreLimpio: limpiarNombre(j.nombre),
-          nivelNum: parseInt(j.nivel) || 1,
-          xpNum: parseInt(j.xp) || 0,
-          pvpNum: parseInt(j.pvp) || 0,
-          npcNum: parseInt(j.npc) || 0,
-          razaNorm: String(j.raza || "NINGUNA").toUpperCase(),
-          clanNorm: j.clan && j.clan !== "SIN CLAN" ? j.clan : "Sin Clan",
-          xpTotal: calcularXPGlobal(j.nivel, j.xp)
-        }));
+        const mapaEv = data.evolucion || {};
 
         datosGlobales.clanes = data.clanes || [];
+        datosGlobales.evolucion = mapaEv;
+
+        datosGlobales.jugadores = (data.jugadores || []).map(j => {
+          const razaNorm = String(j.raza || "NINGUNA").toUpperCase();
+          const claveEv = `${String(j.uuid || "").trim()}_${razaNorm}`;
+          const evData = mapaEv[claveEv] || null;
+
+          const nivelRaza = evData ? (parseInt(evData.nivel_raza) || 1) : 1;
+          const killsRaza = evData ? (parseInt(evData.kills_raza) || 0) : 0;
+          const rangoLinaje = evData && evData.rango
+            ? evData.rango
+            : obtenerRangoPorDefecto(razaNorm, nivelRaza);
+
+          return {
+            ...j,
+            nombreLimpio: limpiarNombre(j.nombre),
+            nivelNum: parseInt(j.nivel) || 1,
+            xpNum: parseInt(j.xp) || 0,
+            pvpNum: parseInt(j.pvp) || 0,
+            npcNum: parseInt(j.npc) || 0,
+            razaNorm,
+            clanNorm: j.clan && j.clan !== "SIN CLAN" ? j.clan : "Sin Clan",
+            xpTotal: calcularXPGlobal(j.nivel, j.xp),
+            nivelRaza,
+            killsRaza,
+            rangoLinaje
+          };
+        });
 
         actualizarEstadisticas();
         renderizarTodo();
@@ -542,7 +595,8 @@
       if (query) {
         filtrados = lista.filter(j =>
           j.nombreLimpio.toLowerCase().includes(query) ||
-          j.clanNorm.toLowerCase().includes(query)
+          j.clanNorm.toLowerCase().includes(query) ||
+          j.rangoLinaje.toLowerCase().includes(query)
         );
       }
 
@@ -570,8 +624,12 @@
             valorSecundario = `Nvl ${j.nivelNum} • ${j.pvpNum} PvP`;
           } else {
             valorPrincipal = `Nivel ${j.nivelNum}`;
-            valorSecundario = `${j.xpTotal.toLocaleString()} XP • ${j.pvpNum} PvP`;
+            valorSecundario = `Linaje Nvl ${j.nivelRaza} • ${j.killsRaza} Presas`;
           }
+
+          const badgeRango = j.rangoLinaje
+            ? `<span class="pill-rango">🏅 ${j.rangoLinaje}</span>`
+            : "";
 
           filasHTML += `
             <div class="rank-row pos-${pos <= 3 ? pos : 'other'}">
@@ -580,6 +638,7 @@
                 <div class="player-name">${j.nombreLimpio}</div>
                 <div class="player-meta">
                   <span class="pill-raza">${iconoRaza(j.razaNorm)}</span>
+                  ${badgeRango}
                   <span>🏰 ${j.clanNorm}</span>
                 </div>
               </div>
@@ -614,21 +673,15 @@
       const topPvp = [...jugadores].sort((a, b) => b.pvpNum - a.pvpNum || b.xpTotal - a.xpTotal);
       const topNpc = [...jugadores].sort((a, b) => b.npcNum - a.npcNum || b.xpTotal - a.xpTotal);
 
-      const topVampiros = jugadores
-        .filter(j => j.razaNorm === "VAMPIRO")
-        .sort((a, b) => b.nivelNum - a.nivelNum || b.xpTotal - a.xpTotal);
+      const ordenarPorLinaje = (a, b) =>
+        b.nivelRaza - a.nivelRaza ||
+        b.nivelNum - a.nivelNum ||
+        b.xpTotal - a.xpTotal;
 
-      const topLycans = jugadores
-        .filter(j => j.razaNorm === "LYCAN")
-        .sort((a, b) => b.nivelNum - a.nivelNum || b.xpTotal - a.xpTotal);
-
-      const topBrujas = jugadores
-        .filter(j => j.razaNorm === "BRUJA")
-        .sort((a, b) => b.nivelNum - a.nivelNum || b.xpTotal - a.xpTotal);
-
-      const topDemonios = jugadores
-        .filter(j => j.razaNorm === "DEMONIO")
-        .sort((a, b) => b.nivelNum - a.nivelNum || b.xpTotal - a.xpTotal);
+      const topVampiros = jugadores.filter(j => j.razaNorm === "VAMPIRO").sort(ordenarPorLinaje);
+      const topLycans   = jugadores.filter(j => j.razaNorm === "LYCAN").sort(ordenarPorLinaje);
+      const topBrujas   = jugadores.filter(j => j.razaNorm === "BRUJA").sort(ordenarPorLinaje);
+      const topDemonios = jugadores.filter(j => j.razaNorm === "DEMONIO").sort(ordenarPorLinaje);
 
       const secciones = [
         { id: "PVP", titulo: "TOP 10 ASESINOS PVP", icono: "⚔️", badge: "Combate Jugador", themeClass: "theme-pvp", lista: topPvp, tipoMetrica: "PVP" },
@@ -648,7 +701,6 @@
         .join("");
     }
 
-    // Manejo de pestañas de filtro
     document.getElementById("filtro-tabs").addEventListener("click", (e) => {
       const btn = e.target.closest(".tab-btn");
       if (!btn) return;
@@ -658,7 +710,6 @@
       renderizarTodo();
     });
 
-    // Carga inicial al abrir la pestaña
     cargarRankings();
   </script>
 </body>
