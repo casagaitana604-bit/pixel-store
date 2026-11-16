@@ -943,7 +943,7 @@
 
     function calcularXPGlobal(n, xp) {
         let lvl = parseInt(n);
-        let xpAcumulada = ((lvl - 1) * lvl / 2) * 500;
+        let xpAcumulada = ((lvl - 1) * lvl / 2) * 1000;
         return xpAcumulada + parseInt(xp);
     }
 
@@ -1299,7 +1299,7 @@
         document.getElementById('p-npc').innerText = p.npc;
         document.getElementById('p-pvp').innerText = p.pvp;
         
-        const req = parseInt(p.nivel) * 500;
+        const req = parseInt(p.nivel) * 1000;
         const pct = (parseInt(p.xp) / req) * 100;
         document.getElementById('p-xp-fill').style.width = Math.min(pct, 100) + "%";
         document.getElementById('p-xp-fill').style.background = cfgRaza.color;
