@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🏆 Salón de la Fama — Top 10 Global & Razas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: #09090d;
+      --bg-card: #12121a;
+      --bg-card-hover: #181824;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --text-primary: #f3f4f6;
+      --text-muted: #9ca3af;
+
+      --gold: #fbbf24;
+      --silver: #cbd5e1;
+      --bronze: #d97706;
+
+      --vampiro: #dc2626;
+      --lycan: #f59e0b;
+      --bruja: #a855f7;
+      --demonio: #ef4444;
+      --pvp: #f43f5e;
+      --npc: #10b981;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      background-image:
+        radial-gradient(circle at 15% 10%, rgba(220, 38, 38, 0.12), transparent 35%),
+        radial-gradient(circle at 85% 20%, rgba(168, 85, 247, 0.12), transparent 35%),
+        radial-gradient(circle at 50% 90%, rgba(245, 158, 11, 0.08), transparent 40%);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      padding-bottom: 60px;
+    }
+
+    /* HEADER / HERO */
+    header {
+      border-bottom: 1px solid var(--border-subtle);
+      background: rgba(12, 12, 18, 0.85);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .nav-bar {
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 16px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.45rem;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      background: linear-gradient(90deg, #fff, #fca5a5, #fbbf24);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-nav {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-nav:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    /* CONTENEDOR PRINCIPAL */
+    .container {
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 28px 24px 0;
+    }
+
+    /* RESUMEN GLOBAL */
+    .stats-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .stat-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .stat-label {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .stat-value {
+      font-family: 'Cinzel', serif;
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    /* CONTROLES Y PESTAÑAS */
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 26px;
+      background: var(--bg-card);
+      padding: 14px 18px;
+      border-radius: 14px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn:hover {
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, #991b1b, #dc2626);
+      color: #fff;
+      border-color: #f87171;
+      box-shadow: 0 0 16px rgba(220, 38, 38, 0.35);
+    }
+
+    .search-box {
+      position: relative;
+      min-width: 260px;
+      flex: 1;
+      max-width: 340px;
+    }
+
+    .search-box input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 9px 14px;
+      color: #fff;
+      font-size: 0.88rem;
+      outline: none;
+    }
+
+    .search-box input:focus {
+      border-color: #f87171;
+    }
+
+    /* GRID DE TABLAS TOP 10 */
+    .rankings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(410px, 1fr));
+      gap: 24px;
+    }
+
+    @media (max-width: 480px) {
+      .rankings-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .rank-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .rank-card:hover {
+      transform: translateY(-2px);
+    }
+
+    .rank-card-header {
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-subtle);
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), transparent);
+    }
+
+    .rank-card-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Cinzel', serif;
+      font-size: 1.12rem;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+    }
+
+    .rank-badge {
+      font-size: 0.72rem;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    /* TEMAS POR CATEGORÍA */
+    .theme-pvp { border-top: 3px solid var(--pvp); }
+    .theme-pvp .rank-badge { background: rgba(244, 63, 94, 0.18); color: #fda4af; }
+
+    .theme-npc { border-top: 3px solid var(--npc); }
+    .theme-npc .rank-badge { background: rgba(16, 185, 129, 0.18); color: #6ee7b7; }
+
+    .theme-vampiro { border-top: 3px solid var(--vampiro); }
+    .theme-vampiro .rank-badge { background: rgba(220, 38, 38, 0.2); color: #fca5a5; }
+
+    .theme-lycan { border-top: 3px solid var(--lycan); }
+    .theme-lycan .rank-badge { background: rgba(245, 158, 11, 0.2); color: #fcd34d; }
+
+    .theme-bruja { border-top: 3px solid var(--bruja); }
+    .theme-bruja .rank-badge { background: rgba(168, 85, 247, 0.2); color: #d8b4fe; }
+
+    .theme-demonio { border-top: 3px solid var(--demonio); }
+    .theme-demonio .rank-badge { background: rgba(239, 68, 68, 0.22); color: #fca5a5; }
+
+    /* FILAS DE JUGADORES */
+    .rank-list {
+      padding: 10px 14px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .rank-row {
+      display: grid;
+      grid-template-columns: 38px 1fr auto;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid transparent;
+      transition: background 0.15s ease;
+    }
+
+    .rank-row:hover {
+      background: var(--bg-card-hover);
+      border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    /* PODIO TOP 3 */
+    .rank-row.pos-1 {
+      background: linear-gradient(90deg, rgba(251, 191, 36, 0.14), rgba(255, 255, 255, 0.02));
+      border-color: rgba(251, 191, 36, 0.35);
+    }
+    .rank-row.pos-2 {
+      background: linear-gradient(90deg, rgba(203, 213, 225, 0.11), rgba(255, 255, 255, 0.02));
+      border-color: rgba(203, 213, 225, 0.28);
+    }
+    .rank-row.pos-3 {
+      background: linear-gradient(90deg, rgba(217, 119, 6, 0.12), rgba(255, 255, 255, 0.02));
+      border-color: rgba(217, 119, 6, 0.3);
+    }
+
+    .pos-num {
+      font-family: 'Cinzel', serif;
+      font-weight: 900;
+      font-size: 1rem;
+      text-align: center;
+      color: var(--text-muted);
+    }
+    .pos-1 .pos-num { color: var(--gold); font-size: 1.2rem; }
+    .pos-2 .pos-num { color: var(--silver); font-size: 1.12rem; }
+    .pos-3 .pos-num { color: var(--bronze); font-size: 1.08rem; }
+
+    .player-info {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      min-width: 0;
+    }
+
+    .player-name {
+      font-weight: 700;
+      font-size: 0.94rem;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .player-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+
+    .pill-raza {
+      padding: 1px 7px;
+      border-radius: 5px;
+      font-weight: 700;
+      font-size: 0.68rem;
+      background: rgba(255, 255, 255, 0.08);
+      color: #e5e7eb;
+    }
+
+    .player-score {
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 2px;
+    }
+
+    .score-main {
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: #fff;
+    }
+
+    .score-sub {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .empty-msg {
+      padding: 28px 16px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+    }
+
+    .loader {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="nav-bar">
+      <div class="brand">
+        <span style="font-size: 1.7rem;">🏆</span>
+        <h1>SALÓN DE LA FAMA — TOP 10</h1>
+      </div>
+      <div class="nav-actions">
+        <a href="index.html" class="btn-nav">⬅️ Volver al Inicio</a>
+        <button onclick="cargarRankings()" class="btn-nav">🔄 Actualizar Datos</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- RESUMEN GLOBAL -->
+    <section class="stats-strip">
+      <div class="stat-box">
+        <span class="stat-label">👥 Guerreros Registrados</span>
+        <span class="stat-value" id="stat-jugadores">-</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-label">⚔️ Total Bajas PvP</span>
+        <span class="stat-value" id="stat-pvp" style="color: #fda4af;">-</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-label">🧟 Total Cazados (NPC)</span>
+        <span class="stat-value" id="stat-npc" style="color: #6ee7b7;">-</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-label">🏰 Clanes Activos</span>
+        <span class="stat-value" id="stat-clanes" style="color: #fcd34d;">-</span>
+      </div>
+    </section>
+
+    <!-- FILTROS Y BUSCADOR -->
+    <section class="toolbar">
+      <div class="tabs" id="filtro-tabs">
+        <button class="tab-btn active" data-filter="ALL">🌐 Ver Todos (6)</button>
+        <button class="tab-btn" data-filter="PVP">⚔️ Top PvP</button>
+        <button class="tab-btn" data-filter="NPC">🧟 Top NPC</button>
+        <button class="tab-btn" data-filter="VAMPIRO">🦇 Vampiros</button>
+        <button class="tab-btn" data-filter="LYCAN">🐺 Lycans</button>
+        <button class="tab-btn" data-filter="BRUJA">🔮 Brujas</button>
+        <button class="tab-btn" data-filter="DEMONIO">😈 Demonios</button>
+      </div>
+      <div class="search-box">
+        <input type="text" id="buscador" placeholder="🔎 Buscar avatar o clan..." oninput="renderizarTodo()" />
+      </div>
+    </section>
+
+    <!-- CONTENEDOR DE TARJETAS TOP 10 -->
+    <section id="contenedor-rankings" class="rankings-grid">
+      <div class="loader">🔮 Invocando registros ancestrales desde el servidor...</div>
+    </section>
+  </main>
+
+  <script>
+    // 🔗 TU ENLACE OFICIAL DE GOOGLE APPS SCRIPT
+    const URL_API = "https://script.google.com/macros/s/AKfycbz_oKUcvFczRfGkpgt2kBmVHVR0APoiFwaF0CCBFgFWTpItRjWtDktepASjLA3w7mYc/exec?accion=DATOS_WEB";
+    const XP_POR_NIVEL = 1000; // Escala actualizada a 1000 XP por nivel
+
+    let datosGlobales = {
+      jugadores: [],
+      clanes: []
+    };
+    let filtroActual = "ALL";
+
+    function calcularXPGlobal(nivel, xpActual) {
+      const n = Math.max(1, parseInt(nivel) || 1);
+      const xp = Math.max(0, parseInt(xpActual) || 0);
+      return ((n * (n - 1)) / 2) * XP_POR_NIVEL + xp;
+    }
+
+    function limpiarNombre(nombre) {
+      return String(nombre || "Desconocido").replace(" Resident", "").trim();
+    }
+
+    function iconoRaza(raza) {
+      const r = String(raza || "").toUpperCase();
+      if (r === "VAMPIRO") return "🦇 Vampiro";
+      if (r === "LYCAN") return "🐺 Lycan";
+      if (r === "BRUJA") return "🔮 Bruja";
+      if (r === "DEMONIO") return "😈 Demonio";
+      return "👤 Humano";
+    }
+
+    async function cargarRankings() {
+      const contenedor = document.getElementById("contenedor-rankings");
+      contenedor.innerHTML = `<div class="loader">🔮 Sincronizando clasificaciones en vivo...</div>`;
+
+      try {
+        const resp = await fetch(URL_API + "&t=" + Date.now());
+        const data = await resp.json();
+
+        datosGlobales.jugadores = (data.jugadores || []).map(j => ({
+          ...j,
+          nombreLimpio: limpiarNombre(j.nombre),
+          nivelNum: parseInt(j.nivel) || 1,
+          xpNum: parseInt(j.xp) || 0,
+          pvpNum: parseInt(j.pvp) || 0,
+          npcNum: parseInt(j.npc) || 0,
+          razaNorm: String(j.raza || "NINGUNA").toUpperCase(),
+          clanNorm: j.clan && j.clan !== "SIN CLAN" ? j.clan : "Sin Clan",
+          xpTotal: calcularXPGlobal(j.nivel, j.xp)
+        }));
+
+        datosGlobales.clanes = data.clanes || [];
+
+        actualizarEstadisticas();
+        renderizarTodo();
+      } catch (err) {
+        console.error(err);
+        contenedor.innerHTML = `<div class="loader">⚠️ Error al conectar con Google Sheets. Verifica tu conexión o recarga la página.</div>`;
+      }
+    }
+
+    function actualizarEstadisticas() {
+      const totalJug = datosGlobales.jugadores.length;
+      const totalPvp = datosGlobales.jugadores.reduce((acc, j) => acc + j.pvpNum, 0);
+      const totalNpc = datosGlobales.jugadores.reduce((acc, j) => acc + j.npcNum, 0);
+      const totalClanes = datosGlobales.clanes.length;
+
+      document.getElementById("stat-jugadores").innerText = totalJug.toLocaleString();
+      document.getElementById("stat-pvp").innerText = totalPvp.toLocaleString();
+      document.getElementById("stat-npc").innerText = totalNpc.toLocaleString();
+      document.getElementById("stat-clanes").innerText = totalClanes.toLocaleString();
+    }
+
+    function construirTarjetaTop10({ id, titulo, icono, badge, themeClass, lista, tipoMetrica }) {
+      const query = document.getElementById("buscador").value.trim().toLowerCase();
+      let filtrados = lista;
+
+      if (query) {
+        filtrados = lista.filter(j =>
+          j.nombreLimpio.toLowerCase().includes(query) ||
+          j.clanNorm.toLowerCase().includes(query)
+        );
+      }
+
+      const top10 = filtrados.slice(0, 10);
+
+      let filasHTML = "";
+      if (top10.length === 0) {
+        filasHTML = `<div class="empty-msg">No hay guerreros registrados en esta categoría todavía.</div>`;
+      } else {
+        top10.forEach((j, idx) => {
+          const pos = idx + 1;
+          let medalla = `#${pos}`;
+          if (pos === 1) medalla = "👑";
+          else if (pos === 2) medalla = "🥈";
+          else if (pos === 3) medalla = "🥉";
+
+          let valorPrincipal = "";
+          let valorSecundario = "";
+
+          if (tipoMetrica === "PVP") {
+            valorPrincipal = `${j.pvpNum.toLocaleString()} Kills`;
+            valorSecundario = `Nvl ${j.nivelNum} • ${j.npcNum} NPC`;
+          } else if (tipoMetrica === "NPC") {
+            valorPrincipal = `${j.npcNum.toLocaleString()} NPC`;
+            valorSecundario = `Nvl ${j.nivelNum} • ${j.pvpNum} PvP`;
+          } else {
+            valorPrincipal = `Nivel ${j.nivelNum}`;
+            valorSecundario = `${j.xpTotal.toLocaleString()} XP • ${j.pvpNum} PvP`;
+          }
+
+          filasHTML += `
+            <div class="rank-row pos-${pos <= 3 ? pos : 'other'}">
+              <div class="pos-num">${medalla}</div>
+              <div class="player-info">
+                <div class="player-name">${j.nombreLimpio}</div>
+                <div class="player-meta">
+                  <span class="pill-raza">${iconoRaza(j.razaNorm)}</span>
+                  <span>🏰 ${j.clanNorm}</span>
+                </div>
+              </div>
+              <div class="player-score">
+                <span class="score-main">${valorPrincipal}</span>
+                <span class="score-sub">${valorSecundario}</span>
+              </div>
+            </div>
+          `;
+        });
+      }
+
+      return `
+        <article class="rank-card ${themeClass}" data-cat="${id}">
+          <div class="rank-card-header">
+            <div class="rank-card-title">
+              <span>${icono}</span>
+              <span>${titulo}</span>
+            </div>
+            <span class="rank-badge">${badge}</span>
+          </div>
+          <div class="rank-list">
+            ${filasHTML}
+          </div>
+        </article>
+      `;
+    }
+
+    function renderizarTodo() {
+      const jugadores = datosGlobales.jugadores;
+
+      const topPvp = [...jugadores].sort((a, b) => b.pvpNum - a.pvpNum || b.xpTotal - a.xpTotal);
+      const topNpc = [...jugadores].sort((a, b) => b.npcNum - a.npcNum || b.xpTotal - a.xpTotal);
+
+      const topVampiros = jugadores
+        .filter(j => j.razaNorm === "VAMPIRO")
+        .sort((a, b) => b.nivelNum - a.nivelNum || b.xpTotal - a.xpTotal);
+
+      const topLycans = jugadores
+        .filter(j => j.razaNorm === "LYCAN")
+        .sort((a, b) => b.nivelNum - a.nivelNum || b.xpTotal - a.xpTotal);
+
+      const topBrujas = jugadores
+        .filter(j => j.razaNorm === "BRUJA")
+        .sort((a, b) => b.nivelNum - a.nivelNum || b.xpTotal - a.xpTotal);
+
+      const topDemonios = jugadores
+        .filter(j => j.razaNorm === "DEMONIO")
+        .sort((a, b) => b.nivelNum - a.nivelNum || b.xpTotal - a.xpTotal);
+
+      const secciones = [
+        { id: "PVP", titulo: "TOP 10 ASESINOS PVP", icono: "⚔️", badge: "Combate Jugador", themeClass: "theme-pvp", lista: topPvp, tipoMetrica: "PVP" },
+        { id: "NPC", titulo: "TOP 10 CAZADORES NPC", icono: "🧟", badge: "Caza & Farmeo", themeClass: "theme-npc", lista: topNpc, tipoMetrica: "NPC" },
+        { id: "VAMPIRO", titulo: "TOP 10 VAMPIROS", icono: "🦇", badge: "Linaje Carmesí", themeClass: "theme-vampiro", lista: topVampiros, tipoMetrica: "RAZA" },
+        { id: "LYCAN", titulo: "TOP 10 LYCANS", icono: "🐺", badge: "Manada Lunar", themeClass: "theme-lycan", lista: topLycans, tipoMetrica: "RAZA" },
+        { id: "BRUJA", titulo: "TOP 10 BRUJAS", icono: "🔮", badge: "Aquelarre Arcano", themeClass: "theme-bruja", lista: topBrujas, tipoMetrica: "RAZA" },
+        { id: "DEMONIO", titulo: "TOP 10 DEMONIOS", icono: "😈", badge: "Legión Abisal", themeClass: "theme-demonio", lista: topDemonios, tipoMetrica: "RAZA" }
+      ];
+
+      const visibles = filtroActual === "ALL"
+        ? secciones
+        : secciones.filter(s => s.id === filtroActual);
+
+      document.getElementById("contenedor-rankings").innerHTML = visibles
+        .map(sec => construirTarjetaTop10(sec))
+        .join("");
+    }
+
+    // Manejo de pestañas de filtro
+    document.getElementById("filtro-tabs").addEventListener("click", (e) => {
+      const btn = e.target.closest(".tab-btn");
+      if (!btn) return;
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      filtroActual = btn.dataset.filter;
+      renderizarTodo();
+    });
+
+    // Carga inicial al abrir la pestaña
+    cargarRankings();
+  </script>
+</body>
+</html>
