@@ -466,7 +466,7 @@
   </main>
 
   <script>
-    const URL_API = "https://script.google.com/macros/s/AKfycbz_oKUcvFczRfGkpgt2kBmVHVR0APoiFwaF0CCBFgFWTpItRjWtDktepASjLA3w7mYc/exec";
+    const URL_API = "https://script.google.com/macros/s/AKfycbz_oKUcvFczRfGkpgt2kBmVHVR0APoiFwaF0CCBFgFWTpItRjWtDktepASjLA3w7mYc/exec?accion=DATOS_WEB";
     const XP_POR_NIVEL = 1000;
 
     let datosGlobales = {
@@ -534,7 +534,8 @@
       contenedor.innerHTML = `<div class="loader">🔮 Sincronizando clasificaciones en vivo...</div>`;
 
       try {
-        const resp = await fetch(URL_API + "&t=" + Date.now());
+        const sep = URL_API.includes("?") ? "&" : "?";
+        const resp = await fetch(URL_API + sep + "t=" + Date.now());
         const data = await resp.json();
         const mapaEv = data.evolucion || {};
 
